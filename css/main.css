@@ -13,11 +13,11 @@ body {
 }
 
 a {
-	text-decoration-line: none;
+	text-decoration: none;
 }
 
 a:hover {
-	text-decoration-line: underline;
+	text-decoration: underline;
 }
 
 .content {
