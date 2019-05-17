@@ -5,8 +5,7 @@ html {
 
 body {
 	max-width: 60em;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 0 auto;
 }
 
 a {
@@ -76,5 +75,31 @@ a:hover {
 
 	50% {
 		content: "";
+	}
+}
+
+@media (max-width: 720px) {
+	#header {
+		text-align: center;
+	}
+
+	#header-image {
+		width: 12em;
+		height: 12em;
+		float: none;
+		display: block;
+		margin: 1.5em auto;
+	}
+
+	#header .blinking-cursor::after {
+		animation: none;
+	}
+
+	#header .menu ul, #header ul.menu {
+		flex-direction: column;
+	}
+
+	#header .menu a {
+		display: block;
 	}
 }
