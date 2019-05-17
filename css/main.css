@@ -1,5 +1,5 @@
 html {
-	font-family: sans-serif;
+	font-family: "Arial", sans-serif;
 	line-height: 1.8;
 }
 
@@ -40,7 +40,7 @@ a:hover {
 #header {
 	background-color: #000;
 	color: #FFF;
-	font-family: monospace;
+	font-family: "Consolas", monospace;
 	padding-top: 1px;
 	margin-top: -1px;
 }
