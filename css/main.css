@@ -1,11 +1,15 @@
 html {
 	font-family: "Arial", sans-serif;
 	line-height: 1.8;
+	background: #EEE;
+	height: 100%;
 }
 
 body {
 	max-width: 60em;
 	margin: 0 auto;
+	background: #FFF;
+	min-height: 100%;
 }
 
 a {
@@ -20,8 +24,13 @@ a:hover {
 	margin: 0 1.5em;
 }
 
+main.content {
+	padding-bottom: 1px;
+	margin-bottom: -1px;
+}
+
 .menu ul, ul.menu {
-	list-style-type: none;
+	list-style: none;
 	padding-left: 0;
 	display: flex;
 }
@@ -37,7 +46,7 @@ a:hover {
 }
 
 #header {
-	background-color: #000;
+	background: #000;
 	color: #FFF;
 	font-family: "Consolas", monospace;
 	padding-top: 1px;
@@ -49,11 +58,11 @@ a:hover {
 	width: 14em;
 	height: 14em;
 	border: 0.5em solid #FFF;
-	background-color: #FFF;
+	background: #FFF;
 }
 
 #header .menu {
-	background-color: #444;
+	background: #444;
 }
 
 #header a {
@@ -61,11 +70,11 @@ a:hover {
 }
 
 #header a:hover {
-	background-color: #222;
+	background: #222;
 }
 
 #header .active {
-	background-color: #000;
+	background: #000;
 }
 
 @keyframes blinking-cursor-keyframes {
