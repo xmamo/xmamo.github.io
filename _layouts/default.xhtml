@@ -24,7 +24,7 @@
 			<nav class="menu">
 				<ul>
 					{% for item in site.data.navigation %}
-					<li><a {% if page.url == item.url %}class="active"{% endif %} href="{{ item.url }}" {% if item.external %}target="_blank"{% endif %}>{{ item.title }}</a></li>
+						<li><a {% if page.url == item.url %}class="active" {% endif %} href="{{ item.url }}" {% if item.external %}target="_blank" {% endif %}>{{ item.title }}</a></li>
 					{% endfor %}
 				</ul>
 			</nav>
