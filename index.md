@@ -1,6 +1,5 @@
 ---
-layout: default
-title: About me
+title: 'About me'
 ---
 
 ## {{ page.title }} ##
