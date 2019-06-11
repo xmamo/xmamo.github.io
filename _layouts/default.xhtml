@@ -10,6 +10,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{{ page.title }} &mdash; Mamo.dev</title>
 		{% comment %}<link rel="icon" href="favicon.ico" />{% endcomment %}
+		<base target="_blank" />
 		<link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
 		<link rel="stylesheet" href="/css/rouge.css" />
@@ -28,12 +29,7 @@
 					{% for item in site.data.navigation %}
 						<li>
 							{% if item.url != nil %}
-								<a
-										class="item {% if page.url == item.url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}"
-										href="{{ item.url }}"
-										{% if item.external %}target="_blank"{% endif %}>
-									{{ item.title }}
-								</a>
+								<a class="item {% if page.url == item.url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title }}</a>
 							{% else %}
 								<span class="item {% if item.subitems %}more{% endif %}">{{ item.title }}</span>
 							{% endif %}
@@ -42,12 +38,7 @@
 									{% for subitem in item.subitems %}
 										<li>
 											{% if subitem.url != nil %}
-												<a
-														class="item {% if page.url == subitem.url %}active{% endif %}"
-														href="{{ subitem.url }}"
-														{% if subitem.external %}target="_blank"{% endif %}>
-													{{ subitem.title }}
-												</a>
+												<a class="item {% if page.url == subitem.url %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title }}</a>
 											{% else %}
 												<span class="item">{{ item.title }}</span>
 											{% endif %}
