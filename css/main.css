@@ -59,9 +59,10 @@ main.content {
 	flex-direction: column;
 }
 
-.menu a {
+.menu .item {
 	display: block;
 	padding: 0.75em 1.25em;
+	cursor: pointer;
 }
 
 .blinking-cursor::after {
@@ -89,19 +90,19 @@ main.content {
 	background: #FFF;
 }
 
-#header .menu ul {
+#header .menu ul, #header ul.menu {
 	background: #444;
 }
 
-#header a {
+#header .menu .item {
 	color: #FFF;
 }
 
-#header a:hover {
+#header .menu .item:hover {
 	background: #222;
 }
 
-#header .active {
+#header .menu .active {
 	background: #000;
 }
 

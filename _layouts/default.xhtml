@@ -26,11 +26,31 @@
 				<ul>
 					{% for item in site.data.navigation %}
 						<li>
-							<a class="{% if page.url == item.url %}active{% endif %} {% if item.subitems %}more{% endif %}" href="{{ item.url }}" {% if item.external %}target="_blank"{% endif %}>{{ item.title }}</a>
-							{% if item.subitems %}
+							{% if item.url != nil %}
+								<a
+										class="item {% if page.url == item.url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}"
+										href="{{ item.url }}"
+										{% if item.external %}target="_blank"{% endif %}>
+									{{ item.title }}
+								</a>
+							{% else %}
+								<span class="item {% if item.subitems %}more{% endif %}">{{ item.title }}</span>
+							{% endif %}
+							{% if item.subitems != nil %}
 								<ul>
 									{% for subitem in item.subitems %}
-										<li><a {% if page.url == subitem.url %}class="active"{% endif %} href="{{ subitem.url }}" {% if subitem.external %}target="_blank"{% endif %}>{{ subitem.title }}</a></li>
+										<li>
+											{% if subitem.url != nil %}
+												<a
+														class="item {% if page.url == subitem.url %}active{% endif %}"
+														href="{{ subitem.url }}"
+														{% if subitem.external %}target="_blank"{% endif %}>
+													{{ subitem.title }}
+												</a>
+											{% else %}
+												<span class="item">{{ item.title }}</span>
+											{% endif %}
+										</li>
 									{% endfor %}
 								</ul>
 							{% endif %}
