@@ -1,7 +1,5 @@
-- title: 'About me'
+- title: 'About'
   url: '/'
-- title: 'Contact'
-  url: '#'
 - title: 'Website source code'
   url: 'https://github.com/xMamo/xMamo.github.io'
   external: true
