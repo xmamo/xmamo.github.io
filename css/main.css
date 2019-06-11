@@ -20,6 +20,18 @@ a:hover {
 	text-decoration: underline;
 }
 
+iframe {
+	border: 0;
+}
+
+img {
+	max-width: 100%;
+}
+
+pre {
+	overflow: auto;
+}
+
 .content {
 	margin: 0 1.25em;
 }
