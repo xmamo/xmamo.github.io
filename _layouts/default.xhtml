@@ -30,7 +30,7 @@
 							{% if item.subitems %}
 								<ul>
 									{% for subitem in item.subitems %}
-										<a {% if page.url == subitem.url %}class="active" {% endif %} href="{{ subitem.url }}" {% if subitem.external %}target="_blank" {% endif %}>{{ subitem.title }}</a>
+										<li><a {% if page.url == subitem.url %}class="active" {% endif %} href="{{ subitem.url }}" {% if subitem.external %}target="_blank" {% endif %}>{{ subitem.title }}</a></li>
 									{% endfor %}
 								</ul>
 							{% endif %}
