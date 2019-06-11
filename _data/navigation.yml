@@ -1,5 +1,10 @@
 - title: 'About'
   url: '/'
-- title: 'Website source code'
-  url: 'https://github.com/xMamo/xMamo.github.io'
-  external: true
+- title: 'Projects'
+  url: '#'
+  subitems:
+  - title: 'VanillaVotifier'
+    url: '/projects/vanillavotifier/'
+  - title: 'Website source code'
+    url: 'https://github.com/xMamo/xMamo.github.io'
+    external: true
