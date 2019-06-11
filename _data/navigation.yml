@@ -1,7 +1,6 @@
 - title: 'About'
   url: '/'
 - title: 'Projects'
-  url: '#'
   subitems:
   - title: 'VanillaVotifier'
     url: '/projects/vanillavotifier/'
