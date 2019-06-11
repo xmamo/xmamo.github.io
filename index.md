@@ -24,5 +24,5 @@ Most of the time, I'm concerned with what happens behind the curtains. That is, 
 strengths: my website does look quite spartan, doesn't it?
 
 For the future I'm planning to learn how to build mobile applications and progressive web apps. Currently,
-I'm taking a look at the Xamarin and React Native frameworks. My journey in the programming
-world has been --- and still is --- quite interesting, and there's still so much to learn!
+I'm taking a look at the Xamarin and Flutter frameworks. My journey in the programming world has been --- and still
+is --- quite interesting and there's still so much to learn!
