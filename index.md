@@ -2,7 +2,7 @@
 title: 'About me'
 ---
 
-## {{ page.title }} ##
+# {{ page.title }} #
 
 My name is Matteo Morena, I'm a 23-year-old guy from northern Italy. I'm half German and half Italian and can speak
 both languages fluently. I like skiing, music, nature, hiking, and programming. This website is dedicated to share my
