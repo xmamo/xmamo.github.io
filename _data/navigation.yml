@@ -2,8 +2,8 @@
   url: '/'
 - title: 'Projects'
   subitems:
-  - title: 'VanillaVotifier'
-    url: '/projects/vanillavotifier/'
-  - title: 'Website source code'
-    url: 'https://github.com/xMamo/xMamo.github.io'
-    external: true
+    - title: 'VanillaVotifier'
+      url: '/projects/vanillavotifier/'
+    - title: 'Website source code'
+      url: 'https://github.com/xMamo/xMamo.github.io'
+      external: true
