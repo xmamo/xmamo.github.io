@@ -2,7 +2,7 @@
 title: 'VanillaVotifier'
 ---
 
-# {{ page.title }} #
+# {{ page.title }} [<span class="fas fa-download"></span>](https://github.com/xMamo/VanillaVotifier/releases/download/v4.1.2/VanillaVotifier.jar){: .icon} [<span class="fab fa-github"></span>](https://github.com/xMamo/VanillaVotifier){: .icon target="_blank"} #
 VanillaVotifier is a Java application which listens for votes made on Minecraft server lists for your server. Inspired
 by Bukkit's Votifier, VanillaVotifier aids to provide the plugins same functionality --- to execute some kind of custom
 action on vote --- but without requiring a Bukkit server. VanillaVotifier creates a liteweight server listening for
@@ -14,7 +14,7 @@ It is highly recommended to run both your Minecraft server and VanillaVotifier o
 
 ## Installation ##
 You can download the latest version of VanillaVotifier
-[here](https://github.com/xMamo/VanillaVotifier/releases/latest){:target="_blank"}. Once downloaded, just run the
+[here](https://github.com/xMamo/VanillaVotifier/releases/latest){: target="_blank"}. Once downloaded, just run the
 application using `java -jar VanillaVotifier.jar` (it is recommended to run VanillaVotifier in an empty directory). On
 first startup, VanillaVotifier automatically creates a new configuration file in the current working directory (called
 `config.yaml`) and two additional key files referenced by the config (`public.pem` and `private.pem`). These key files

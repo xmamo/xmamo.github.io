@@ -74,6 +74,16 @@ main.content {
 	content: " ▾";
 }
 
+a.icon, .icon a {
+	color: #000;
+	transition: 0.5s;
+	display: inline-block;
+}
+
+a.icon:hover, .icon a:hover {
+	transform: scale(1.1);
+}
+
 #header {
 	background: #000;
 	color: #FFF;
