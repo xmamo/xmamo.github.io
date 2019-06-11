@@ -244,4 +244,4 @@ previous example.
 otherwise, just start up VanillaVotifier.
 
 ## Tutorial video ##
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/mRHu5d-BcXQ" allowfullscreen="allowfullscreen"></iframe>
+<iframe src="https://www.youtube-nocookie.com/embed/mRHu5d-BcXQ" width="560" height="315" allowfullscreen="allowfullscreen"></iframe>

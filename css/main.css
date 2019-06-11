@@ -29,6 +29,8 @@ img {
 }
 
 pre {
+	font-size: 0.85em;
+	line-height: 1.5;
 	overflow: auto;
 }
 
@@ -47,6 +49,16 @@ main.content {
 	display: flex;
 }
 
+.menu li > ul {
+	position: absolute;
+	display: none;
+}
+
+.menu li:hover > ul {
+	display: flex;
+	flex-direction: column;
+}
+
 .menu a {
 	display: inline-block;
 	padding: 0.75em 1.25em;
@@ -55,6 +67,10 @@ main.content {
 .blinking-cursor::after {
 	content: "";
 	animation: blinking-cursor-keyframes 1.2s step-end infinite;
+}
+
+.more::after {
+	content: " ▾";
 }
 
 #header {
@@ -73,7 +89,7 @@ main.content {
 	background: #FFF;
 }
 
-#header .menu {
+#header .menu ul {
 	background: #444;
 }
 
