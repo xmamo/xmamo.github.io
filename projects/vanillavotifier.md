@@ -218,7 +218,7 @@ commands. It is assumed that Linux is being used as OS, that the Minecraft serve
 machine, and that the Minecraft server is running using `screen` (more precisely, that it starts up using something
 like `screen -dmS <screen name> java -jar minecraft_server.jar`). Here's how to do it:
 
-1. Add a `voted` dummy score and create a Command Block clock to deal with votes, as explained in the steps 1–2 of the
+1. Add a `voted` dummy score and create a Command Block clock to deal with votes, as explained in the steps 1--2 of the
 previous example.
 
 2. Create bash file called `onvote.sh` in the same directory as `config.yaml`. Copy the following code in the newly
