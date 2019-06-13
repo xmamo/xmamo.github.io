@@ -53,6 +53,20 @@ input {
 	margin: 0 1.25em;
 }
 
+.title {
+	font-size: 2em;
+}
+
+.subtitle {
+	font-size: 1.5em;
+}
+
+.title, .subtitle {
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
 main.content {
 	padding-bottom: 1px;
 	margin-bottom: -1px;
@@ -114,8 +128,8 @@ a.icon:hover, .icon a:hover {
 
 #header-image {
 	float: right;
-	max-width: 14em;
-	max-height: 14em;
+	max-width: 13em;
+	max-height: 13em;
 	border: 0.5em solid #FFF;
 	background: #FFF;
 }
