@@ -1,5 +1,7 @@
 ---
-title: "BiLoMa's theorem"
+title: 'BiLoMa’s theorem'
+description: 'The objective of BiLoMa’s theorem is to provide formulas for projectile motion, but in discrete time.'
+keywords: 'BiLoMa, theorem, formula, proof, projectile motion, projectile, motion, velocity, position, displacement, discrete time, discrete'
 scripts:
   - '/js/projects/biloma.js'
   - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=MML_CHTML'
