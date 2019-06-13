@@ -6,9 +6,13 @@ scripts:
 ---
 
 # {{ page.title }} #
-This is a theorem wich some friends and I worked on. It's objective is to provide formulas for [projectile motion](https://en.wikipedia.org/wiki/Projectile_motion), but in discrete time. The name of the theorem originates from our nicknames, [BisUmTo](https://bisumto.it/), Lore, and Mamo (me!).
+This is a theorem wich some friends and I worked on. It's objective is to provide formulas for [projectile
+motion](https://en.wikipedia.org/wiki/Projectile_motion), but in discrete time. The name of the theorem originates from
+our nicknames, [BisUmTo](https://bisumto.it/), Lore, and Mamo (me!).
 
-We initially worked on this theorem because of [Minecraft](https://www.minecraft.net/), to calculate the initial velocity needed to launch blocks of sand in such a way that they land at an exact point in space. If you own Minecraft have some knowledge of command blocks, you can fill out the form below and see how our theorem works in practice.
+We initially worked on this theorem because of [Minecraft](https://www.minecraft.net/), to calculate the initial
+velocity needed to launch blocks of sand in such a way that they land at an exact point in space. If you own Minecraft
+have some knowledge of command blocks, you can fill out the form below and see how our theorem works in practice.
 
 <form id="biloma" target="_self">
 	<div>
@@ -34,7 +38,13 @@ We initially worked on this theorem because of [Minecraft](https://www.minecraft
 </form>
 
 ## The theorem ##
-Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math> be the number of time units that have passed since the object was launched and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi></math> the (gravitational) acceleration. Assuming that the object was launched with an initial position of <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn></math> and an initial velocity of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>0</mn></msub></math>, we have the following formulas for the velocity <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>n</mn></msub></math> and the position <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>p</mi><mn>n</mn></msub></math>:
+Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math> be the number of time units that have passed
+since the object was launched and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi></math> the
+(gravitational) acceleration. Assuming that the object was launched with an initial position of
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn></math> and an initial velocity of
+<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>0</mn></msub></math>, we have the following
+formulas for the velocity <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>n</mn></msub></math> and
+the position <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>p</mi><mn>n</mn></msub></math>:
 
 <p>
 	<math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -130,7 +140,9 @@ Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math> be the nu
 	</math>
 </p>
 
-The damping factor, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>d</mi></math>, is used in Minecraft to prevent objects from incrementing their velocity indefinitely. Using these formulas with <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>d</mi><mo>→</mo><mn>1</mn></math> means having no damping at all.
+The damping factor, <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>d</mi></math>, is used in Minecraft to prevent
+objects from incrementing their velocity indefinitely. Using these formulas with
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>d</mi><mo>→</mo><mn>1</mn></math> means having no damping at all.
 
 ### Proof of the formula for <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mi>n</mi></msub></math> ###
 <p>
