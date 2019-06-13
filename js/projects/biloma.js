@@ -1,7 +1,8 @@
 "use strict";
 
 var MathJax = {
-	showMathMenu: false
+	showMathMenu: false,
+	messageStyle: "none"
 };
 
 (function () {
