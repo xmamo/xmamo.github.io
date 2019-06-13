@@ -58,6 +58,7 @@
 
 		<script>
 			"use strict";
+
 			(function () {
 				var elements = document.getElementsByClassName("js-only");
 				while (elements.length > 0) {
@@ -65,8 +66,6 @@
 				}
 			})();
 		</script>
-
-		<script src="/js/github-download-link-generator.js"></script>
 
 		{% for script in page.scripts %}
 			<script src="{{ script }}"></script>
