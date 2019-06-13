@@ -4,6 +4,8 @@
   subitems:
     - title: 'VanillaVotifier'
       url: '/projects/vanillavotifier/'
+    - title: 'BiLoMa'
+      url: '/projects/biloma/'
     - title: 'Website source code'
       url: 'https://github.com/xMamo/xMamo.github.io'
       external: true
