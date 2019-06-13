@@ -34,7 +34,7 @@ We initially worked on this theorem because of [Minecraft](https://www.minecraft
 </form>
 
 ## The theorem ##
-Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math> be the number of time units that have passed since the object was launched. Assuming that the object was launched with an initial position of <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn></math> and an initial velocity of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>0</mn></msub></math>, we have the following formulas for the velocity <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>n</mn></msub></math> and the position <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>p</mi><mn>n</mn></msub></math>:
+Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math> be the number of time units that have passed since the object was launched and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi></math> the (gravitational) acceleration. Assuming that the object was launched with an initial position of <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn></math> and an initial velocity of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>0</mn></msub></math>, we have the following formulas for the velocity <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>n</mn></msub></math> and the position <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>p</mi><mn>n</mn></msub></math>:
 
 <p>
 	<math xmlns="http://www.w3.org/1998/Math/MathML">
