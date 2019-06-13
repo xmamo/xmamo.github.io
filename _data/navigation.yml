@@ -4,7 +4,7 @@
   subitems:
     - title: 'VanillaVotifier'
       url: '/projects/vanillavotifier/'
-    - title: 'BiLoMa'
+    - title: "BiLoMa’s theorem"
       url: '/projects/biloma/'
     - title: 'Website source code'
       url: 'https://github.com/xMamo/xMamo.github.io'
