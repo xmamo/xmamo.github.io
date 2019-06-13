@@ -90,6 +90,10 @@ main.content {
 	content: " ▾";
 }
 
+.js-only {
+	display: none;
+}
+
 a.icon, .icon a {
 	color: #000;
 	text-decoration: none;

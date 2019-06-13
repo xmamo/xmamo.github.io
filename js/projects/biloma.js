@@ -25,7 +25,6 @@ var MathJax = {
 
 	var form = document.forms["biloma"];
 
-	form.removeAttribute("hidden");
 	form["source-pos"].value = randomInt(-64, 64) + ", " + randomInt(64, 128) + ", " + randomInt(-64, 64);
 	form["source-pos"].pattern = threeDecimalsPattern;
 	form["destination-pos"].value = randomInt(-64, 64) + ", " + randomInt(64, 128) + ", " + randomInt(-64, 64);

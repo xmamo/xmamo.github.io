@@ -11,10 +11,10 @@ motion](https://en.wikipedia.org/wiki/Projectile_motion), but in discrete time. 
 our nicknames, [BisUmTo](https://bisumto.it/), Lore, and Mamo (me!).
 
 We initially worked on this theorem because of [Minecraft](https://www.minecraft.net/), to calculate the initial
-velocity needed to launch blocks of sand in such a way that they land at an exact point in space. If you own Minecraft
-have some knowledge of command blocks, you can fill out the form below and see how our theorem works in practice.
+velocity needed to launch blocks of sand in such a way that they land at an exact point in space. <span class="js-only">If you own Minecraft
+have some knowledge of command blocks, you can fill out the form below and see how our theorem works in practice.<span>
 
-<form id="biloma" target="_self">
+<form id="biloma" class="js-only" target="_self">
 	<div>
 		<label for="biloma-source-pos">Source position</label>
 		<input id="biloma-source-pos" name="source-pos" required="required" placeholder="x, y, z" spellcheck="false" />
@@ -40,9 +40,9 @@ have some knowledge of command blocks, you can fill out the form below and see h
 ## The theorem ##
 Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>n</mi></math> be the number of time units that have passed
 since the object was launched and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi></math> the
-(gravitational) acceleration. Assuming that the object was launched with an initial position of
-<math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn></math> and an initial velocity of
-<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>0</mn></msub></math>, we have the following
+(gravitational) acceleration. Assuming that the object was launched with an initial position
+of <math xmlns="http://www.w3.org/1998/Math/MathML"><mn>0</mn></math> and an initial velocity
+of <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>0</mn></msub></math>, we have the following
 formulas for the velocity <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mn>n</mn></msub></math> and
 the position <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>p</mi><mn>n</mn></msub></math>:
 
@@ -146,7 +146,7 @@ objects from incrementing their velocity indefinitely. Using these formulas with
 
 ### Proof of the formula for <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>v</mi><mi>n</mi></msub></math> ###
 <p>
-	<math xmlns="http://www.w3.org/1998/Math/MathML">
+	<math xmlns="http://www.w3.org/1998/Math/MathML" displaystyle="true">
 		<mtable columnalign="left">
 			<mtr>
 				<mtd>
