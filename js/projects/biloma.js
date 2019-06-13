@@ -81,8 +81,9 @@ var MathJax = {
 			return false;
 		}
 
-		form.result.value = "(" + v0.x + ", " + v0.y + ", " + v0.z + ")";
+		form.result.innerHTML = ("<math><mfenced><mn>" + v0.x + "</mn><mn>" + v0.y + "</mn><mn>" + v0.z + "</mn></mfenced></math>").replace("-", "−");
 		form.command.value = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
+		MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
 		return false;
 	};
