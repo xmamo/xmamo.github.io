@@ -147,6 +147,10 @@ a.icon:hover, .icon a:hover {
 }
 
 @media (max-width: 720px) {
+	.menu li > ul {
+		width: 100%;
+	}
+
 	#header {
 		text-align: center;
 	}
