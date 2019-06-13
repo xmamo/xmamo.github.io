@@ -29,11 +29,11 @@ below and see how our theorem works in practice.<span>
 		<input id="biloma-air-time" name="air-time" required="required" spellcheck="false" />
 	</p>
 	<p>
-		<label for="acceleration">Gravitational acceleration</label>
+		<label for="biloma-acceleration">Gravitational acceleration</label>
 		<input id="biloma-acceleration" name="acceleration" required="required" spellcheck="false" value="-0.04" />
 	</p>
 	<p>
-		<label for="damping">Damping factor</label>
+		<label for="biloma-damping">Damping factor</label>
 		<input id="biloma-damping" name="damping" required="required" spellcheck="false" value="0.98" />
 	</p>
 	<p>
