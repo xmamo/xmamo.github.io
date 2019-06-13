@@ -1,7 +1,7 @@
 ---
 title: 'VanillaVotifier'
 scripts:
-  - '/js/github-download-link-generator.js'
+  - '/js/projects/vanillavotifier.js'
 ---
 
 # {{ page.title }} [](https://github.com/xMamo/VanillaVotifier/releases/latest){:.fas .fa-download .icon data-github-repo="xMamo/VanillaVotifier"} [](https://github.com/xMamo/VanillaVotifier){:.fab .fa-github .icon} #
