@@ -27,18 +27,20 @@
 			<nav class="menu">
 				<ul>
 					{% for item in site.data.navigation %}
+						{% assign url = item.url | append: 'index.xhtml' %}
 						<li>
 							{% if item.url != nil %}
-								<a class="item {% if page.url == item.url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title }}</a>
+								<a class="item {% if page.url == url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title }}</a>
 							{% else %}
 								<span class="item {% if item.subitems %}more{% endif %}">{{ item.title }}</span>
 							{% endif %}
 							{% if item.subitems != nil %}
 								<ul>
 									{% for subitem in item.subitems %}
+										{% assign suburl = subitem.url | append: 'index.xhtml' %}
 										<li>
 											{% if subitem.url != nil %}
-												<a class="item {% if page.url == subitem.url %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title }}</a>
+												<a class="item {% if page.url == suburl %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title }}</a>
 											{% else %}
 												<span class="item">{{ item.title }}</span>
 											{% endif %}
