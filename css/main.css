@@ -1,6 +1,10 @@
+*, ::after, ::before {
+	box-sizing: border-box;
+}
+
 html {
 	font-family: "Arial", sans-serif;
-	line-height: 1.8;
+	line-height: 1.5;
 	background: #EEE;
 	height: 100%;
 }
@@ -31,8 +35,19 @@ img, iframe {
 
 pre {
 	font-size: 0.85em;
-	line-height: 1.5;
 	overflow: auto;
+}
+
+label {
+	display: inline-block;
+	margin-bottom: 0.25em;
+}
+
+input {
+	width: 100%;
+	max-width: 100%;
+	padding: 0.5em 0.75em;
+	margin-bottom: 0.5em;
 }
 
 .content {
