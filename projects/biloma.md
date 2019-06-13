@@ -11,30 +11,38 @@ motion](https://en.wikipedia.org/wiki/Projectile_motion), but in discrete time. 
 our nicknames, [BisUmTo](https://bisumto.it/), Lore, and Mamo (me!).
 
 We initially worked on this theorem because of [Minecraft](https://www.minecraft.net/), to calculate the initial
-velocity needed to launch blocks of sand in such a way that they land at an exact point in space. <span class="js-only">If you own Minecraft
-have some knowledge of command blocks, you can fill out the form below and see how our theorem works in practice.<span>
+velocity needed to launch blocks of sand in such a way that they land at an exact point in
+space. <span class="js-only">If you own Minecraft have some knowledge of command blocks, you can fill out the form
+below and see how our theorem works in practice.<span>
 
 <form id="biloma" class="js-only" target="_self">
-	<div>
+	<p>
 		<label for="biloma-source-pos">Source position</label>
 		<input id="biloma-source-pos" name="source-pos" required="required" placeholder="x, y, z" spellcheck="false" />
-	</div>
-	<div>
+	</p>
+	<p>
 		<label for="biloma-destination-pos">Destination position</label>
 		<input id="biloma-destination-pos" name="destination-pos" required="required" placeholder="x, y, z" spellcheck="false" />
-	</div>
-	<div>
-		<label for="biloma-fly-time">Fly time</label>
-		<input id="biloma-fly-time" name="fly-time" required="required" spellcheck="false" />
-	</div>
-	<div>
+	</p>
+	<p>
+		<label for="biloma-air-time">Air time</label>
+		<input id="biloma-air-time" name="air-time" required="required" spellcheck="false" />
+	</p>
+	<p>
+		<label for="acceleration">Gravitational acceleration</label>
+		<input id="biloma-acceleration" name="acceleration" required="required" spellcheck="false" value="-0.04" />
+	</p>
+	<p>
+		<label for="damping">Damping factor</label>
+		<input id="biloma-damping" name="damping" required="required" spellcheck="false" value="0.98" />
+	</p>
+	<p>
 		<label for="biloma-result">Required initial velocity:</label>
 		<output id="biloma-result" name="result"></output>
-	</div>
-	<div>
+		<br />
 		<label for="biloma-command">Minecraft command:</label>
 		<code><output id="biloma-command" name="command"></output></code>
-	</div>
+	</p>
 </form>
 
 ## The theorem ##
