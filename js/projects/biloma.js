@@ -22,9 +22,9 @@ var MathJax = {
 
 	var form = document.forms["biloma"];
 
-	form["source-pos"].value = randomInt(-64, 64) + ", " + randomInt(64, 128) + ", " + randomInt(-64, 64);
+	form["source-pos"].value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
 	form["source-pos"].pattern = threeDecimalsPattern;
-	form["destination-pos"].value = randomInt(-64, 64) + ", " + randomInt(64, 128) + ", " + randomInt(-64, 64);
+	form["destination-pos"].value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
 	form["destination-pos"].pattern = threeDecimalsPattern;
 	form["air-time"].value = randomInt(1, 6) * 20;
 	form["air-time"].pattern = singleDecimalPattern;
