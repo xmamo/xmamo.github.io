@@ -54,14 +54,14 @@ var MathJax = {
 			z: parseFloat(destinationPos[3].replace("−", "-"))
 		};
 
-		var n = parseFloat(airTime[1]);
+		var n = parseFloat(airTime[1].replace("−", "-"));
 		var pn = {
 			x: destinationPos.x - sourcePos.x,
 			y: destinationPos.y - sourcePos.y,
 			z: destinationPos.z - sourcePos.z
 		};
-		var a = parseFloat(acceleration[1]);
-		var d = parseFloat(damping[1]);
+		var a = parseFloat(acceleration[1].replace("−", "-"));
+		var d = parseFloat(damping[1].replace("−", "-"));
 
 		var v0;
 		if (d == 1) {
