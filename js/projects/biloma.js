@@ -14,7 +14,7 @@ var MathJax = {
 		return Math.floor(random(min, max));
 	}
 
-	var decimal = "(-?(?:[0-9]+(?:.[0-9]*)?|.[0-9]+))";
+	var decimal = "([-−]?(?:[0-9]+(?:.[0-9]*)?|.[0-9]+))";
 	var delimiter = "(?:\\s*,\\s*|\\s+)";
 	var singleDecimal = "\\s*" + decimal + "\\s*";
 	var threeDecimals = singleDecimal + delimiter + singleDecimal + delimiter + singleDecimal;
@@ -44,14 +44,14 @@ var MathJax = {
 		}
 
 		sourcePos = {
-			x: parseFloat(sourcePos[1]),
-			y: parseFloat(sourcePos[2]),
-			z: parseFloat(sourcePos[3])
+			x: parseFloat(sourcePos[1].replace("−", "-")),
+			y: parseFloat(sourcePos[2].replace("−", "-")),
+			z: parseFloat(sourcePos[3].replace("−", "-"))
 		};
 		destinationPos = {
-			x: parseFloat(destinationPos[1]),
-			y: parseFloat(destinationPos[2]),
-			z: parseFloat(destinationPos[3])
+			x: parseFloat(destinationPos[1].replace("−", "-")),
+			y: parseFloat(destinationPos[2].replace("−", "-")),
+			z: parseFloat(destinationPos[3].replace("−", "-"))
 		};
 
 		var n = parseFloat(airTime[1]);
@@ -82,7 +82,7 @@ var MathJax = {
 			return false;
 		}
 
-		form.result.innerHTML = ('<math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced><mn>' + v0.x + "</mn><mn>" + v0.y + "</mn><mn>" + v0.z + "</mn></mfenced></math>").replace("-", "−");
+		form.result.innerHTML = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced><mn>' + v0.x.toString().replace("-", "−") + "</mn><mn>" + v0.y.toString().replace("-", "−") + "</mn><mn>" + v0.z.toString().replace("-", "−") + "</mn></mfenced></math>";
 		form.command.value = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
 
 		if (typeof MathJax.Hub !== "undefined") {
