@@ -1,5 +1,5 @@
 /_site/
-/node_modules
+/node_modules/
 /.jekyll-metadata
 /Gemfile.lock
 /package-lock.json
