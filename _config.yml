@@ -1,0 +1,9 @@
+exclude:
+  - '/img/projects/biloma/*.txt'
+  - '/node_modules/'
+  - '/CNAME'
+  - '/Gemfile'
+  - '/Gemfile.lock'
+  - '/package-lock.json'
+  - '/package.json'
+  - '/tex2svg.js'
