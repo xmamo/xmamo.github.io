@@ -18,6 +18,7 @@
 	}
 
 	mjAPI.typeset({
+		width: 0,
 		math: fs.readFileSync(0),
 		format: inline ? "inline-TeX" : "TeX",
 		svg: true

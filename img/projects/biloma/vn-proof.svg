@@ -1,4 +1,4 @@
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100ex" height="44.843ex" style="vertical-align: -40.996ex; margin-bottom: -0.175ex; max-width: 60000px;" viewBox="0 -1580.7 43055.4 19307.2" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="33.749ex" height="44.843ex" style="vertical-align: -40.996ex; margin-bottom: -0.175ex;" viewBox="0 -1580.7 14530.9 19307.2" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
 <title id="MathJax-SVG-1-Title">\left\{ \begin{aligned}
 	v_{n + 1} &amp; = d (v_n + a) \\
 	v_0 &amp; = \text{constant}

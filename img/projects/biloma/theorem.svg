@@ -1,4 +1,4 @@
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100.089ex" height="13.176ex" style="vertical-align: -9.671ex; margin-left: -0.089ex;" viewBox="-38.5 -1508.9 43093.9 5673" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="30.153ex" height="13.176ex" style="vertical-align: -9.671ex; margin-left: -0.089ex;" viewBox="-38.5 -1508.9 12982.7 5673" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
 <title id="MathJax-SVG-1-Title">v_n = d^n v_0 + \frac{1 - d^n}{1 - d} d a \\
 p_n = \frac{1 - d^n}{1 - d} v_0 + \frac{n - \frac{1 - d^n}{1 - d} d}{1 - d} a</title>
 <defs aria-hidden="true">
