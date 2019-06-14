@@ -139,7 +139,7 @@ contain an indefinite amount of elements, if needed.
 Sends one or more commands to a Minecraft RCon server.
 
 ##### `server` #####
-Has three subsections: `ip`, `port`, and `password`. They determine the internet address and the passwod of the RCon
+Has three subsections: `ip`, `port`, and `password`. They determine the internet address and the password of the RCon
 server to connect to. It is highly recommended to connect only to local RCon servers, since the RCon protocol requires
 passwords to be sent as plaintext.
 
