@@ -48,22 +48,20 @@ below and see how our theorem works in practice.<span>
 </form>
 
 ## The theorem ##
-Let ![](/img/projects/biloma/n.svg){:.h1} be the number of time units that have passed since the object was launched
-and ![](/img/projects/biloma/a.svg){:.h1} the (gravitational) acceleration. Assuming that the object was launched with
-an initial position of ![](/img/projects/biloma/0.svg){:.h1} and an initial velocity of
-![](/img/projects/biloma/v0.svg){:.h1}, we have the following formulas for the velocity
-![](/img/projects/biloma/vn.svg){:.h1} and the position ![](/img/projects/biloma/pn.svg){:.h1}:
+Let ![n](/img/projects/biloma/n.svg){:.h1} be the number of time units that have passed since the object was launched
+and ![a](/img/projects/biloma/a.svg){:.h1} the (gravitational) acceleration. Assuming that the object was launched with
+an initial position of ![0](/img/projects/biloma/0.svg){:.h1} and an initial velocity of
+![v0](/img/projects/biloma/v0.svg){:.h1}, we have the following formulas for the velocity
+![vn](/img/projects/biloma/vn.svg){:.h1} and the position ![pn](/img/projects/biloma/pn.svg){:.h1}:
 
-![](/img/projects/biloma/theorem.svg)
+![BiLoMa’s theorem](/img/projects/biloma/theorem.svg)
 
-The damping factor ![](/img/projects/biloma/d.svg){:.h1}, is used in Minecraft to prevent objects from incrementing
-their velocity indefinitely. Using these formulas with ![](/img/projects/biloma/d-to-1.svg){:.h1} means having no
+The damping factor ![d](/img/projects/biloma/d.svg){:.h1}, is used in Minecraft to prevent objects from incrementing
+their velocity indefinitely. Using these formulas with ![d→1](/img/projects/biloma/d-to-1.svg){:.h1} means having no
 damping at all.
 
-### Proof of the formula for ![](/img/projects/biloma/vn.svg){:.h1} ###
+### Proof of the formula for ![vn](/img/projects/biloma/vn.svg){:.h1} ###
+![Proof of the formula for vn](/img/projects/biloma/vn-proof.svg)
 
-![](/img/projects/biloma/vn-proof.svg)
-
-### Proof of the formula for ![](/img/projects/biloma/pn.svg){:.h1} ###
-
-![](/img/projects/biloma/pn-proof.svg)
+### Proof of the formula for ![pn](/img/projects/biloma/pn.svg){:.h1} ###
+![Proof of the formula for pn](/img/projects/biloma/pn-proof.svg)
