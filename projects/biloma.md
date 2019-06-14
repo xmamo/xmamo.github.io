@@ -14,7 +14,7 @@ originates from our nicknames, [BisUmTo](https://bisumto.it/), Lore, and Mamo (m
 
 We initially worked on this theorem because of [Minecraft](https://www.minecraft.net/), to calculate the initial
 velocity needed to launch blocks of sand in such a way that they land at an exact point in
-space. <span class="js-only">If you own Minecraft have some knowledge of command blocks, you can fill out the form
+space. <span class="js-only">If you own Minecraft and have some knowledge of command blocks, you can fill out the form
 below and see how our theorem works in practice.<span>
 
 <form id="biloma" class="js-only" target="_self">
