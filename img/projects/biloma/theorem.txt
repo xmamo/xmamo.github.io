@@ -1,0 +1,2 @@
+v_n = d^n v_0 + \frac{1 - d^n}{1 - d} d a \\
+p_n = \frac{1 - d^n}{1 - d} v_0 + \frac{n - \frac{1 - d^n}{1 - d} d}{1 - d} a

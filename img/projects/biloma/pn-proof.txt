@@ -1,0 +1,16 @@
+\left\{ \begin{aligned}
+	p_{n + 1} & = p_n + \frac{v_{n + 1}}{d} \\
+	p_0 & = 0
+\end{aligned} \right. \\
+\begin{aligned}
+	p_0 & = 0 \\
+	p_1 & = \frac{v_1}{d} \\
+	p_2 & = \frac{v_1 + v_2}{d} \\
+	p_n & = \frac{1}{d} \sum_{m = 1}^n v_m = \\
+	& = \frac{1}{d} \sum_{m = 1}^n \left( d^m v_0 + \frac{1 - d^m}{1 - d} d a \right) = \\
+	& = \frac{1}{d} \left( \left( \frac{1 - d^{n + 1}}{1 - d} - 1 \right) v_0 + \left( \sum_{m = 1}^n 1 - \sum_{m = 1}^n d^m \right) \frac{d}{1 - d} a \right) = \\
+	& = \frac{1}{d} \left( \frac{1 - d^n}{1 - d} d v_0 + \left( n - \left( \frac{1 - d^{m + 1}}{1 - d} - 1 \right) \right) \frac{d}{1 - d} a \right) = \\
+	& = \frac{1 - d^n}{1 - d} v_0 + \left( n - \left( \frac{1 - d^{n + 1}}{1 - d} - 1 \right) \right) \frac{1}{1 - d} a = \\
+	& = \frac{1 - d^n}{1 - d} v_0 + \left( n - \frac{1 - d^n}{1 - d} d \right) \frac{1}{1 - d} a = \\
+	& = \frac{1 - d^n}{1 - d} v_0 + \frac{n - \frac{1 - d^n}{1 - d} d}{1 - d} a
+\end{aligned}

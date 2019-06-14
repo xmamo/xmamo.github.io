@@ -33,6 +33,10 @@ img, iframe {
 	max-width: 100%;
 }
 
+img {
+	vertical-align: middle;
+}
+
 pre {
 	font-size: 0.85em;
 	overflow: auto;
@@ -47,6 +51,14 @@ input {
 	width: 100%;
 	max-width: 100%;
 	padding: 0.5em 0.75em;
+}
+
+.h1 {
+	height: 1em;
+}
+
+.w1 {
+	width: 1em;
 }
 
 .content {
