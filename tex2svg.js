@@ -21,7 +21,8 @@
 		width: 0,
 		math: fs.readFileSync(0),
 		format: inline ? "inline-TeX" : "TeX",
-		svg: true
+		svg: true,
+		speakText: false
 	}, function (data) {
 		if (!data.errors) {
 			console.log(data.svg);
