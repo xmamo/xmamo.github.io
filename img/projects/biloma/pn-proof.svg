@@ -1,4 +1,4 @@
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="100.114ex" height="69.843ex" style="vertical-align: -65.338ex; margin-left: -0.114ex;" viewBox="-49 -1939.5 43104.4 30071" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="62.082ex" height="69.843ex" style="vertical-align: -65.338ex; margin-left: -0.114ex;" viewBox="-49 -1939.5 26729.5 30071" role="img" focusable="false" xmlns="http://www.w3.org/2000/svg" aria-labelledby="MathJax-SVG-1-Title">
 <title id="MathJax-SVG-1-Title">\left\{ \begin{aligned}
 	p_{n + 1} &amp; = p_n + \frac{v_{n + 1}}{d} \\
 	p_0 &amp; = 0
