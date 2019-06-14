@@ -146,7 +146,8 @@ passwords to be sent as plaintext.
 ##### `commands` #####
 A list of commands to send to the RCon server. Before execution, the command will be parsed and checked against special
 sets of characters:
- * `${service-name}` will be replaced with the service the player has voted on (for example MCSL).
+ * `${service-name}` will be replaced with the service the player has voted on (for example
+   [MCSL](https://minecraft-server-list.com/)).
  * `${user-name}` will be replaced with the IGN of the player.
  * `${address}` will be replaced with the player's IP address.
  * `${timestamp}` will be replaced with the time stamp in which the player has voted. Format may vary depending on
