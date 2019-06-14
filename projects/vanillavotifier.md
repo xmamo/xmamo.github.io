@@ -181,7 +181,7 @@ This example shows how to set up a simple "get a diamond for voting" system usin
 
 1. Log in to your Minecraft server and execute the following command: `/scoreboard objectives add voted dummy`.
 
-2. Create a Command Block chain, as shown in the following picture below.
+2. Create a Command Block chain, as shown in the picture below.
 
    You have to make sure that the chain is inside a spawn chunk, and thus always loaded. To verify that this condition
    is met, you can place a Repeating Command Block near the chain, set it to be Always Active, set the command to
@@ -216,7 +216,7 @@ This example shows how to set up a simple "get a diamond for voting" system usin
        regex-replace: {}
    ```
 
-4. If VanillaVotifier is already running, reload the configuration using using VanillaVotifier's `restart` command;
+4. If VanillaVotifier is already running, reload the configuration using VanillaVotifier's `restart` command;
 otherwise, just start up VanillaVotifier.
 
 #### `shell` action example ####
