@@ -17,7 +17,7 @@ velocity needed to launch blocks of sand in such a way that they land at an exac
 space. <span class="js-only">If you own Minecraft and have some knowledge of command blocks, you can fill out the form
 below and see how our theorem works in practice.<span>
 
-<form id="biloma" class="js-only" target="_self">
+<form id="biloma" class="js-only">
 	<p>
 		<label for="biloma-source-pos">Source position</label>
 		<input id="biloma-source-pos" name="source-pos" required="required" placeholder="x, y, z" spellcheck="false" />
