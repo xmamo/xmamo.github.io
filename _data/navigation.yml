@@ -2,7 +2,7 @@
   url: '/'
 - title: 'Projects'
   subitems:
-    - title: "BiLoMa’s theorem"
+    - title: "BiLoMa's theorem"
       url: '/projects/biloma/'
     - title: 'VanillaVotifier'
       url: '/projects/vanillavotifier/'

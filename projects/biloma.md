@@ -1,6 +1,6 @@
 ---
-title: 'BiLoMa’s theorem'
-description: 'The objective of BiLoMa’s theorem is to provide formulas for projectile motion, but in discrete time.'
+title: "BiLoMa's theorem"
+description: "The objective of BiLoMa's theorem is to provide formulas for projectile motion, but in discrete time."
 keywords: 'BiLoMa, theorem, formula, proof, projectile motion, projectile, motion, velocity, position, displacement, discrete time, discrete'
 permalink: '/projects/biloma/index.xhtml'
 scripts:
