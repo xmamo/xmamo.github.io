@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+*, ::after, ::before {
+	box-sizing: border-box;
+}
+
+html {
+	font-family: "Arial", sans-serif;
+	line-height: 1.5;
+}
+
+a {
+	color: #00E;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+img, iframe {
+	max-width: 100%;
+}
+
+img {
+	vertical-align: middle;
+}
+
+iframe {
+	border: 0;
+}
+
+pre {
+	font-size: 0.85em;
+	overflow: auto;
+}
+
+label {
+	display: inline-block;
+	margin-bottom: 0.25em;
+}
+
+input {
+	width: 100%;
+	padding: 0.5em 0.75em;
+}

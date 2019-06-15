@@ -12,9 +12,6 @@
 		<title>{{ page.title | smartify }} — Mamo.dev</title>
 		<base target="_blank" />
 		{% comment %}<link rel="icon" href="favicon.ico" />{% endcomment %}
-		<link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
-		<link rel="stylesheet" href="/css/rouge.css" />
 		<link rel="stylesheet" href="/css/main.css" />
 	</head>
 
@@ -25,25 +22,25 @@
 				<div class="title">Matteo Morena</div>
 				<div class="subtitle blinking-cursor">Software engineer</div>
 			</div>
-			<nav class="menu">
-				<ul>
+			<nav>
+				<ul class="menu">
 					{% for item in site.data.navigation %}
 						{% assign url = item.url | append: 'index.xhtml' %}
-						<li>
+						<li class="menu-item">
 							{% if item.url != nil %}
-								<a class="item {% if page.url == url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title | smartify }}</a>
+								<a class="menu-item-content {% if page.url == url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title | smartify }}</a>
 							{% else %}
-								<span class="item {% if item.subitems %}more{% endif %}">{{ item.title | smartify }}</span>
+								<span class="menu-item-content {% if item.subitems %}more{% endif %}">{{ item.title | smartify }}</span>
 							{% endif %}
 							{% if item.subitems != nil %}
-								<ul>
+								<ul class="submenu">
 									{% for subitem in item.subitems %}
 										{% assign suburl = subitem.url | append: 'index.xhtml' %}
-										<li>
+										<li class="submenu-item">
 											{% if subitem.url != nil %}
-												<a class="item {% if page.url == suburl %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title | smartify }}</a>
+												<a class="submenu-item-content {% if page.url == suburl %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title | smartify }}</a>
 											{% else %}
-												<span class="item">{{ subitem.title | smartify }}</span>
+												<span class="submenu-item-content">{{ subitem.title | smartify }}</span>
 											{% endif %}
 										</li>
 									{% endfor %}
@@ -56,7 +53,9 @@
 		</header>
 
 		<main class="content">
-			{{ content }}
+			<article>
+				{{ content }}
+			</article>
 		</main>
 
 		<script src="/js/main.js" defer="defer"></script>
