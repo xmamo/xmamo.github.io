@@ -5,11 +5,11 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="author" content="Matteo Morena" />
-		{% if page.description != nil %}<meta name="description" content="{{ page.description }}" />{% endif %}
-		{% if page.keywords != nil %}<meta name="keywords" content="{{ page.keywords }}" />{% endif %}
+		{% if page.description != nil %}<meta name="description" content="{{ page.description | smartify }}" />{% endif %}
+		{% if page.keywords != nil %}<meta name="keywords" content="{{ page.keywords | smartify }}" />{% endif %}
 		<meta name="theme-color" content="#000" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>{{ page.title }} — Mamo.dev</title>
+		<title>{{ page.title | smartify }} — Mamo.dev</title>
 		<base target="_blank" />
 		{% comment %}<link rel="icon" href="favicon.ico" />{% endcomment %}
 		<link rel="stylesheet" href="https://necolas.github.io/normalize.css/latest/normalize.css" />
@@ -31,9 +31,9 @@
 						{% assign url = item.url | append: 'index.xhtml' %}
 						<li>
 							{% if item.url != nil %}
-								<a class="item {% if page.url == url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title }}</a>
+								<a class="item {% if page.url == url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title | smartify }}</a>
 							{% else %}
-								<span class="item {% if item.subitems %}more{% endif %}">{{ item.title }}</span>
+								<span class="item {% if item.subitems %}more{% endif %}">{{ item.title | smartify }}</span>
 							{% endif %}
 							{% if item.subitems != nil %}
 								<ul>
@@ -41,9 +41,9 @@
 										{% assign suburl = subitem.url | append: 'index.xhtml' %}
 										<li>
 											{% if subitem.url != nil %}
-												<a class="item {% if page.url == suburl %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title }}</a>
+												<a class="item {% if page.url == suburl %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title | smartify }}</a>
 											{% else %}
-												<span class="item">{{ item.title }}</span>
+												<span class="item">{{ subitem.title | smartify }}</span>
 											{% endif %}
 										</li>
 									{% endfor %}
