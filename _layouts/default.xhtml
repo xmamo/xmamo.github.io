@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 	<head>
@@ -58,19 +59,9 @@
 			{{ content }}
 		</main>
 
-		<script>
-			"use strict";
-
-			(function () {
-				var elements = document.getElementsByClassName("js-only");
-				while (elements.length > 0) {
-					elements[0].classList.remove("js-only");
-				}
-			})();
-		</script>
-
+		<script src="js/main.js" defer="defer"></script>
 		{% for script in page.scripts %}
-			<script src="{{ script }}"></script>
+			<script src="{{ script }}" defer="defer"></script>
 		{% endfor %}
 	</body>
 </html>
