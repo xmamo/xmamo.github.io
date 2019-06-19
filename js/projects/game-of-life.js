@@ -1,3 +1,5 @@
+"use strict";
+
 (function () {
 	Number.prototype.mod = function (number) {
 		return (this % number + number) % number;
