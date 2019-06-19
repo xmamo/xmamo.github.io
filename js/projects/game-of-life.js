@@ -81,6 +81,8 @@
 				Math.floor(field.height / canvas.height * mouse.y)
 			);
 		}
+
+		return event.target !== canvas;
 	};
 
 	canvas.oncontextmenu = function (event) {
@@ -96,6 +98,7 @@
 				mouse.rightDown = true;
 				break;
 		}
+		return event.target !== canvas;
 	};
 
 	document.onmouseup = function (event) {
@@ -107,6 +110,7 @@
 				mouse.rightDown = false;
 				break;
 		}
+		return event.target !== canvas;
 	};
 
 	var form = document.forms["gol"];
@@ -124,7 +128,6 @@
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
 
-		// context.fillStyle = "#000";
 		for (var y = 0; y < field.height; y++) {
 			for (var x = 0; x < field.width; x++) {
 				if (field.get(x, y)) {
@@ -138,7 +141,6 @@
 			}
 		}
 
-		// context.fillStyle = "rgba(0, 0, 0, 0.5)";
 		context.strokeRect(
 			canvas.width / field.width * Math.floor(field.width / canvas.width * mouse.x),
 			canvas.height / field.height * Math.floor(field.height / canvas.height * mouse.y),
