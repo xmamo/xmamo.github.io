@@ -8,6 +8,7 @@
 	var mouseY = -1;
 	var leftDown = false;
 	var rightDown = false;
+	var paused = false;
 
 	canvas.oncontextmenu = function () {
 		return false;
@@ -74,17 +75,28 @@
 		return event.target !== canvas;
 	};
 
-	window.onkeydown = function (event) {
+	document.onkeydown = function (event) {
 		switch (event.key) {
 			case "f":
 			case "F":
-				if (!document.fullscreenElement) {
-					canvas.requestFullscreen();
-				} else {
-					document.exitFullscreen();
+				if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+					if (!document.fullscreenElement) {
+						canvas.requestFullscreen();
+					} else {
+						document.exitFullscreen();
+					}
+					return false;
+				}
+				break;
+
+			case " ":
+				if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+					paused = !paused;
+					return false;
 				}
 				break;
 		}
+
 		return event.target !== canvas;
 	}
 
@@ -93,7 +105,7 @@
 	window.requestAnimationFrame(callback);
 
 	function callback(timeStamp) {
-		if (timeStamp >= lastUpdate + 1000) {
+		if (!paused && timeStamp >= lastUpdate + 1000) {
 			world.updateCells();
 			lastUpdate = timeStamp;
 		}
