@@ -2,12 +2,11 @@ var gameOfLife = gameOfLife || {};
 
 gameOfLife.World = function (width, height) {
 	var arrays = [[], []];
-	for (var i = 0; i < width * height; i++) {
-		arrays[0][i] = false;
-		arrays[1][i] = false;
-	}
-
 	var current = 0;
+	for (var i = 0; i < width * height; i++) {
+		arrays[current][i] = false;
+		arrays[1 - current][i] = false;
+	}
 
 	Object.defineProperty(this, "width", {
 		get: function () {
@@ -54,7 +53,7 @@ gameOfLife.World = function (width, height) {
 			for (var x = 0; x < width; x++) {
 				var value = callback(arrays[current][x + + y * width], x, y);
 				if (value !== undefined) {
-					arrays[current][x + + y * width] = value;
+					arrays[current][x + y * width] = value;
 				}
 			}
 		}
