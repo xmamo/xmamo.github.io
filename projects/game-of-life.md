@@ -1,5 +1,5 @@
 ---
-title: 'Game of life'
+title: 'Game of Life'
 permalink: '/projects/game-of-life/index.xhtml'
 scripts:
   - '/js/projects/game-of-life/world.js'
