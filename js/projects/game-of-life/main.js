@@ -22,6 +22,15 @@
 				rightDown = true;
 				break;
 		}
+
+		if (leftDown ^ rightDown) {
+			world.set(
+				Math.floor(mouseX * world.width / canvas.clientWidth),
+				Math.floor(mouseY * world.height / canvas.clientHeight),
+				leftDown
+			);
+		}
+
 		return event.target !== canvas;
 	};
 
@@ -37,25 +46,32 @@
 		return event.target !== canvas;
 	};
 
-	canvas.onmousemove = function (event) {
-		mouseX = event.clientX - canvas.getBoundingClientRect().x;
-		mouseY = event.clientY - canvas.getBoundingClientRect().y;
+	document.onmousemove = function (event) {
+		var newMouseX = event.clientX - canvas.getBoundingClientRect().x;
+		var newMouseY = event.clientY - canvas.getBoundingClientRect().y;
 
-		if (leftDown && !rightDown) {
-			world.set(
-				Math.floor(world.width / canvas.width * mouseX),
-				Math.floor(world.height / canvas.height * mouseY),
-				true
-			);
-		} else if (rightDown && !leftDown) {
-			world.set(
-				Math.floor(world.width / canvas.width * mouseX),
-				Math.floor(world.height / canvas.height * mouseY),
-				false
-			);
+		if (leftDown ^ rightDown) {
+			var x0 = Math.floor(mouseX * world.width / canvas.clientWidth);
+			var x1 = Math.floor(newMouseX * world.width / canvas.clientWidth);
+			var y0 = Math.floor(mouseY * world.height / canvas.clientHeight);
+			var y1 = Math.floor(newMouseY * world.height / canvas.clientHeight);
+			var dx = x1 - x0;
+			var dy = y1 - y0;
+			var step = Math.max(Math.abs(dx), Math.abs(dy));
+
+			if (step === 0) {
+				world.set(x1, y1, leftDown);
+			} else {
+				for (var i = 0; i < step; i++) {
+					world.set(Math.floor(x0 + dx / step * i), Math.floor(y0 + dy / step * i), leftDown);
+				}
+			}
 		}
 
-		return false;
+		mouseX = newMouseX;
+		mouseY = newMouseY;
+
+		return event.target !== canvas;
 	};
 
 	window.onkeydown = function (event) {
