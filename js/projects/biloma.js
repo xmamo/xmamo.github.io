@@ -53,7 +53,7 @@
 		var d = parseFloat(damping[1]);
 
 		var v0;
-		if (d == 1) {
+		if (d === 1) {
 			v0 = {
 				x: pn.x / n,
 				y: (pn.y - n * a) / n,
@@ -61,14 +61,14 @@
 			};
 		} else {
 			v0 = {
-				x: pn.x / n,
+				x: pn.x / ((1 - Math.pow(d, n)) / (1 - d)),
 				y: (pn.y - (n - (1 - Math.pow(d, n)) / (1 - d) * d) / (1 - d) * a) / ((1 - Math.pow(d, n)) / (1 - d)),
-				z: pn.z / n
+				z: pn.z / ((1 - Math.pow(d, n)) / (1 - d))
 			};
 		}
 
 		if (!isFinite(v0.x) || !isFinite(v0.y) || !isFinite(v0.z)) {
-			return false;
+			return;
 		}
 
 		form.result.innerHTML = v0.x + ", " + v0.y + ", " + v0.z;
