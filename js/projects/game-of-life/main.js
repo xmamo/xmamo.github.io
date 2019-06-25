@@ -12,16 +12,22 @@
 	var lastUpdate = 0;
 
 	canvas.addEventListener("contextmenu", function () {
-		return false;
+		event.preventDefault();
 	});
 
 	canvas.addEventListener("mousedown", function (event) {
 		switch (event.button) {
 			case 0:
 				leftDown = true;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
 				break;
 			case 2:
 				rightDown = true;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
 				break;
 		}
 
@@ -32,20 +38,23 @@
 				leftDown
 			);
 		}
-
-		return false;
 	});
 
 	document.addEventListener("mouseup", function (event) {
 		switch (event.button) {
 			case 0:
 				leftDown = false;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
 				break;
 			case 2:
 				rightDown = false;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
 				break;
 		}
-		return event.target !== canvas;
 	});
 
 	document.addEventListener("mousemove", function (event) {
@@ -73,30 +82,32 @@
 		mouseX = newMouseX;
 		mouseY = newMouseY;
 
-		return event.target !== canvas;
+		if (mouseInCanvas()) {
+			event.preventDefault();
+		}
 	});
 
 	document.addEventListener("keydown", function (event) {
-		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
-			switch (event.key) {
-				case "f":
-				case "F":
-					if (!document.fullscreenElement) {
-						canvas.requestFullscreen();
-					} else {
-						document.exitFullscreen();
-					}
-					return false;
-					break;
+		switch (event.key) {
+			case "f":
+			case "F":
+				if (!document.fullscreenElement) {
+					canvas.requestFullscreen();
+				} else {
+					document.exitFullscreen();
+				}
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
 
-				case " ":
-					paused = !paused;
-					return false;
-					break;
-			}
+			case " ":
+				paused = !paused;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
 		}
-
-		return event.target !== canvas;
 	});
 
 	window.requestAnimationFrame(callback);
@@ -124,7 +135,7 @@
 			}
 		});
 
-		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+		if (mouseInCanvas()) {
 			context.strokeRect(
 				Math.floor(canvas.width / world.width * Math.floor(world.width / canvas.width * mouseX)),
 				Math.floor(canvas.height / world.height * Math.floor(world.height / canvas.height * mouseY)),
@@ -132,5 +143,9 @@
 				Math.ceil(canvas.height / world.height)
 			);
 		}
+	}
+
+	function mouseInCanvas() {
+		return mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight;
 	}
 })();

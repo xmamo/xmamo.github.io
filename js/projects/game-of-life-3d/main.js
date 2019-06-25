@@ -52,12 +52,14 @@
 
 	canvas.addEventListener("mousedown", function () {
 		mouseDown = true;
-		return false;
+		event.preventDefault();
 	});
 
 	document.addEventListener("mouseup", function () {
 		mouseDown = false;
-		return event.target !== canvas;
+		if (mouseInCanvas()) {
+			event.preventDefault();
+		}
 	});
 
 	document.addEventListener("mousemove", function (event) {
@@ -69,71 +71,87 @@
 			camera.ry -= event.movementX / canvas.clientWidth * Math.PI;
 		}
 
-		return event.target !== canvas;
+		if (mouseInCanvas()) {
+			event.preventDefault();
+		}
 	});
 
 	document.addEventListener("keydown", function (event) {
-		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
-			switch (event.key) {
-				case "f":
-				case "F":
-					if (!document.fullscreenElement) {
-						canvas.requestFullscreen();
-					} else {
-						document.exitFullscreen();
-					}
-					return false;
-					break;
+		switch (event.key) {
+			case "f":
+			case "F":
+				if (!document.fullscreenElement) {
+					canvas.requestFullscreen();
+				} else {
+					document.exitFullscreen();
+				}
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
 
-				case " ":
-					paused = !paused;
-					return false;
-					break;
-			}
-
-			switch (event.code) {
-				case "KeyA":
-					left = true;
-					return false;
-					break;
-				case "KeyD":
-					right = true;
-					return false;
-					break;
-				case "KeyW":
-					up = true;
-					return false;
-					break;
-				case "KeyS":
-					down = true;
-					return false;
-					break;
-			}
+			case " ":
+				paused = !paused;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
 		}
 
-		return event.target !== canvas;
+		switch (event.code) {
+			case "KeyA":
+				left = true;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
+			case "KeyD":
+				right = true;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
+			case "KeyW":
+				up = true;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
+			case "KeyS":
+				down = true;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
+		}
 	});
 
 	document.addEventListener("keyup", function (event) {
-		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
-			switch (event.code) {
-				case "KeyA":
-					left = false;
-					return false;
-					break;
-				case "KeyD":
-					right = false;
-					return false;
-					break;
-				case "KeyW":
-					up = false;
-					return false;
-					break;
-				case "KeyS":
-					down = false;
-					return false;
-					break;
-			}
+		switch (event.code) {
+			case "KeyA":
+				left = false;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
+			case "KeyD":
+				right = false;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
+			case "KeyW":
+				up = false;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
+			case "KeyS":
+				down = false;
+				if (mouseInCanvas()) {
+					event.preventDefault();
+				}
+				break;
 		}
 
 		return event.target !== canvas;
@@ -237,5 +255,9 @@
 
 			renderer.render(aPositionLocation, aNormalLocation);
 		}
+	}
+
+	function mouseInCanvas() {
+		return mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight;
 	}
 })();
