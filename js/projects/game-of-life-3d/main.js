@@ -41,76 +41,103 @@
 		-world.xMax / 2, -world.yMax / 2, -world.zMax / 2, 1
 	];
 
+	var mouseX = -1;
+	var mouseY = -1;
+	var mouseDown = false;
 	var left = false;
 	var right = false;
 	var up = false;
 	var down = false;
 	var paused = false;
-	var mouseDown = false;
 
-	window.onkeydown = function (event) {
-		switch (event.key) {
-			case "f":
-			case "F":
-				if (!document.fullscreenElement) {
-					canvas.requestFullscreen();
-				} else {
-					document.exitFullscreen();
-				}
-				break;
+	canvas.addEventListener("mousedown", function () {
+		mouseDown = true;
+		return false;
+	});
 
-			case " ":
-				paused = !paused;
-				break;
-		}
-
-		switch (event.code) {
-			case "KeyA":
-				left = true;
-				break;
-			case "KeyD":
-				right = true;
-				break;
-			case "KeyW":
-				up = true;
-				break;
-			case "KeyS":
-				down = true;
-				break;
-		}
-	};
-
-	window.onkeyup = function (event) {
-		switch (event.code) {
-			case "KeyA":
-				left = false;
-				break;
-			case "KeyD":
-				right = false;
-				break;
-			case "KeyW":
-				up = false;
-				break;
-			case "KeyS":
-				down = false;
-				break;
-		}
-	};
-
-	window.ontouchstart = window.onmousedown = function () {
-		mouseDown = event.target === canvas;
-	};
-
-	window.ontouchend = window.onmouseup = function () {
+	document.addEventListener("mouseup", function () {
 		mouseDown = false;
-	};
+		return event.target !== canvas;
+	});
 
-	window.onmousemove = function (event) {
+	document.addEventListener("mousemove", function (event) {
+		mouseX = event.clientX - canvas.getBoundingClientRect().x;
+		mouseY = event.clientY - canvas.getBoundingClientRect().y;
+
 		if (mouseDown) {
 			camera.rx = Math.max(-Math.PI / 2, Math.min(camera.rx - event.movementY / canvas.clientHeight * Math.PI, Math.PI / 2));
 			camera.ry -= event.movementX / canvas.clientWidth * Math.PI;
 		}
-	};
+
+		return event.target !== canvas;
+	});
+
+	document.addEventListener("keydown", function (event) {
+		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+			switch (event.key) {
+				case "f":
+				case "F":
+					if (!document.fullscreenElement) {
+						canvas.requestFullscreen();
+					} else {
+						document.exitFullscreen();
+					}
+					return false;
+					break;
+
+				case " ":
+					paused = !paused;
+					return false;
+					break;
+			}
+
+			switch (event.code) {
+				case "KeyA":
+					left = true;
+					return false;
+					break;
+				case "KeyD":
+					right = true;
+					return false;
+					break;
+				case "KeyW":
+					up = true;
+					return false;
+					break;
+				case "KeyS":
+					down = true;
+					return false;
+					break;
+			}
+		}
+
+		return event.target !== canvas;
+	});
+
+	document.addEventListener("keyup", function (event) {
+		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+			switch (event.code) {
+				case "KeyA":
+					left = false;
+					return false;
+					break;
+				case "KeyD":
+					right = false;
+					return false;
+					break;
+				case "KeyW":
+					up = false;
+					return false;
+					break;
+				case "KeyS":
+					down = false;
+					return false;
+					break;
+			}
+		}
+
+		return event.target !== canvas;
+	});
 
 	function callback() {
 		if (vertexShaderRequest.readyState !== XMLHttpRequest.DONE || vertexShaderRequest.status !== 200) {
@@ -176,13 +203,15 @@
 				camera.rx = Math.min(camera.rx + delta, Math.PI / 2);
 			}
 
-			switch (update) {
-				case "cells":
-					world.updateCells(world.volume * Math.min(delta, 0.1) * 2);
-					break;
-				case "buffers":
-					renderer.updateBuffers(world.volume * Math.min(delta, 0.1) * 2);
-					break;
+			if (!paused) {
+				switch (update) {
+					case "cells":
+						world.updateCells(world.volume * Math.min(delta, 0.1) * 2);
+						break;
+					case "buffers":
+						renderer.updateBuffers(world.volume * Math.min(delta, 0.1) * 2);
+						break;
+				}
 			}
 
 			if (!document.fullscreenElement) {
