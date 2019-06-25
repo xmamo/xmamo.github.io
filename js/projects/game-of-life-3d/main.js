@@ -50,6 +50,10 @@
 	var down = false;
 	var paused = false;
 
+	canvas.addEventListener("contextmenu", function () {
+		event.preventDefault();
+	});
+
 	canvas.addEventListener("mousedown", function () {
 		mouseDown = true;
 		event.preventDefault();
