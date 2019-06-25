@@ -4,6 +4,8 @@
   subitems:
     - title: 'Game of Life'
       url: '/projects/game-of-life/'
+    - title: 'Game of Life 3D'
+      url: '/projects/game-of-life-3d/'
     - title: "BiLoMa's theorem"
       url: '/projects/biloma/'
     - title: 'VanillaVotifier'
