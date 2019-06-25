@@ -10,11 +10,11 @@
 	var rightDown = false;
 	var paused = false;
 
-	canvas.oncontextmenu = function () {
+	canvas.addEventListener("contextmenu", function () {
 		return false;
-	};
+	});
 
-	document.onmousedown = function (event) {
+	document.addEventListener("mousedown", function (event) {
 		switch (event.button) {
 			case 0:
 				leftDown = true;
@@ -33,9 +33,9 @@
 		}
 
 		return event.target !== canvas;
-	};
+	});
 
-	document.onmouseup = function (event) {
+	document.addEventListener("mouseup", function (event) {
 		switch (event.button) {
 			case 0:
 				leftDown = false;
@@ -45,9 +45,9 @@
 				break;
 		}
 		return event.target !== canvas;
-	};
+	});
 
-	document.onmousemove = function (event) {
+	document.addEventListener("mousemove", function (event) {
 		var newMouseX = event.clientX - canvas.getBoundingClientRect().x;
 		var newMouseY = event.clientY - canvas.getBoundingClientRect().y;
 
@@ -73,9 +73,9 @@
 		mouseY = newMouseY;
 
 		return event.target !== canvas;
-	};
+	});
 
-	document.onkeydown = function (event) {
+	document.addEventListener("keydown", function (event) {
 		switch (event.key) {
 			case "f":
 			case "F":
@@ -98,7 +98,7 @@
 		}
 
 		return event.target !== canvas;
-	}
+	});
 
 	var context = canvas.getContext("2d");
 	var lastUpdate = 0;
