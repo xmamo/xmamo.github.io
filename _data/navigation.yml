@@ -2,6 +2,8 @@
   url: '/'
 - title: 'Projects'
   subitems:
+    - title: 'Game of Life'
+      url: '/projects/game-of-life/'
     - title: "BiLoMa's theorem"
       url: '/projects/biloma/'
     - title: 'VanillaVotifier'
