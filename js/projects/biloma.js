@@ -1,14 +1,6 @@
 "use strict";
 
 (function () {
-	function random(min, max) {
-		return Math.random() * (max - min) + min;
-	}
-
-	function randomInt(min, max) {
-		return Math.floor(random(min, max));
-	}
-
 	var decimal = "(-?(?:[0-9]+(?:.[0-9]*)?|.[0-9]+))";
 	var delimiter = "(?:\\s*,\\s*|\\s+)";
 	var singleDecimal = "\\s*" + decimal + "\\s*";
@@ -17,7 +9,6 @@
 	var threeDecimalsPattern = "^" + threeDecimals + "$";
 
 	var form = document.forms["biloma"];
-
 	form["source-pos"].value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
 	form["source-pos"].pattern = threeDecimalsPattern;
 	form["destination-pos"].value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
@@ -26,16 +17,19 @@
 	form["air-time"].pattern = singleDecimalPattern;
 	form.acceleration.pattern = singleDecimalPattern;
 	form.damping.pattern = singleDecimalPattern;
+	form.addEventListener("input", updateForm);
+	form.addEventListener("submit", function (event) { event.preventDefault(); })
+	updateForm();
 
-	form.oninput = function () {
+	function updateForm() {
 		var sourcePos = form["source-pos"].value.match(threeDecimalsPattern);
 		var destinationPos = form["destination-pos"].value.match(threeDecimalsPattern);
 		var airTime = form["air-time"].value.match(singleDecimalPattern);
 		var acceleration = form.acceleration.value.match(singleDecimalPattern);
 		var damping = form.damping.value.match(singleDecimalPattern);
 
-		if (sourcePos === null || destinationPos === null || airTime === null || acceleration == null || damping == null) {
-			return false;
+		if (sourcePos == null || destinationPos == null || airTime == null || acceleration == null || damping == null) {
+			return;
 		}
 
 		sourcePos = {
@@ -79,9 +73,13 @@
 
 		form.result.innerHTML = v0.x + ", " + v0.y + ", " + v0.z;
 		form.command.value = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
+	}
 
-		return false;
-	};
+	function random(min, max) {
+		return Math.random() * (max - min) + min;
+	}
 
-	form.oninput();
+	function randomInt(min, max) {
+		return Math.floor(random(min, max));
+	}
 })();
