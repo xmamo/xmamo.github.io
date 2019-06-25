@@ -77,25 +77,23 @@
 	});
 
 	document.addEventListener("keydown", function (event) {
-		switch (event.key) {
-			case "f":
-			case "F":
-				if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+			switch (event.key) {
+				case "f":
+				case "F":
 					if (!document.fullscreenElement) {
 						canvas.requestFullscreen();
 					} else {
 						document.exitFullscreen();
 					}
 					return false;
-				}
-				break;
+					break;
 
-			case " ":
-				if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+				case " ":
 					paused = !paused;
 					return false;
-				}
-				break;
+					break;
+			}
 		}
 
 		return event.target !== canvas;
