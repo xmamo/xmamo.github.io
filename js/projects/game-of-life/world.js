@@ -1,3 +1,5 @@
+"use strict";
+
 var gameOfLife = gameOfLife || {};
 
 gameOfLife.World = function (width, height) {
