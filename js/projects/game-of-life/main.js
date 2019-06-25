@@ -2,19 +2,20 @@
 
 (function () {
 	var world = new gameOfLife.World(48, 27);
-
 	var canvas = document.getElementById("game-of-life-canvas");
+	var context = canvas.getContext("2d");
 	var mouseX = -1;
 	var mouseY = -1;
 	var leftDown = false;
 	var rightDown = false;
 	var paused = false;
+	var lastUpdate = 0;
 
 	canvas.addEventListener("contextmenu", function () {
 		return false;
 	});
 
-	document.addEventListener("mousedown", function (event) {
+	canvas.addEventListener("mousedown", function (event) {
 		switch (event.button) {
 			case 0:
 				leftDown = true;
@@ -32,7 +33,7 @@
 			);
 		}
 
-		return event.target !== canvas;
+		return false;
 	});
 
 	document.addEventListener("mouseup", function (event) {
@@ -100,11 +101,11 @@
 		return event.target !== canvas;
 	});
 
-	var context = canvas.getContext("2d");
-	var lastUpdate = 0;
 	window.requestAnimationFrame(callback);
 
 	function callback(timeStamp) {
+		window.requestAnimationFrame(callback);
+
 		if (!paused && timeStamp >= lastUpdate + 1000) {
 			world.updateCells();
 			lastUpdate = timeStamp;
@@ -125,13 +126,13 @@
 			}
 		});
 
-		context.strokeRect(
-			Math.floor(canvas.width / world.width * Math.floor(world.width / canvas.width * mouseX)),
-			Math.floor(canvas.height / world.height * Math.floor(world.height / canvas.height * mouseY)),
-			Math.ceil(canvas.width / world.width),
-			Math.ceil(canvas.height / world.height)
-		);
-
-		window.requestAnimationFrame(callback);
+		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+			context.strokeRect(
+				Math.floor(canvas.width / world.width * Math.floor(world.width / canvas.width * mouseX)),
+				Math.floor(canvas.height / world.height * Math.floor(world.height / canvas.height * mouseY)),
+				Math.ceil(canvas.width / world.width),
+				Math.ceil(canvas.height / world.height)
+			);
+		}
 	}
 })();
