@@ -18,7 +18,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-img, iframe, canvas {
+img, iframe {
 	max-width: 100%;
 }
 
@@ -28,6 +28,12 @@ img {
 
 iframe {
 	border: 0;
+}
+
+canvas {
+	display: block;
+	width: 100%;
+	background: #FFF;
 }
 
 pre {
