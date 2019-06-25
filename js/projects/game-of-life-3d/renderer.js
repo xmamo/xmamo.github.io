@@ -26,14 +26,17 @@ gameOfLife3d.Renderer = function (gl, world) {
 			var x = updated % self.world.xMax;
 			var z = Math.floor(updated / self.world.xMax) % self.world.zMax;
 			var y = Math.floor(Math.floor(updated / self.world.xMax) / self.world.zMax);
+			var dx = -self.world.xMax / 2;
+			var dy = -self.world.yMax / 2;
+			var dz = -self.world.zMax / 2;
 
 			if (self.world.get(x, y, z)) {
 				if (!self.world.get(x - 1, y, z)) {
 					positions.push(
-						x, y, z,
-						x, y, z + 1,
-						x, y + 1, z + 1,
-						x, y + 1, z
+						x + dx, y + dy, z + dz,
+						x + dx, y + dy, z + 1 + dz,
+						x + dx, y + 1 + dy, z + 1 + dz,
+						x + dx, y + 1 + dy, z + dz
 					);
 					normals.push(
 						-1, 0, 0,
@@ -50,10 +53,10 @@ gameOfLife3d.Renderer = function (gl, world) {
 
 				if (!self.world.get(x + 1, y, z)) {
 					positions.push(
-						x + 1, y, z,
-						x + 1, y + 1, z,
-						x + 1, y + 1, z + 1,
-						x + 1, y, z + 1
+						x + 1 + dx, y + dy, z + dz,
+						x + 1 + dx, y + 1 + dy, z + dz,
+						x + 1 + dx, y + 1 + dy, z + 1 + dz,
+						x + 1 + dx, y + dy, z + 1 + dz
 					);
 					normals.push(
 						1, 0, 0,
@@ -70,10 +73,10 @@ gameOfLife3d.Renderer = function (gl, world) {
 
 				if (!self.world.get(x, y - 1, z)) {
 					positions.push(
-						x, y, z,
-						x + 1, y, z,
-						x + 1, y, z + 1,
-						x, y, z + 1
+						x + dx, y + dy, z + dz,
+						x + 1 + dx, y + dy, z + dz,
+						x + 1 + dx, y + dy, z + 1 + dz,
+						x + dx, y + dy, z + 1 + dz
 					);
 					normals.push(
 						0, -1, 0,
@@ -90,10 +93,10 @@ gameOfLife3d.Renderer = function (gl, world) {
 
 				if (!self.world.get(x, y + 1, z)) {
 					positions.push(
-						x, y + 1, z,
-						x, y + 1, z + 1,
-						x + 1, y + 1, z + 1,
-						x + 1, y + 1, z
+						x + dx, y + 1 + dy, z + dz,
+						x + dx, y + 1 + dy, z + 1 + dz,
+						x + 1 + dx, y + 1 + dy, z + 1 + dz,
+						x + 1 + dx, y + 1 + dy, z + dz
 					);
 					normals.push(
 						0, 1, 0,
@@ -110,10 +113,10 @@ gameOfLife3d.Renderer = function (gl, world) {
 
 				if (!self.world.get(x, y, z - 1)) {
 					positions.push(
-						x, y, z,
-						x, y + 1, z,
-						x + 1, y + 1, z,
-						x + 1, y, z
+						x + dx, y + dy, z + dz,
+						x + dx, y + 1 + dy, z + dz,
+						x + 1 + dx, y + 1 + dy, z + dz,
+						x + 1 + dx, y + dy, z + dz
 					);
 					normals.push(
 						0, 0, -1,
@@ -130,10 +133,10 @@ gameOfLife3d.Renderer = function (gl, world) {
 
 				if (!self.world.get(x, y, z + 1)) {
 					positions.push(
-						x, y, z + 1,
-						x + 1, y, z + 1,
-						x + 1, y + 1, z + 1,
-						x, y + 1, z + 1
+						x + dx, y + dy, z + 1 + dz,
+						x + 1 + dx, y + dy, z + 1 + dz,
+						x + 1 + dx, y + 1 + dy, z + 1 + dz,
+						x + dx, y + 1 + dy, z + 1 + dz
 					);
 					normals.push(
 						0, 0, 1,

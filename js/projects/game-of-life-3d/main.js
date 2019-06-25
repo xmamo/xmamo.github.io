@@ -14,7 +14,18 @@
 	fragmentShaderRequest.responseType = "text";
 	fragmentShaderRequest.send();
 
+	var canvas = document.getElementById("game-of-life-3d-canvas");
+	var gl = canvas.getContext("webgl");
+	var camera = new gameOfLife3d.Camera({ z: 64 });
 	var update = "cells";
+	var mouseX = -1;
+	var mouseY = -1;
+	var mouseDown = false;
+	var left = false;
+	var right = false;
+	var up = false;
+	var down = false;
+	var paused = false;
 
 	var world = new gameOfLife3d.World(64, 64, 64, 4, 5, 5, 5);
 	world.forEach(function () {
@@ -24,31 +35,11 @@
 		update = "buffers";
 	};
 
-	var canvas = document.getElementById("game-of-life-3d-canvas");
-	var gl = canvas.getContext("webgl");
 	var renderer = new gameOfLife3d.Renderer(gl, world);
 	renderer.updateBuffers(world.volume);
 	renderer.onUpdateComplete = function () {
 		update = "cells";
 	};
-
-	var camera = new gameOfLife3d.Camera({ z: 64 });
-
-	var modelMatrix = [
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		-world.xMax / 2, -world.yMax / 2, -world.zMax / 2, 1
-	];
-
-	var mouseX = -1;
-	var mouseY = -1;
-	var mouseDown = false;
-	var left = false;
-	var right = false;
-	var up = false;
-	var down = false;
-	var paused = false;
 
 	canvas.addEventListener("contextmenu", function () {
 		event.preventDefault();
@@ -157,8 +148,6 @@
 				}
 				break;
 		}
-
-		return event.target !== canvas;
 	});
 
 	function callback() {
@@ -193,7 +182,6 @@
 
 		var aPositionLocation = gl.getAttribLocation(program, "aPosition");
 		var aNormalLocation = gl.getAttribLocation(program, "aNormal");
-		var uModelMatrixLocation = gl.getUniformLocation(program, "uModelMatrix");
 		var uViewMatrixLocation = gl.getUniformLocation(program, "uViewMatrix");
 		var uProjectionMatrixLocation = gl.getUniformLocation(program, "uProjectionMatrix");
 		var uLightDirectionLocation = gl.getUniformLocation(program, "uLightDirection");
@@ -252,7 +240,6 @@
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 			gl.useProgram(program);
-			gl.uniformMatrix4fv(uModelMatrixLocation, false, modelMatrix);
 			gl.uniformMatrix4fv(uViewMatrixLocation, false, camera.viewMatrix);
 			gl.uniformMatrix4fv(uProjectionMatrixLocation, false, camera.projectionMatrix);
 			gl.uniform3f(uLightDirectionLocation, -1, -2, -3);
