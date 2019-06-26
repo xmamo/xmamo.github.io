@@ -46,9 +46,23 @@
     margin-right: 1.25em;
 }
 
+.columns {
+	display: flex;
+}
+
+.column {
+	flex-grow: 1;
+}
+
 .blinking-cursor::after {
 	content: "";
 	animation: blinking-cursor-keyframes 1.2s step-end infinite;
+}
+
+@media (max-width: 720px) {
+	.columns {
+		flex-direction: column;
+	}
 }
 
 @keyframes blinking-cursor-keyframes {

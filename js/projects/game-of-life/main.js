@@ -1,9 +1,11 @@
 "use strict";
 
 (function () {
-	var world = new gameOfLife.World(48, 27);
+	var form = document.forms["game-of-life"];
 	var canvas = document.getElementById("game-of-life-canvas");
 	var context = canvas.getContext("2d");
+
+	var world = new gameOfLife.World(80, 45, 2, 3, 3, 3, true);
 	var mouseX = -1;
 	var mouseY = -1;
 	var leftDown = false;
@@ -11,7 +13,40 @@
 	var paused = false;
 	var lastUpdate = 0;
 
-	canvas.addEventListener("contextmenu", function () {
+	form.addEventListener("submit", function (event) {
+		event.preventDefault();
+	});
+
+	form.size.addEventListener("input", function () {
+		var size = form.size.value.match(/^\s*([+-]?\d+)(?:\s*[x×]\s*|\s+)([+-]?\d+)\s*$/);
+		if (size == null) {
+			return;
+		}
+
+		var newWorld = new gameOfLife.World(parseInt(size[1]), parseInt(size[2]), world.a, world.b, world.c, world.d);
+		newWorld.forEach(function (value, x, y) {
+			return world.get(x, y);
+		});
+		world = newWorld;
+	});
+
+	form.ruleset.addEventListener("input", function () {
+		var ruleset = form.ruleset.value.match(form.ruleset.pattern);
+		if (ruleset == null) {
+			return;
+		}
+
+		world.a = parseInt(ruleset[1]);
+		world.b = parseInt(ruleset[2]);
+		world.c = parseInt(ruleset[3]);
+		world.d = parseInt(ruleset[4]);
+	});
+
+	form.wrap.addEventListener("input", function () {
+		world.wrap = form.wrap.checked;
+	});
+
+	canvas.addEventListener("contextmenu", function (event) {
 		event.preventDefault();
 	});
 
@@ -19,15 +54,11 @@
 		switch (event.button) {
 			case 0:
 				leftDown = true;
-				if (mouseInCanvas()) {
-					event.preventDefault();
-				}
+				event.preventDefault();
 				break;
 			case 2:
 				rightDown = true;
-				if (mouseInCanvas()) {
-					event.preventDefault();
-				}
+				event.preventDefault();
 				break;
 		}
 
@@ -91,19 +122,19 @@
 		switch (event.key) {
 			case "f":
 			case "F":
-				if (!document.fullscreenElement) {
-					canvas.requestFullscreen();
-				} else {
-					document.exitFullscreen();
-				}
 				if (mouseInCanvas()) {
+					if (!document.fullscreenElement) {
+						canvas.requestFullscreen();
+					} else {
+						document.exitFullscreen();
+					}
 					event.preventDefault();
 				}
 				break;
 
 			case " ":
-				paused = !paused;
 				if (mouseInCanvas()) {
+					paused = !paused;
 					event.preventDefault();
 				}
 				break;
