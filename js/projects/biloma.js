@@ -1,7 +1,7 @@
 "use strict";
 
 (function () {
-	var decimal = "(-?(?:[0-9]+(?:.[0-9]*)?|.[0-9]+))";
+	var decimal = "([+-]?(?:[0-9]+(?:.[0-9]*)?|.[0-9]+))";
 	var delimiter = "(?:\\s*,\\s*|\\s+)";
 	var singleDecimal = "\\s*" + decimal + "\\s*";
 	var threeDecimals = singleDecimal + delimiter + singleDecimal + delimiter + singleDecimal;
@@ -17,8 +17,8 @@
 	form["air-time"].pattern = singleDecimalPattern;
 	form.acceleration.pattern = singleDecimalPattern;
 	form.damping.pattern = singleDecimalPattern;
-	form.addEventListener("input", updateForm);
 	form.addEventListener("submit", function (event) { event.preventDefault(); })
+	form.addEventListener("input", updateForm);
 	updateForm();
 
 	function updateForm() {

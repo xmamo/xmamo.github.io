@@ -43,10 +43,19 @@ pre {
 
 label {
 	display: inline-block;
-	margin-bottom: 0.25em;
+	margin-bottom: 0.3em;
 }
 
-input {
+input, select {
 	width: 100%;
 	padding: 0.5em 0.75em;
+	line-height: 1.25;
+}
+
+input[type="checkbox"] {
+	width: auto;
+}
+
+option {
+	padding: 0;
 }
