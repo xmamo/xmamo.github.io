@@ -34,17 +34,17 @@ scripts:
 			<p>
 				<label for="game-of-life-size">World size</label>
 				<select id="game-of-life-size" name="size">
-					<option value="80x45" selected="selected">80 × 45</option>
-					<option value="96x54">96 × 54</option>
-					<option value="112x63">112 × 63</option>
-					<option value="128x72">128 × 72</option>
-					<option value="144x81">144 × 81</option>
-					<option value="160x90">160 × 90</option>
-					<option value="176x99">176 × 99</option>
-					<option value="192x108">192 × 108</option>
-					<option value="208x117">208 × 117</option>
-					<option value="224x126">224 × 126</option>
-					<option value="240x135">240 × 135</option>
+					<option selected="selected">80 × 45</option>
+					<option>96 × 54</option>
+					<option>112 × 63</option>
+					<option>128 × 72</option>
+					<option>144 × 81</option>
+					<option>160 × 90</option>
+					<option>176 × 99</option>
+					<option>192 × 108</option>
+					<option>208 × 117</option>
+					<option>224 × 126</option>
+					<option>240 × 135</option>
 				</select>
 			</p>
 			<p>
