@@ -20,6 +20,8 @@ scripts:
 				<dd>Place an alive cell at the cursor’s position</dd>
 				<dt><kbd>Right-click</kbd></dt>
 				<dd>Place a dead cell at the cursor’s position</dd>
+				<dt><kbd>Mouse wheel</kbd></dt>
+				<dd>Increase/decrease brush size</dd>
 				<dt><kbd>Space</kbd></dt>
 				<dd>Enable/disable simulation</dd>
 				<dt><kbd>F</kbd></dt>

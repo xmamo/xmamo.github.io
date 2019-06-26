@@ -10,6 +10,7 @@
 	var mouseY = -1;
 	var leftDown = false;
 	var rightDown = false;
+	var brushSize = 1;
 	var paused = false;
 	var lastUpdate = 0;
 
@@ -23,7 +24,7 @@
 			return;
 		}
 
-		var newWorld = new gameOfLife.World(parseInt(size[1]), parseInt(size[2]), world.a, world.b, world.c, world.d);
+		var newWorld = new gameOfLife.World(parseInt(size[1]), parseInt(size[2]), world.a, world.b, world.setCells, world.d);
 		newWorld.forEach(function (value, x, y) {
 			return world.get(x, y);
 		});
@@ -38,7 +39,7 @@
 
 		world.a = parseInt(ruleset[1]);
 		world.b = parseInt(ruleset[2]);
-		world.c = parseInt(ruleset[3]);
+		world.setCells = parseInt(ruleset[3]);
 		world.d = parseInt(ruleset[4]);
 	});
 
@@ -63,10 +64,9 @@
 		}
 
 		if (leftDown ^ rightDown) {
-			world.set(
-				Math.floor(mouseX * world.width / canvas.clientWidth),
-				Math.floor(mouseY * world.height / canvas.clientHeight),
-				leftDown
+			setCells(
+				Math.round(world.width / canvas.width * mouseX - brushSize / 2),
+				Math.round(world.height / canvas.height * mouseY - brushSize / 2)
 			);
 		}
 	});
@@ -93,19 +93,19 @@
 		var newMouseY = event.clientY - canvas.getBoundingClientRect().y;
 
 		if (leftDown ^ rightDown) {
-			var x0 = Math.floor(mouseX * world.width / canvas.clientWidth);
-			var x1 = Math.floor(newMouseX * world.width / canvas.clientWidth);
-			var y0 = Math.floor(mouseY * world.height / canvas.clientHeight);
-			var y1 = Math.floor(newMouseY * world.height / canvas.clientHeight);
+			var x0 = Math.round(world.width / canvas.width * mouseX - brushSize / 2);
+			var y0 = Math.round(world.height / canvas.height * mouseY - brushSize / 2);
+			var x1 = Math.round(world.width / canvas.width * newMouseX - brushSize / 2);
+			var y1 = Math.round(world.height / canvas.height * newMouseY - brushSize / 2);
 			var dx = x1 - x0;
 			var dy = y1 - y0;
 			var step = Math.max(Math.abs(dx), Math.abs(dy));
 
 			if (step === 0) {
-				world.set(x1, y1, leftDown);
+				setCells(x1, y1);
 			} else {
 				for (var i = 0; i < step; i++) {
-					world.set(Math.floor(x0 + dx / step * i), Math.floor(y0 + dy / step * i), leftDown);
+					setCells(Math.floor(x0 + dx / step * i), Math.floor(y0 + dy / step * i));
 				}
 			}
 		}
@@ -114,6 +114,13 @@
 		mouseY = newMouseY;
 
 		if (mouseInCanvas()) {
+			event.preventDefault();
+		}
+	});
+
+	document.addEventListener("wheel", function (event) {
+		if (mouseInCanvas()) {
+			brushSize = Math.max(1, Math.min(brushSize + Math.sign(event.deltaY), Math.min(world.width, world.height)));
 			event.preventDefault();
 		}
 	});
@@ -168,15 +175,23 @@
 
 		if (mouseInCanvas()) {
 			context.strokeRect(
-				Math.floor(canvas.width / world.width * Math.floor(world.width / canvas.width * mouseX)),
-				Math.floor(canvas.height / world.height * Math.floor(world.height / canvas.height * mouseY)),
-				Math.ceil(canvas.width / world.width),
-				Math.ceil(canvas.height / world.height)
+				Math.floor(canvas.width / world.width * Math.round(world.width / canvas.width * mouseX - brushSize / 2)),
+				Math.floor(canvas.height / world.height * Math.round(world.height / canvas.height * mouseY - brushSize / 2)),
+				Math.ceil(canvas.width / world.width * brushSize),
+				Math.ceil(canvas.height / world.height * brushSize)
 			);
 		}
 	}
 
 	function mouseInCanvas() {
 		return mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight;
+	}
+
+	function setCells(x0, y0) {
+		for (var y = y0; y < y0 + brushSize; y++) {
+			for (var x = x0; x < x0 + brushSize; x++) {
+				world.set(x, y, leftDown);
+			}
+		}
 	}
 })();
