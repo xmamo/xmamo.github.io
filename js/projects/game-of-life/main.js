@@ -24,7 +24,7 @@
 			return;
 		}
 
-		var newWorld = new gameOfLife.World(parseInt(size[1]), parseInt(size[2]), world.a, world.b, world.setCells, world.d);
+		var newWorld = new gameOfLife.World(parseInt(size[1]), parseInt(size[2]), world.a, world.b, world.c, world.d);
 		newWorld.forEach(function (value, x, y) {
 			return world.get(x, y);
 		});
@@ -39,7 +39,7 @@
 
 		world.a = parseInt(ruleset[1]);
 		world.b = parseInt(ruleset[2]);
-		world.setCells = parseInt(ruleset[3]);
+		world.c = parseInt(ruleset[3]);
 		world.d = parseInt(ruleset[4]);
 	});
 
