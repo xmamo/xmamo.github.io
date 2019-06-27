@@ -3,6 +3,7 @@ title: 'About me'
 description: "My name is Matteo Morena, I'm a 23-year-old guy from Italy. Here I share my interests regarding software development."
 keywords: 'Matteo Morena, Mamo, developer, programmer, sofware engineer, software, programming'
 permalink: '/index.xhtml'
+canonical: '/'
 ---
 
 # {{ page.title }} #

@@ -1,6 +1,7 @@
 ---
 title: 'Game of Life'
 permalink: '/projects/game-of-life/index.xhtml'
+canonical: '/projects/game-of-life/'
 scripts:
   - '/js/projects/game-of-life/world.js'
   - '/js/projects/game-of-life/main.js'
