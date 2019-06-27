@@ -148,10 +148,10 @@
 		}
 	});
 
-	window.requestAnimationFrame(callback);
+	window.requestAnimationFrame(render);
 
-	function callback(timeStamp) {
-		window.requestAnimationFrame(callback);
+	function render(timeStamp) {
+		window.requestAnimationFrame(render);
 
 		if (!paused && timeStamp >= lastUpdate + 1000) {
 			world.updateCells();
@@ -162,6 +162,7 @@
 		canvas.height = document.fullscreenElement ? canvas.clientHeight : canvas.width * 9 / 16;
 		context.clearRect(0, 0, canvas.width, canvas.height);
 
+		context.fillStyle = "#000";
 		world.forEach(function (value, x, y) {
 			if (value) {
 				context.fillRect(
@@ -174,11 +175,18 @@
 		});
 
 		if (mouseInCanvas()) {
+			context.lineWidth = 2;
+			context.lineCap = "butt";
+			context.lineJoin = "miter";
+			context.miterLimit = Number.MAX_VALUE;
+			context.setLineDash([]);
+			context.lineDashOffset = 0;
+			context.strokeStyle = "#777";
 			context.strokeRect(
-				Math.floor(canvas.width / world.width * Math.round(world.width / canvas.width * mouseX - brushSize / 2)),
-				Math.floor(canvas.height / world.height * Math.round(world.height / canvas.height * mouseY - brushSize / 2)),
-				Math.ceil(canvas.width / world.width * brushSize),
-				Math.ceil(canvas.height / world.height * brushSize)
+				Math.floor(canvas.width / world.width * Math.round(world.width / canvas.width * mouseX - brushSize / 2)) + 1,
+				Math.floor(canvas.height / world.height * Math.round(world.height / canvas.height * mouseY - brushSize / 2)) + 1,
+				Math.ceil(canvas.width / world.width * brushSize) - 2,
+				Math.ceil(canvas.height / world.height * brushSize) - 2
 			);
 		}
 	}
