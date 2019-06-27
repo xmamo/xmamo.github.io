@@ -1,6 +1,7 @@
 ---
 title: 'Game of Life 3D'
 permalink: '/projects/game-of-life-3d/index.xhtml'
+canonical: '/projects/game-of-life-3d/'
 scripts:
   - '/js/projects/game-of-life-3d/camera.js'
   - '/js/projects/game-of-life-3d/world.js'
