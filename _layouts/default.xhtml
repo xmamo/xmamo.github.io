@@ -26,9 +26,9 @@
 			<nav>
 				<ul class="menu">
 					{% for item in site.data.navigation %}
-						{% assign url = item.url | append: 'index.xhtml' %}
 						<li class="menu-item">
 							{% if item.url != nil %}
+								{% assign url = item.url | append: 'index.xhtml' %}
 								<a class="menu-item-content {% if page.url == url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title | smartify }}</a>
 							{% else %}
 								<span class="menu-item-content {% if item.subitems %}more{% endif %}">{{ item.title | smartify }}</span>
@@ -36,9 +36,9 @@
 							{% if item.subitems != nil %}
 								<ul class="submenu">
 									{% for subitem in item.subitems %}
-										{% assign suburl = subitem.url | append: 'index.xhtml' %}
 										<li class="submenu-item">
 											{% if subitem.url != nil %}
+												{% assign suburl = subitem.url | append: 'index.xhtml' %}
 												<a class="submenu-item-content {% if page.url == suburl %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title | smartify }}</a>
 											{% else %}
 												<span class="submenu-item-content">{{ subitem.title | smartify }}</span>

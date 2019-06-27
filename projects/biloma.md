@@ -42,8 +42,7 @@ below and see how our theorem works in practice.<span>
 	<p>
 		<label for="biloma-result">Required initial velocity:</label>
 		<output id="biloma-result" name="result"></output>
-	</p>
-	<p>
+		<br />
 		<label for="biloma-command">Minecraft command:</label>
 		<code><output id="biloma-command" name="command"></output></code>
 	</p>
