@@ -1,6 +1,6 @@
 ---
 title: 'About me'
-description: "My name is Matteo Morena, I'm a 23-year-old guy from Italy. Here I share my interests regarding software development."
+description: "My name is Matteo Morena. I like skiing, music, nature, hiking, and programming. This website is dedicated to share my interest in this last subject."
 keywords: 'Matteo Morena, Mamo, developer, programmer, sofware engineer, software, programming'
 permalink: '/index.xhtml'
 canonical: '/'
@@ -8,9 +8,9 @@ canonical: '/'
 
 # {{ page.title }} #
 
-My name is Matteo Morena, I'm a 23-year-old guy from northern Italy. I'm half German and half Italian and can speak
-both languages fluently. I like skiing, music, nature, hiking, and programming. This website is dedicated to share my
-interest in this last subject.
+My name is Matteo Morena, I'm a {{ 'today' | date: '%s' | minus: 821228400 | date: '%Y' | minus: 1970 }}-year-old guy
+from northern Italy. I'm half German and half Italian and can speak both languages fluently. I like skiing, music,
+nature, hiking, and programming. This website is dedicated to share my interest in this last subject.
 
 Since I was a kid, I've always been passionate about computers, how they work, and how to program them. I still
 remember how I thought that using the terminal or the registry editor was like black magic. Of course, time has passed,
