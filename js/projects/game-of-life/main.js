@@ -120,7 +120,7 @@
 
 	document.addEventListener("wheel", function (event) {
 		if (mouseInCanvas()) {
-			brushSize = Math.max(1, Math.min(brushSize + Math.sign(event.deltaY), Math.min(world.width, world.height)));
+			brushSize = Math.max(1, Math.min(brushSize - Math.sign(event.deltaY), Math.min(world.width, world.height)));
 			event.preventDefault();
 		}
 	});
