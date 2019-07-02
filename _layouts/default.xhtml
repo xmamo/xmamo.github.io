@@ -14,6 +14,7 @@
 		{% if page.canonical != nil %}<link rel="canonical" href="{{ page.canonical }}" />{% endif %}
 		{% comment %}<link rel="icon" href="favicon.ico" />{% endcomment %}
 		<link rel="stylesheet" href="/css/main.css" />
+		<noscript><style>.js-only { display: none; }</style></noscript>
 	</head>
 
 	<body>
@@ -59,7 +60,6 @@
 			</article>
 		</main>
 
-		<script src="/js/main.js" defer="defer"></script>
 		{% for script in page.scripts %}
 			<script src="{{ script }}" defer="defer"></script>
 		{% endfor %}
