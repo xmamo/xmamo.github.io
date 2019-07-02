@@ -218,7 +218,7 @@ This example shows how to set up a simple "get a diamond for voting" system usin
    ```
 
 4. If VanillaVotifier is already running, reload the configuration using VanillaVotifier's `restart` command;
-otherwise, just start up VanillaVotifier.
+   otherwise, just start up VanillaVotifier.
 
 #### `shell` action example ####
 This example aims to show exactly what the previous example did, but using a shell script instead of sending RCon
@@ -249,7 +249,7 @@ previous example.
    ```
 
 4. If VanillaVotifier is already running, reload the configuration using VanillaVotifier's `restart` command;
-otherwise, just start up VanillaVotifier.
+   otherwise, just start up VanillaVotifier.
 
 ## Tutorial video ##
-<iframe src="https://www.youtube-nocookie.com/embed/mRHu5d-BcXQ?rel=0" width="560" height="315" allowfullscreen="allowfullscreen"></iframe>
+<p><iframe src="https://www.youtube-nocookie.com/embed/mRHu5d-BcXQ?rel=0" width="560" height="315" allowfullscreen="allowfullscreen"></iframe></p>
