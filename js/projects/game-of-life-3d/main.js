@@ -14,6 +14,7 @@
 	fragmentShaderRequest.responseType = "text";
 	fragmentShaderRequest.send();
 
+	var form = document.forms["game-of-life-3d"];
 	var canvas = document.getElementById("game-of-life-3d-canvas");
 	var gl = canvas.getContext("webgl");
 	var camera = new gameOfLife3d.Camera({ z: 64 });
@@ -41,16 +42,20 @@
 		update = "cells";
 	};
 
-	canvas.addEventListener("contextmenu", function () {
+	form.addEventListener("submit", function (event) {
 		event.preventDefault();
 	});
 
-	canvas.addEventListener("mousedown", function () {
+	canvas.addEventListener("contextmenu", function (event) {
+		event.preventDefault();
+	});
+
+	canvas.addEventListener("mousedown", function (event) {
 		mouseDown = true;
 		event.preventDefault();
 	});
 
-	document.addEventListener("mouseup", function () {
+	document.addEventListener("mouseup", function (event) {
 		mouseDown = false;
 		if (mouseInCanvas()) {
 			event.preventDefault();

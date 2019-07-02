@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.js-only {
+	display: none;
+}
+
 .h1 {
 	height: 1em;
 }
