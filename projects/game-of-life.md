@@ -8,11 +8,12 @@ scripts:
 ---
 
 # {{ page.title }} #
-<form id="game-of-life">
+<noscript><p>Error: JavaScript is disabled.</p></noscript>
+
+<form id="game-of-life" class="js-only">
 	<output class="bordered" style="display: block;">
 		<canvas id="game-of-life-canvas"></canvas>
 	</output>
-
 	<div class="columns">
 		<div class="column">
 			<h2>Controls</h2>
@@ -29,7 +30,6 @@ scripts:
 				<dd>Toggle fullscreen mode</dd>
 			</dl>
 		</div>
-
 		<div class="column">
 			<h2>Settings</h2>
 			<p>
