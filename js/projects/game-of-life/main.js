@@ -176,11 +176,6 @@
 
 		if (mouseInCanvas()) {
 			context.lineWidth = 2;
-			context.lineCap = "butt";
-			context.lineJoin = "miter";
-			context.miterLimit = Number.MAX_VALUE;
-			context.setLineDash([]);
-			context.lineDashOffset = 0;
 			context.strokeStyle = "#777";
 			context.strokeRect(
 				Math.floor(canvas.width / world.width * Math.round(world.width / canvas.width * mouseX - brushSize / 2)) + 1,
