@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>P2P Paint</title>
+		<style>
+			html, body, #canvas {
+				height: 100%;
+			}
+
+			body {
+				margin: 0;
+			}
+
+			#canvas {
+				display: block;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<p id="id" style="position: absolute; margin: 1em;">ID:</p>
+		<canvas id="canvas"></canvas>
+		<script src="https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js" defer="defer"></script>
+		<script src="/js/projects/p2p-paint.js" defer="defer"></script>
+	</body>
+</html>
