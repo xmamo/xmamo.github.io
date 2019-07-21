@@ -7,7 +7,7 @@
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
 
-	var peer = new Peer();
+	var peer = new Peer(null, { debug: 2 });
 	var connection = null;
 
 	peer.on("open", function (id) {
@@ -34,9 +34,7 @@
 			connection = c;
 
 			connection.on("data", function (data) {
-				if ("data" in data) {
-					context.putImageData(new ImageData(data.data, data.width, data.height), 0, 0);
-				} else {
+				if (!("data" in data)) {
 					line("#F00", data.x0, data.y0, data.x1, data.y1);
 				}
 			});
