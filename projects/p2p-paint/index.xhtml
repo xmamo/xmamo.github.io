@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<title>P2P Paint</title>
 		<style>
-			html, body, #canvas {
+			html, body, #p2p-paint-canvas {
 				height: 100%;
 			}
 
@@ -12,16 +12,19 @@
 				margin: 0;
 			}
 
-			#canvas {
+			#p2p-paint-canvas {
 				display: block;
 				width: 100%;
 			}
 		</style>
 	</head>
 	<body>
-		<p id="id" style="position: absolute; margin: 1em;">ID:</p>
-		<canvas id="canvas"></canvas>
+		<p id="p2p-paint-id" style="position: absolute; margin: 1em;"></p>
+		<canvas id="p2p-paint-canvas"></canvas>
 		<script src="https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js" defer="defer"></script>
-		<script src="/js/projects/p2p-paint.js" defer="defer"></script>
+		<script src="/js/projects/p2p-paint/common.js" defer="defer"></script>
+		<script src="/js/projects/p2p-paint/server.js" defer="defer"></script>
+		<script src="/js/projects/p2p-paint/client.js" defer="defer"></script>
+		<script src="/js/projects/p2p-paint/main.js" defer="defer"></script>
 	</body>
 </html>
