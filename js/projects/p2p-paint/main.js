@@ -18,8 +18,8 @@ var p2pPaint = p2pPaint || {};
 	} else {
 		p2pPaint.startServer(function (id) {
 			params.set("remote", id);
-			var link = "/projects/p2p-paint/?" + params;
-			document.getElementById("p2p-paint-id").innerHTML = 'Your friends should connect to: <a href="' + link + '">' + window.location.origin + link + '</a>';
+			var url = window.location.pathname + "?" + params + window.location.hash;
+			document.getElementById("p2p-paint-id").innerHTML = 'Your friends should connect to: <a href="' + url + '" target="_blank">' + window.location.origin + url + "</a>";
 			p2pPaint.startClient(id);
 		});
 	}
