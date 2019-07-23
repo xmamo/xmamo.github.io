@@ -6,8 +6,8 @@
 	var context = canvas.getContext("2d");
 
 	var world = new gameOfLife.World(80, 45, 2, 3, 3, 3, true);
-	var mouseX = -1;
-	var mouseY = -1;
+	var mouseX = NaN;
+	var mouseY = NaN;
 	var leftDown = false;
 	var rightDown = false;
 	var brushSize = 1;
@@ -57,6 +57,7 @@
 				leftDown = true;
 				event.preventDefault();
 				break;
+
 			case 2:
 				rightDown = true;
 				event.preventDefault();
@@ -79,6 +80,7 @@
 					event.preventDefault();
 				}
 				break;
+
 			case 2:
 				rightDown = false;
 				if (mouseInCanvas()) {
