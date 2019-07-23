@@ -161,8 +161,6 @@
 		canvas.width = canvas.clientWidth;
 		canvas.height = document.fullscreenElement ? canvas.clientHeight : canvas.width * 9 / 16;
 
-		context.clearRect(0, 0, canvas.width, canvas.height);
-
 		context.fillStyle = "#000";
 		world.forEach(function (value, x, y) {
 			if (value) {
