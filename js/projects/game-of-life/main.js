@@ -120,11 +120,9 @@
 		}
 	});
 
-	document.addEventListener("wheel", function (event) {
-		if (mouseInCanvas()) {
-			brushSize = Math.max(1, Math.min(brushSize - Math.sign(event.deltaY), Math.min(world.width, world.height)));
-			event.preventDefault();
-		}
+	canvas.addEventListener("wheel", function (event) {
+		brushSize = Math.max(1, Math.min(brushSize - Math.sign(event.deltaY), Math.min(world.width, world.height)));
+		event.preventDefault();
 	});
 
 	document.addEventListener("keydown", function (event) {
@@ -162,6 +160,7 @@
 
 		canvas.width = canvas.clientWidth;
 		canvas.height = document.fullscreenElement ? canvas.clientHeight : canvas.width * 9 / 16;
+
 		context.clearRect(0, 0, canvas.width, canvas.height);
 
 		context.fillStyle = "#000";
