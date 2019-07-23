@@ -19,8 +19,8 @@
 	var gl = canvas.getContext("webgl");
 	var camera = new gameOfLife3d.Camera({ z: 64 });
 	var update = "cells";
-	var mouseX = -1;
-	var mouseY = -1;
+	var mouseX = NaN;
+	var mouseY = NaN;
 	var mouseDown = false;
 	var left = false;
 	var right = false;
@@ -105,18 +105,21 @@
 					event.preventDefault();
 				}
 				break;
+
 			case "KeyD":
 				right = true;
 				if (mouseInCanvas()) {
 					event.preventDefault();
 				}
 				break;
+
 			case "KeyW":
 				up = true;
 				if (mouseInCanvas()) {
 					event.preventDefault();
 				}
 				break;
+
 			case "KeyS":
 				down = true;
 				if (mouseInCanvas()) {
@@ -134,18 +137,21 @@
 					event.preventDefault();
 				}
 				break;
+
 			case "KeyD":
 				right = false;
 				if (mouseInCanvas()) {
 					event.preventDefault();
 				}
 				break;
+
 			case "KeyW":
 				up = false;
 				if (mouseInCanvas()) {
 					event.preventDefault();
 				}
 				break;
+
 			case "KeyS":
 				down = false;
 				if (mouseInCanvas()) {
@@ -223,6 +229,7 @@
 					case "cells":
 						world.updateCells(world.volume * Math.min(delta, 0.1) * 2);
 						break;
+
 					case "buffers":
 						renderer.updateBuffers(world.volume * Math.min(delta, 0.1) * 2);
 						break;
