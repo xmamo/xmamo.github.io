@@ -3,11 +3,6 @@
 var p2pPaint = p2pPaint || {};
 
 (function () {
-	for (var i = 0; i < p2pPaint.canvas.length; i++) {
-		p2pPaint.canvas[i].width = p2pPaint.canvas[i].clientWidth;
-		p2pPaint.canvas[i].height = p2pPaint.canvas[i].clientHeight;
-	}
-
 	p2pPaint.context[0].fillStyle = "#FFF";
 	p2pPaint.context[0].fillRect(0, 0, p2pPaint.canvas[0].width, p2pPaint.canvas[0].height);
 

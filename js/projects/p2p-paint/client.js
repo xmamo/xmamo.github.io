@@ -89,7 +89,16 @@ p2pPaint.startClient = function (serverId) {
 	function render() {
 		window.requestAnimationFrame(render);
 
-		p2pPaint.context[1].clearRect(0, 0, p2pPaint.canvas[1].width, p2pPaint.canvas[1].height);
+		if (p2pPaint.canvas[0].clientWidth != p2pPaint.canvas[0].width || p2pPaint.canvas[0].clientHeight != p2pPaint.canvas[0].height) {
+			var imageData = p2pPaint.context[0].getImageData(0, 0, p2pPaint.canvas[0].width, p2pPaint.canvas[0].height);
+			p2pPaint.canvas[0].width = p2pPaint.canvas[0].clientWidth;
+			p2pPaint.canvas[0].height = p2pPaint.canvas[0].clientHeight;
+			p2pPaint.context[0].putImageData(imageData, 0, 0);
+		}
+
+		p2pPaint.canvas[1].width = p2pPaint.canvas[1].clientWidth;
+		p2pPaint.canvas[1].height = p2pPaint.canvas[1].clientHeight;
+
 		drawLine(1, mouseX, mouseY, mouseX, mouseY, "rgba(0, 0, 0, 0.2)", brushSize);
 	}
 
