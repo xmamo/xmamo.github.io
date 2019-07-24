@@ -2,6 +2,8 @@
   url: '/'
 - title: 'Projects'
   subitems:
+    - title: 'P2P Paint'
+      url: '/projects/p2p-paint/'
     - title: 'Game of Life'
       url: '/projects/game-of-life/'
     - title: 'Game of Life 3D'
