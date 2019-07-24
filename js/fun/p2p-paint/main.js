@@ -1,7 +1,5 @@
 "use strict";
 
-var p2pPaint = p2pPaint || {};
-
 (function () {
 	var params = new URLSearchParams(window.location.search);
 

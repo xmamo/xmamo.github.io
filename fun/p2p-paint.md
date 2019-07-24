@@ -4,6 +4,7 @@ permalink: '/fun/p2p-paint/index.xhtml'
 canonical: '/fun/p2p-paint/'
 scripts:
   - 'https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js'
+  - '/js/fun/p2p-paint/common.js'
   - '/js/fun/p2p-paint/server.js'
   - '/js/fun/p2p-paint/client.js'
   - '/js/fun/p2p-paint/main.js'
