@@ -3,6 +3,12 @@
 var p2pPaint = p2pPaint || {};
 
 p2pPaint.startClient = function (serverId) {
+	var canvas = [document.getElementById("p2p-paint-canvas-0"), document.getElementById("p2p-paint-canvas-1")];
+	var context = [canvas[0].getContext("2d"), canvas[1].getContext("2d")];
+
+	context[0].fillStyle = "#FFF";
+	context[0].fillRect(0, 0, canvas[0].width, canvas[0].height);
+
 	var connection = new Peer(null, { debug: 2 }).connect(serverId);
 
 	connection.on("data", function (data) {
@@ -13,13 +19,13 @@ p2pPaint.startClient = function (serverId) {
 	var mouseY = NaN;
 	var leftDown = false;
 	var rightDown = false;
-	var brushSize = 5;
+	var brushSize = 10;
 
-	p2pPaint.canvas[1].addEventListener("contextmenu", function (event) {
+	canvas[1].addEventListener("contextmenu", function (event) {
 		event.preventDefault();
 	});
 
-	p2pPaint.canvas[1].addEventListener("mousedown", function (event) {
+	canvas[1].addEventListener("mousedown", function (event) {
 		switch (event.button) {
 			case 0:
 				leftDown = true;
@@ -60,8 +66,9 @@ p2pPaint.startClient = function (serverId) {
 	});
 
 	document.addEventListener("mousemove", function (event) {
-		var newMouseX = event.clientX - p2pPaint.canvas[0].getBoundingClientRect().x;
-		var newMouseY = event.clientY - p2pPaint.canvas[0].getBoundingClientRect().y;
+		var rect = canvas[0].getBoundingClientRect();
+		var newMouseX = (event.clientX - rect.x) * canvas[0].width / rect.width;
+		var newMouseY = (event.clientY - rect.y) * canvas[0].height / rect.height;
 
 		if (leftDown && !rightDown) {
 			drawLine(0, mouseX, mouseY, newMouseX, newMouseY, "#000", brushSize);
@@ -79,7 +86,7 @@ p2pPaint.startClient = function (serverId) {
 		}
 	});
 
-	p2pPaint.canvas[1].addEventListener("wheel", function (event) {
+	canvas[1].addEventListener("wheel", function (event) {
 		brushSize = Math.max(1, brushSize * Math.exp(-Math.sign(event.deltaY) / 10));
 		event.preventDefault();
 	});
@@ -89,27 +96,18 @@ p2pPaint.startClient = function (serverId) {
 	function render() {
 		window.requestAnimationFrame(render);
 
-		if (p2pPaint.canvas[0].clientWidth != p2pPaint.canvas[0].width || p2pPaint.canvas[0].clientHeight != p2pPaint.canvas[0].height) {
-			var imageData = p2pPaint.context[0].getImageData(0, 0, p2pPaint.canvas[0].width, p2pPaint.canvas[0].height);
-			p2pPaint.canvas[0].width = p2pPaint.canvas[0].clientWidth;
-			p2pPaint.canvas[0].height = p2pPaint.canvas[0].clientHeight;
-			p2pPaint.context[0].putImageData(imageData, 0, 0);
-		}
-
-		p2pPaint.canvas[1].width = p2pPaint.canvas[1].clientWidth;
-		p2pPaint.canvas[1].height = p2pPaint.canvas[1].clientHeight;
-
+		context[1].clearRect(0, 0, canvas[1].width, canvas[1].height);
 		drawLine(1, mouseX, mouseY, mouseX, mouseY, "rgba(0, 0, 0, 0.2)", brushSize);
 	}
 
 	function drawLine(which, x0, y0, x1, y1, style, width) {
-		p2pPaint.context[which].strokeStyle = style;
-		p2pPaint.context[which].lineWidth = width;
-		p2pPaint.context[which].lineCap = "round";
-		p2pPaint.context[which].beginPath();
-		p2pPaint.context[which].moveTo(x0, y0);
-		p2pPaint.context[which].lineTo(x1, y1);
-		p2pPaint.context[which].stroke();
+		context[which].strokeStyle = style;
+		context[which].lineWidth = width;
+		context[which].lineCap = "round";
+		context[which].beginPath();
+		context[which].moveTo(x0, y0);
+		context[which].lineTo(x1, y1);
+		context[which].stroke();
 	}
 
 	function send(data) {
@@ -119,6 +117,6 @@ p2pPaint.startClient = function (serverId) {
 	}
 
 	function mouseInCanvas() {
-		return mouseX >= 0 && mouseX <= p2pPaint.canvas[1].clientWidth && mouseY >= 0 && mouseY <= p2pPaint.canvas[1].clientHeight;
+		return mouseX >= 0 && mouseX <= canvas[1].clientWidth && mouseY >= 0 && mouseY <= canvas[1].clientHeight;
 	}
 };
