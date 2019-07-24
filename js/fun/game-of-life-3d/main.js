@@ -5,12 +5,12 @@
 	var fragmentShaderRequest = new XMLHttpRequest();
 
 	vertexShaderRequest.onreadystatechange = callback;
-	vertexShaderRequest.open("GET", "/js/projects/game-of-life-3d/shader.vert");
+	vertexShaderRequest.open("GET", "/js/fun/game-of-life-3d/shader.vert");
 	vertexShaderRequest.responseType = "text";
 	vertexShaderRequest.send();
 
 	fragmentShaderRequest.onreadystatechange = callback;
-	fragmentShaderRequest.open("GET", "/js/projects/game-of-life-3d/shader.frag");
+	fragmentShaderRequest.open("GET", "/js/fun/game-of-life-3d/shader.frag");
 	fragmentShaderRequest.responseType = "text";
 	fragmentShaderRequest.send();
 
