@@ -14,7 +14,7 @@ p2pPaint.startServer = function (onOpen) {
 		connections.push(connection);
 
 		connection.on("open", function() {
-			connection.send(p2pPaint.canvas[0].getContext("2d").getImageData(0, 0, p2pPaint.canvas[0].width, p2pPaint.canvas[0].height).data);
+			connection.send(p2pPaint.context[0].getImageData(0, 0, p2pPaint.canvas[0].width, p2pPaint.canvas[0].height).data);
 		});
 
 		connection.on("data", function (data) {
