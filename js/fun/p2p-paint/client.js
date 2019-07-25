@@ -11,7 +11,11 @@ p2pPaint.startClient = function (serverId) {
 
 	connection.on("data", function (data) {
 		if (data instanceof ArrayBuffer) {
-			p2pPaint.context[0].putImageData(new ImageData(new Uint8ClampedArray(data), 2048, 1080), 0, 0);
+			p2pPaint.context[0].putImageData(new ImageData(
+				new Uint8ClampedArray(data),
+				p2pPaint.canvas[0].width,
+				p2pPaint.canvas[0].height
+			), 0, 0);
 			canDraw = true;
 		} else {
 			drawLine(0, data.x0, data.y0, data.x1, data.y1, data.style, data.width);
@@ -69,9 +73,10 @@ p2pPaint.startClient = function (serverId) {
 	});
 
 	document.addEventListener("mousemove", function (event) {
-		var rect = p2pPaint.canvas[0].getBoundingClientRect();
-		var newMouseX = (event.clientX - rect.x) * p2pPaint.canvas[0].width / rect.width;
-		var newMouseY = (event.clientY - rect.y) * p2pPaint.canvas[0].height / rect.height;
+		var newMouseX = (event.clientX - p2pPaint.canvas[0].getBoundingClientRect().x)
+			* p2pPaint.canvas[0].width / p2pPaint.canvas[0].getBoundingClientRect().width;
+		var newMouseY = (event.clientY - p2pPaint.canvas[0].getBoundingClientRect().y)
+			* p2pPaint.canvas[0].height / p2pPaint.canvas[0].getBoundingClientRect().height;
 
 		if (canDraw) {
 			if (leftDown && !rightDown) {
@@ -124,6 +129,7 @@ p2pPaint.startClient = function (serverId) {
 	}
 
 	function mouseInCanvas() {
-		return mouseX >= 0 && mouseX <= p2pPaint.canvas[1].clientWidth && mouseY >= 0 && mouseY <= p2pPaint.canvas[1].clientHeight;
+		return mouseX >= 0 && mouseX <= p2pPaint.canvas[1].clientWidth
+			&& mouseY >= 0 && mouseY <= p2pPaint.canvas[1].clientHeight;
 	}
 };
