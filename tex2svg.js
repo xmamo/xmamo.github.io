@@ -5,7 +5,7 @@
 	var mjAPI = require("mathjax-node");
 
 	var inline = false;
-	for (var i = 2; i < process.argv.length; i++) {
+	for (var i = 2, argCount = process.argv.length; i < argCount; i++) {
 		if (process.argv[i] == "--inline") {
 			inline = true;
 			break;

@@ -2,7 +2,7 @@
 
 (function () {
 	var elements = document.querySelectorAll("[data-github-repo]");
-	for (var i = 0; i < elements.length; i++) {
+	for (var i = 0, elementCount = elements.length; i < elementCount; i++) {
 		(function (element) {
 			var httpRequest = new XMLHttpRequest();
 			httpRequest.onreadystatechange = function () {

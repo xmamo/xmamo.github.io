@@ -190,8 +190,11 @@
 	}
 
 	function setCells(x0, y0) {
-		for (var y = y0; y < y0 + brushSize; y++) {
-			for (var x = x0; x < x0 + brushSize; x++) {
+		var y1 = y0 + brushSize;
+		var x1 = x0 + brushSize;
+
+		for (var y = y0; y < y1; y++) {
+			for (var x = x0; x < x1; x++) {
 				world.set(x, y, leftDown);
 			}
 		}

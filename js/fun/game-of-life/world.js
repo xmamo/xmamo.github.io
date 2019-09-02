@@ -6,9 +6,9 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 	var self = this;
 	var arrays = [[], []];
 	var current = 0;
-	for (var i = 0; i < width * height; i++) {
-		arrays[current][i] = false;
-		arrays[1 - current][i] = false;
+	for (var i = 0, area = width * height; i < area; i++) {
+		arrays[current].push(false);
+		arrays[1 - current].push(false);
 	}
 
 	self.a = a;
