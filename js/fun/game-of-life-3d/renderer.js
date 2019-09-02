@@ -171,18 +171,18 @@ gameOfLife3d.Renderer = function (gl, world) {
 					});
 				}
 
-				for (var i = 0; i < arrayLength; i++) {
+				for (var i = 0, buffersLength = buffers.length; i < buffersLength; i++) {
 					var buffer = buffers[i];
 					var array = arrays[i];
 
 					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.positionsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array.positions), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(i < arrayLength ? array.positions : []), gl.DYNAMIC_DRAW);
 
 					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.normalsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array.normals), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(i < arrayLength ? array.normals : []), gl.DYNAMIC_DRAW);
 
 					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indicesBuffer);
-					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(array.indices), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(i < arrayLength ? array.indices : []), gl.DYNAMIC_DRAW);
 
 					buffers[i].count = array.indices.length;
 				}
@@ -203,7 +203,7 @@ gameOfLife3d.Renderer = function (gl, world) {
 		gl.enableVertexAttribArray(aPositionLocation);
 		gl.enableVertexAttribArray(aNormalLocation);
 
-		for (var i = 0, buffersArrayLength = buffers.length; i < buffersArrayLength; i++) {
+		for (var i = 0, buffersLength = buffers.length; i < buffersLength; i++) {
 			gl.bindBuffer(gl.ARRAY_BUFFER, buffers[i].positionsBuffer);
 			gl.vertexAttribPointer(aPositionLocation, 3, gl.FLOAT, false, 0, 0);
 
