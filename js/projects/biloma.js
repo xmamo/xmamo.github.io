@@ -17,7 +17,7 @@
 	form["air-time"].pattern = singleDecimalPattern;
 	form.acceleration.pattern = singleDecimalPattern;
 	form.damping.pattern = singleDecimalPattern;
-	form.addEventListener("submit", function (event) { event.preventDefault(); })
+	form.addEventListener("submit", function (event) { event.preventDefault(); });
 	form.addEventListener("input", updateForm);
 	updateForm();
 
