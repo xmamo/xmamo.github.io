@@ -171,20 +171,35 @@ gameOfLife3d.Renderer = function (gl, world) {
 					});
 				}
 
-				for (var i = 0, buffersLength = buffers.length; i < buffersLength; i++) {
+				for (var i = 0; i < arrayLength; i++) {
 					var buffer = buffers[i];
 					var array = arrays[i];
 
 					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.positionsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(i < arrayLength ? array.positions : []), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array.positions), gl.DYNAMIC_DRAW);
 
 					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.normalsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(i < arrayLength ? array.normals : []), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array.normals), gl.DYNAMIC_DRAW);
 
 					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indicesBuffer);
-					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(i < arrayLength ? array.indices : []), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(array.indices), gl.DYNAMIC_DRAW);
 
 					buffers[i].count = array.indices.length;
+				}
+
+				for (var i = arrayLength, buffersLength = buffers.length; i < buffersLength; i++) {
+					var buffer = buffers[i];
+
+					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.positionsBuffer);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([]), gl.DYNAMIC_DRAW);
+
+					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.normalsBuffer);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([]), gl.DYNAMIC_DRAW);
+
+					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indicesBuffer);
+					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([]), gl.DYNAMIC_DRAW);
+
+					buffers[i].count = 0;
 				}
 
 				positions = [];
