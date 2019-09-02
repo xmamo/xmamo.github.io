@@ -3,7 +3,6 @@
 var gameOfLife = gameOfLife || {};
 
 gameOfLife.World = function (width, height, a, b, c, d, wrap) {
-	var self = this;
 	var arrays = [[], []];
 	var current = 0;
 	for (var i = 0, area = width * height; i < area; i++) {
@@ -11,31 +10,31 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 		arrays[1 - current].push(false);
 	}
 
-	self.a = a;
-	self.b = b;
-	self.c = c;
-	self.d = d;
-	self.wrap = wrap;
+	this.a = a;
+	this.b = b;
+	this.c = c;
+	this.d = d;
+	this.wrap = wrap;
 
-	Object.defineProperty(self, "width", {
+	Object.defineProperty(this, "width", {
 		get: function () {
 			return width;
 		}
 	});
 
-	Object.defineProperty(self, "height", {
+	Object.defineProperty(this, "height", {
 		get: function () {
 			return height;
 		}
 	});
 
-	Object.defineProperty(self, "area", {
+	Object.defineProperty(this, "area", {
 		get: function () {
 			return arrays[current].length;
 		}
 	});
 
-	self.get = function (x, y) {
+	this.get = function (x, y) {
 		if (x < 0 || x >= width) {
 			return false;
 		}
@@ -46,7 +45,7 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 		return arrays[current][x + y * width];
 	};
 
-	self.set = function (x, y, value) {
+	this.set = function (x, y, value) {
 		if (x < 0 || x >= width) {
 			return;
 		}
@@ -57,7 +56,7 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 		arrays[current][x + y * width] = value;
 	};
 
-	self.forEach = function (callback) {
+	this.forEach = function (callback) {
 		for (var y = 0; y < height; y++) {
 			for (var x = 0; x < width; x++) {
 				var value = callback(arrays[current][x + y * width], x, y);
@@ -68,7 +67,7 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 		}
 	}
 
-	self.updateCells = function () {
+	this.updateCells = function () {
 		for (var y = 0; y < height; y++) {
 			for (var x = 0; x < width; x++) {
 				var neighbours = 0;
@@ -80,7 +79,7 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 									neighbours++;
 								}
 							} else {
-								if (self.get(x + dx, y + dy)) {
+								if (this.get(x + dx, y + dy)) {
 									neighbours++;
 								}
 							}
@@ -89,9 +88,9 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 				}
 
 				if (arrays[current][x + y * width]) {
-					arrays[1 - current][x + y * width] = neighbours >= self.a && neighbours <= self.b;
+					arrays[1 - current][x + y * width] = neighbours >= this.a && neighbours <= this.b;
 				} else {
-					arrays[1 - current][x + y * width] = neighbours >= self.c && neighbours <= self.d;
+					arrays[1 - current][x + y * width] = neighbours >= this.c && neighbours <= this.d;
 				}
 			}
 		}

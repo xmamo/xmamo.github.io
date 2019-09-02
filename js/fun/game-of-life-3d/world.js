@@ -3,7 +3,6 @@
 var gameOfLife3d = gameOfLife3d || {};
 
 gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
-	var self = this;
 	var arrays = [[], []];
 	for (var i = 0, volume = xMax * yMax * zMax; i < volume; i++) {
 		arrays[0].push(false);
@@ -12,37 +11,37 @@ gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 	var current = 0;
 	var updated = 0;
 
-	self.a = a;
-	self.b = b;
-	self.c = c;
-	self.d = d;
-	self.onUpdateComplete = function () { };
+	this.a = a;
+	this.b = b;
+	this.c = c;
+	this.d = d;
+	this.onUpdateComplete = function () { };
 
-	Object.defineProperty(self, "xMax", {
+	Object.defineProperty(this, "xMax", {
 		get: function () {
 			return xMax;
 		}
 	});
 
-	Object.defineProperty(self, "yMax", {
+	Object.defineProperty(this, "yMax", {
 		get: function () {
 			return yMax;
 		}
 	});
 
-	Object.defineProperty(self, "zMax", {
+	Object.defineProperty(this, "zMax", {
 		get: function () {
 			return zMax;
 		}
 	});
 
-	Object.defineProperty(self, "volume", {
+	Object.defineProperty(this, "volume", {
 		get: function () {
 			return arrays[current].length;
 		}
 	});
 
-	self.get = function (x, y, z) {
+	this.get = function (x, y, z) {
 		if (x < 0 || x >= xMax) {
 			return false;
 		}
@@ -56,7 +55,7 @@ gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 		return arrays[current][x + z * xMax + y * xMax * zMax];
 	};
 
-	self.set = function (x, y, z, value) {
+	this.set = function (x, y, z, value) {
 		if (x < 0 || x >= xMax) {
 			return;
 		}
@@ -70,7 +69,7 @@ gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 		arrays[current][x + z * xMax + y * xMax * zMax] = value;
 	};
 
-	self.forEach = function (callback) {
+	this.forEach = function (callback) {
 		for (var y = 0; y < yMax; y++) {
 			for (var z = 0; z < zMax; z++) {
 				for (var x = 0; x < xMax; x++) {
@@ -83,7 +82,7 @@ gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 		}
 	};
 
-	self.updateCells = function (count) {
+	this.updateCells = function (count) {
 		for (; count > 0; count--) {
 			var x = updated % xMax;
 			var z = Math.floor(updated / xMax) % zMax;
@@ -103,16 +102,16 @@ gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 			}
 
 			if (arrays[current][x + z * xMax + y * xMax * zMax]) {
-				arrays[1 - current][x + z * xMax + y * xMax * zMax] = neighbours >= self.a && neighbours <= self.b;
+				arrays[1 - current][x + z * xMax + y * xMax * zMax] = neighbours >= this.a && neighbours <= this.b;
 			} else {
-				arrays[1 - current][x + z * xMax + y * xMax * zMax] = neighbours >= self.c && neighbours <= self.d;
+				arrays[1 - current][x + z * xMax + y * xMax * zMax] = neighbours >= this.c && neighbours <= this.d;
 			}
 
 			if (++updated == arrays[current].length) {
 				current = 1 - current;
 				updated = 0;
 
-				self.onUpdateComplete();
+				this.onUpdateComplete();
 			}
 		}
 	};

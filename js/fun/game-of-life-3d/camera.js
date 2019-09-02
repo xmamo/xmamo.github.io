@@ -3,24 +3,24 @@
 var gameOfLife3d = gameOfLife3d || {};
 
 gameOfLife3d.Camera = function (options) {
-	options = options || {};
+	if (options == null) {
+		options = {};
+	}
 
-	var self = this;
-
-	var fov = options.fov != null ? options.fov : 45 * Math.PI / 2;
-	var aspect = options.aspect != null ? options.aspect : 1;
-	var near = options.near != null ? options.near : 0.1;
-	var far = options.far != null ? options.far : 1000;
-	var x = options.x != null ? options.x : 0;
-	var y = options.y != null ? options.y : 0;
-	var z = options.z != null ? options.z : 0;
-	var rx = options.rx != null ? options.rx : 0;
-	var ry = options.ry != null ? options.ry : 0;
+	var fov = options.fov || 45 * Math.PI / 2;
+	var aspect = options.aspect || 1;
+	var near = options.near || 0.1;
+	var far = options.far || 1000;
+	var x = options.x || 0;
+	var y = options.y || 0;
+	var z = options.z || 0;
+	var rx = options.rx || 0;
+	var ry = options.ry || 0;
 
 	var projectionMatrix = null;
 	var viewMatrix = null;
 
-	Object.defineProperty(self, "fov", {
+	Object.defineProperty(this, "fov", {
 		get: function () {
 			return fov;
 		},
@@ -32,7 +32,7 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "aspect", {
+	Object.defineProperty(this, "aspect", {
 		get: function () {
 			return aspect;
 		},
@@ -44,7 +44,7 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "near", {
+	Object.defineProperty(this, "near", {
 		get: function () {
 			return near;
 		},
@@ -56,7 +56,7 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "far", {
+	Object.defineProperty(this, "far", {
 		get: function () {
 			return far;
 		},
@@ -68,7 +68,7 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "x", {
+	Object.defineProperty(this, "x", {
 		get: function () {
 			return x;
 		},
@@ -80,7 +80,7 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "y", {
+	Object.defineProperty(this, "y", {
 		get: function () {
 			return y;
 		},
@@ -92,7 +92,7 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "z", {
+	Object.defineProperty(this, "z", {
 		get: function () {
 			return z;
 		},
@@ -104,7 +104,7 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "rx", {
+	Object.defineProperty(this, "rx", {
 		get: function () {
 			return rx;
 		},
@@ -116,7 +116,7 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "ry", {
+	Object.defineProperty(this, "ry", {
 		get: function () {
 			return ry;
 		},
@@ -128,14 +128,14 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "projectionMatrix", {
+	Object.defineProperty(this, "projectionMatrix", {
 		get: function () {
 			if (projectionMatrix === null) {
 				projectionMatrix = [
-					1 / (Math.tan(self.fov / 2) * self.aspect), 0, 0, 0,
-					0, 1 / Math.tan(self.fov / 2), 0, 0,
-					0, 0, (self.far + self.near) / (self.near - self.far), -1,
-					0, 0, (2 * self.far * self.near) / (self.near - self.far), 0
+					1 / (Math.tan(this.fov / 2) * this.aspect), 0, 0, 0,
+					0, 1 / Math.tan(this.fov / 2), 0, 0,
+					0, 0, (this.far + this.near) / (this.near - this.far), -1,
+					0, 0, (2 * this.far * this.near) / (this.near - this.far), 0
 				];
 			}
 
@@ -143,15 +143,15 @@ gameOfLife3d.Camera = function (options) {
 		}
 	});
 
-	Object.defineProperty(self, "viewMatrix", {
+	Object.defineProperty(this, "viewMatrix", {
 		get: function () {
 			if (viewMatrix === null) {
 				// (R_y * R_x * T)^-1 = T^-1 * R_y^-1 * R_x^-1
 				viewMatrix = [
-					Math.cos(self.ry), Math.sin(self.rx) * Math.sin(self.ry), Math.cos(self.rx) * Math.sin(self.ry), 0,
-					0, Math.cos(self.rx), -Math.sin(self.rx), 0,
-					-Math.sin(self.ry), Math.sin(self.rx) * Math.cos(self.ry), Math.cos(self.rx) * Math.cos(self.ry), 0,
-					-self.x, -self.y, -self.z, 1
+					Math.cos(this.ry), Math.sin(this.rx) * Math.sin(this.ry), Math.cos(this.rx) * Math.sin(this.ry), 0,
+					0, Math.cos(this.rx), -Math.sin(this.rx), 0,
+					-Math.sin(this.ry), Math.sin(this.rx) * Math.cos(this.ry), Math.cos(this.rx) * Math.cos(this.ry), 0,
+					-this.x, -this.y, -this.z, 1
 				];
 			}
 
