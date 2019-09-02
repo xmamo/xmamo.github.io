@@ -12,7 +12,7 @@ scripts:
 
 <form id="game-of-life" class="js-only">
 	<output class="bordered" style="display: block;">
-		<canvas id="game-of-life-canvas"></canvas>
+		<canvas id="game-of-life-canvas" style="background: #FFF;"></canvas>
 	</output>
 	<div class="columns">
 		<div class="column">
