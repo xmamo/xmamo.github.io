@@ -5,7 +5,7 @@ var gameOfLife3d = gameOfLife3d || {};
 gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 	var self = this;
 	var arrays = [[], []];
-	for (var i = 0; i < xMax * yMax * zMax; i++) {
+	for (var i = 0, volume = xMax * yMax * zMax; i < volume; i++) {
 		arrays[0].push(false);
 		arrays[1].push(false);
 	}

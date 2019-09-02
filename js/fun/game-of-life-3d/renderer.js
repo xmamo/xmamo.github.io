@@ -161,7 +161,9 @@ gameOfLife3d.Renderer = function (gl, world) {
 			}
 
 			if (++updated === self.world.volume) {
-				for (var i = buffersArray.length; i < array.length; i++) {
+				var arrayLength = array.length;
+
+				while (buffersArray.length < arrayLength) {
 					buffersArray.push({
 						positionsBuffer: gl.createBuffer(),
 						normalsBuffer: gl.createBuffer(),
@@ -170,17 +172,17 @@ gameOfLife3d.Renderer = function (gl, world) {
 					});
 				}
 
-				for (var i = 0; i < buffersArray.length; i++) {
+				for (var i = 0; i < arrayLength; i++) {
 					gl.bindBuffer(gl.ARRAY_BUFFER, buffersArray[i].positionsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(i < array.length ? array[i].positions : []), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(i < arrayLength ? array[i].positions : []), gl.DYNAMIC_DRAW);
 
 					gl.bindBuffer(gl.ARRAY_BUFFER, buffersArray[i].normalsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(i < array.length ? array[i].normals : []), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(i < arrayLength ? array[i].normals : []), gl.DYNAMIC_DRAW);
 
 					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffersArray[i].indicesBuffer);
-					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(i < array.length ? array[i].indices : []), gl.DYNAMIC_DRAW);
+					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(i < arrayLength ? array[i].indices : []), gl.DYNAMIC_DRAW);
 
-					buffersArray[i].count = i < array.length ? array[i].indices.length : 0;
+					buffersArray[i].count = i < arrayLength ? array[i].indices.length : 0;
 				}
 
 				positions = [];
@@ -199,7 +201,7 @@ gameOfLife3d.Renderer = function (gl, world) {
 		gl.enableVertexAttribArray(aPositionLocation);
 		gl.enableVertexAttribArray(aNormalLocation);
 
-		for (var i = 0; i < buffersArray.length; i++) {
+		for (var i = 0, buffersArrayLength = buffersArray.length; i < buffersArrayLength; i++) {
 			gl.bindBuffer(gl.ARRAY_BUFFER, buffersArray[i].positionsBuffer);
 			gl.vertexAttribPointer(aPositionLocation, 3, gl.FLOAT, false, 0, 0);
 
