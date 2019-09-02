@@ -13,7 +13,9 @@ scripts:
 <noscript><p>Error: JavaScript is disabled.</p></noscript>
 
 <form id="game-of-life-3d" class="js-only">
-	<output class="bordered" style="display: block;"><canvas id="game-of-life-3d-canvas"></canvas></output>
+	<output class="bordered" style="display: block;">
+		<canvas id="game-of-life-3d-canvas" style="background: #FFF;"></canvas>
+	</output>
 	<h2>Controls</h2>
 	<dl>
 		<dt><kbd>W</kbd>, <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd></dt>
