@@ -11,8 +11,8 @@ scripts:
 ---
 
 # {{ page.title }} #
+<p id="p2p-paint-remote">Please wait…</p>
 <div class="bordered" style="position: relative;">
 	<canvas id="p2p-paint-canvas-0" width="1920" height="1080" style="position: absolute;"></canvas>
 	<canvas id="p2p-paint-canvas-1" width="1920" height="1080" style="position: relative;"></canvas>
 </div>
-<p id="p2p-paint-remote"></p>
