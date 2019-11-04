@@ -65,7 +65,7 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 				}
 			}
 		}
-	}
+	};
 
 	this.updateCells = function () {
 		for (var y = 0; y < height; y++) {
@@ -97,4 +97,4 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 
 		current = 1 - current;
 	};
-}
+};
