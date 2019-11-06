@@ -20,7 +20,7 @@ var fol = fol || {};
 		skipWhitespace(context);
 		var formula = parseFormula(context);
 		if (formula == null) {
-			context.error = "Expected expression";
+			context.error = "Expected formula";
 			context.position = position;
 			return null;
 		}
