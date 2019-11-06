@@ -2,10 +2,10 @@
 title: "BiLoMa's theorem"
 description: "The objective of BiLoMa's theorem is to provide formulas for projectile motion, but in discrete time."
 keywords: 'BiLoMa, theorem, formula, proof, projectile motion, projectile, motion, velocity, position, displacement, discrete time, discrete'
-permalink: '/projects/biloma/index.xhtml'
-canonical: '/projects/biloma/'
+permalink: '/biloma/index.xhtml'
+canonical: '/biloma/'
 scripts:
-  - '/js/projects/biloma.js'
+  - '/js/biloma.js'
 ---
 
 # {{ page.title }} #
@@ -49,20 +49,20 @@ below and see how our theorem works in practice.<span>
 </form>
 
 ## The theorem ##
-Let ![n](/img/projects/biloma/n.svg){:.h1} be the number of time units that have passed since the object was launched
-and ![a](/img/projects/biloma/a.svg){:.h1} the (gravitational) acceleration. Assuming that the object was launched with
-an initial position of ![0](/img/projects/biloma/0.svg){:.h1} and an initial velocity of
-![v0](/img/projects/biloma/v0.svg){:.h1}, we have the following formulas for the velocity
-![vn](/img/projects/biloma/vn.svg){:.h1} and the position ![pn](/img/projects/biloma/pn.svg){:.h1}:
+Let ![n](/img/biloma/n.svg){:.h1} be the number of time units that have passed since the object was launched
+and ![a](/img/biloma/a.svg){:.h1} the (gravitational) acceleration. Assuming that the object was launched with
+an initial position of ![0](/img/biloma/0.svg){:.h1} and an initial velocity of
+![v0](/img/biloma/v0.svg){:.h1}, we have the following formulas for the velocity
+![vn](/img/biloma/vn.svg){:.h1} and the position ![pn](/img/biloma/pn.svg){:.h1}:
 
-![BiLoMa’s theorem](/img/projects/biloma/theorem.svg)
+![BiLoMa’s theorem](/img/biloma/theorem.svg)
 
-The damping factor ![d](/img/projects/biloma/d.svg){:.h1}, is used in Minecraft to prevent objects from incrementing
-their velocity indefinitely. Using these formulas with ![d→1](/img/projects/biloma/d-to-1.svg){:.h1} means having no
+The damping factor ![d](/img/biloma/d.svg){:.h1}, is used in Minecraft to prevent objects from incrementing
+their velocity indefinitely. Using these formulas with ![d→1](/img/biloma/d-to-1.svg){:.h1} means having no
 damping at all.
 
-### Proof of the formula for ![vn](/img/projects/biloma/vn.svg){:.h1} ###
-![Proof of the formula for vn](/img/projects/biloma/vn-proof.svg)
+### Proof of the formula for ![vn](/img/biloma/vn.svg){:.h1} ###
+![Proof of the formula for vn](/img/biloma/vn-proof.svg)
 
-### Proof of the formula for ![pn](/img/projects/biloma/pn.svg){:.h1} ###
-![Proof of the formula for pn](/img/projects/biloma/pn-proof.svg)
+### Proof of the formula for ![pn](/img/biloma/pn.svg){:.h1} ###
+![Proof of the formula for pn](/img/biloma/pn-proof.svg)
