@@ -18,7 +18,7 @@ p2pPaint.startServer = function (onOpen) {
 		});
 
 		connection.on("data", function (data) {
-			for (var i = 0, connectionCount = connections.length; i < connectionCount; i++) {
+			for (var i = 0, count = connections.length; i < count; i++) {
 				if (connections[i] !== connection) {
 					// Unpack and repack data in order to avoid forwarding forged data objects
 					connections[i].send({
