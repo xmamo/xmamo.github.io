@@ -3,6 +3,7 @@
 var gameOfLife3d = gameOfLife3d || {};
 
 gameOfLife3d.Renderer = function (gl, world) {
+	var self = this;
 	var positions = [];
 	var normals = [];
 	var indices = [];
@@ -11,26 +12,26 @@ gameOfLife3d.Renderer = function (gl, world) {
 	var updated = 0;
 	var buffers = [];
 
-	this.world = world;
-	this.onUpdateComplete = function () { };
+	self.world = world;
+	self.onUpdateComplete = function () { };
 
-	Object.defineProperty(this, "gl", {
+	Object.defineProperty(self, "gl", {
 		get: function () {
 			return gl;
 		}
 	});
 
-	this.updateBuffers = function (count) {
+	self.updateBuffers = function (count) {
 		for (; count > 0; count--) {
-			var x = updated % this.world.xMax;
-			var z = Math.floor(updated / this.world.xMax) % this.world.zMax;
-			var y = Math.floor(Math.floor(updated / this.world.xMax) / this.world.zMax);
-			var dx = -this.world.xMax / 2;
-			var dy = -this.world.yMax / 2;
-			var dz = -this.world.zMax / 2;
+			var x = updated % self.world.xMax;
+			var z = Math.floor(updated / self.world.xMax) % self.world.zMax;
+			var y = Math.floor(Math.floor(updated / self.world.xMax) / self.world.zMax);
+			var dx = -self.world.xMax / 2;
+			var dy = -self.world.yMax / 2;
+			var dz = -self.world.zMax / 2;
 
-			if (this.world.get(x, y, z)) {
-				if (!this.world.get(x - 1, y, z)) {
+			if (self.world.get(x, y, z)) {
+				if (!self.world.get(x - 1, y, z)) {
 					positions.push(
 						x + dx, y + dy, z + dz,
 						x + dx, y + dy, z + 1 + dz,
@@ -50,7 +51,7 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!this.world.get(x + 1, y, z)) {
+				if (!self.world.get(x + 1, y, z)) {
 					positions.push(
 						x + 1 + dx, y + dy, z + dz,
 						x + 1 + dx, y + 1 + dy, z + dz,
@@ -70,7 +71,7 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!this.world.get(x, y - 1, z)) {
+				if (!self.world.get(x, y - 1, z)) {
 					positions.push(
 						x + dx, y + dy, z + dz,
 						x + 1 + dx, y + dy, z + dz,
@@ -90,7 +91,7 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!this.world.get(x, y + 1, z)) {
+				if (!self.world.get(x, y + 1, z)) {
 					positions.push(
 						x + dx, y + 1 + dy, z + dz,
 						x + dx, y + 1 + dy, z + 1 + dz,
@@ -110,7 +111,7 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!this.world.get(x, y, z - 1)) {
+				if (!self.world.get(x, y, z - 1)) {
 					positions.push(
 						x + dx, y + dy, z + dz,
 						x + dx, y + 1 + dy, z + dz,
@@ -130,7 +131,7 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!this.world.get(x, y, z + 1)) {
+				if (!self.world.get(x, y, z + 1)) {
 					positions.push(
 						x + dx, y + dy, z + 1 + dz,
 						x + 1 + dx, y + dy, z + 1 + dz,
@@ -159,7 +160,7 @@ gameOfLife3d.Renderer = function (gl, world) {
 				}
 			}
 
-			if (++updated === this.world.volume) {
+			if (++updated === self.world.volume) {
 				var arrayLength = arrays.length;
 
 				while (buffers.length < arrayLength) {
@@ -209,12 +210,12 @@ gameOfLife3d.Renderer = function (gl, world) {
 				io = 0;
 				updated = 0;
 
-				this.onUpdateComplete();
+				self.onUpdateComplete();
 			}
 		}
 	};
 
-	this.render = function (aPositionLocation, aNormalLocation) {
+	self.render = function (aPositionLocation, aNormalLocation) {
 		gl.enableVertexAttribArray(aPositionLocation);
 		gl.enableVertexAttribArray(aNormalLocation);
 
