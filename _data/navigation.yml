@@ -3,17 +3,17 @@
 - title: 'Projects'
   subitems:
     - title: "BiLoMa's theorem"
-      url: '/projects/biloma/'
+      url: '/biloma/'
     - title: 'VanillaVotifier'
-      url: '/projects/vanillavotifier/'
+      url: '/vanillavotifier/'
     - title: 'Website source code'
       url: 'https://github.com/xMamo/xMamo.github.io'
       external: true
 - title: 'Fun'
   subitems:
     - title: 'P2P Paint'
-      url: '/fun/p2p-paint/'
+      url: '/p2p-paint/'
     - title: 'Game of Life'
-      url: '/fun/game-of-life/'
+      url: '/game-of-life/'
     - title: 'Game of Life 3D'
-      url: '/fun/game-of-life-3d/'
+      url: '/game-of-life-3d/'

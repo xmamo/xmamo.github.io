@@ -1,12 +1,12 @@
 ---
 title: 'Game of Life 3D'
-permalink: '/fun/game-of-life-3d/index.xhtml'
-canonical: '/fun/game-of-life-3d/'
+permalink: '/game-of-life-3d/index.xhtml'
+canonical: '/game-of-life-3d/'
 scripts:
-  - '/js/fun/game-of-life-3d/camera.js'
-  - '/js/fun/game-of-life-3d/world.js'
-  - '/js/fun/game-of-life-3d/renderer.js'
-  - '/js/fun/game-of-life-3d/main.js'
+  - '/js/game-of-life-3d/camera.js'
+  - '/js/game-of-life-3d/world.js'
+  - '/js/game-of-life-3d/renderer.js'
+  - '/js/game-of-life-3d/main.js'
 ---
 
 # {{ page.title }} #

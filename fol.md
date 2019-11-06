@@ -1,15 +1,15 @@
 ---
 title: 'First order logic'
-permalink: '/projects/fol/index.xhtml'
-canonical: '/projects/fol/'
+permalink: '/fol/index.xhtml'
+canonical: '/fol/'
 scripts:
   - '/js/util.js'
   - '/js/parse.js'
   - '/js/scope.js'
-  - '/js/projects/fol/ast.js'
-  - '/js/projects/fol/parser.js'
-  - '/js/projects/fol/analyzer.js'
-  - '/js/projects/fol/main.js'
+  - '/js/fol/ast.js'
+  - '/js/fol/parser.js'
+  - '/js/fol/analyzer.js'
+  - '/js/fol/main.js'
 ---
 
 # {{ page.title }} #

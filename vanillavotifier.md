@@ -2,10 +2,10 @@
 title: 'VanillaVotifier'
 description: 'VanillaVotifier is an application which listens for votes made on Minecraft server lists for your server. It allows to execute some kind of custom action on vote, without requiring a Bukkit server.'
 keywords: 'VanillaVotifier, Minecraft server, Minecraft, server, RCon, vanilla Votifier, vanilla, Votifier, Bukkit, plugin, Minecraft server list, server list'
-permalink: '/projects/vanillavotifier/index.xhtml'
-canonical: '/projects/vanillavotifier/'
+permalink: '/vanillavotifier/index.xhtml'
+canonical: '/vanillavotifier/'
 scripts:
-  - '/js/projects/vanillavotifier.js'
+  - '/js/vanillavotifier.js'
 ---
 
 # {{ page.title }} [](https://github.com/xMamo/VanillaVotifier/releases/latest){:.fas .fa-download .icon data-github-repo="xMamo/VanillaVotifier"} [](https://github.com/xMamo/VanillaVotifier){:.fab .fa-github .icon} #

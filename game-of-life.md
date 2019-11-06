@@ -1,10 +1,10 @@
 ---
 title: 'Game of Life'
-permalink: '/fun/game-of-life/index.xhtml'
-canonical: '/fun/game-of-life/'
+permalink: '/game-of-life/index.xhtml'
+canonical: '/game-of-life/'
 scripts:
-  - '/js/fun/game-of-life/world.js'
-  - '/js/fun/game-of-life/main.js'
+  - '/js/game-of-life/world.js'
+  - '/js/game-of-life/main.js'
 ---
 
 # {{ page.title }} #
