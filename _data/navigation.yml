@@ -11,8 +11,6 @@
       external: true
 - title: 'Fun'
   subitems:
-    - title: 'P2P Paint'
-      url: '/p2p-paint/'
     - title: 'Game of Life'
       url: '/game-of-life/'
     - title: 'Game of Life 3D'
