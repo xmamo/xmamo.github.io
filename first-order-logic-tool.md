@@ -1,5 +1,5 @@
 ---
-title: 'First order logic'
+title: 'First order logic tool'
 permalink: '/first-order-logic-tool/index.xhtml'
 canonical: '/first-order-logic-tool/'
 scripts:
