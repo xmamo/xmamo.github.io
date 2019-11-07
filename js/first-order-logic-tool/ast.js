@@ -1,10 +1,10 @@
 "use strict";
 
-var fol = fol || {};
+var firstOrderLogicTool = firstOrderLogicTool || {};
 
 (function () {
-	var ast = fol.ast || {};
-	fol.ast = ast;
+	var ast = firstOrderLogicTool.ast || {};
+	firstOrderLogicTool.ast = ast;
 
 	ast.Symbol = function (source, start, end, identifier) {
 		var self = this;
