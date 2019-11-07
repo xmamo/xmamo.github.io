@@ -34,7 +34,7 @@
 		world = newWorld;
 	});
 
-	form.ruleset.addEventListener("change", function () {
+	form.ruleset.addEventListener("input", function () {
 		var ruleset = form.ruleset.value.match(form.ruleset.pattern);
 		if (ruleset == null) {
 			return;
