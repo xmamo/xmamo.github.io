@@ -1,11 +1,14 @@
 "use strict";
 
 (function () {
+	var touchToMouse = util.touchToMouse;
+	var World = gameOfLife.World;
+
 	var form = document.forms["game-of-life"];
 	var canvas = document.getElementById("game-of-life-canvas");
 	var context = canvas.getContext("2d");
 
-	var world = new gameOfLife.World(80, 45, 2, 3, 3, 3, true);
+	var world = new World(80, 45, 2, 3, 3, 3, true);
 	var mouseX = NaN;
 	var mouseY = NaN;
 	var leftDown = false;
@@ -18,20 +21,20 @@
 		event.preventDefault();
 	});
 
-	form.size.addEventListener("input", function () {
+	form.size.addEventListener("change", function () {
 		var size = form.size.value.match(/^\s*([+-]?\d+)(?:\s*[x×]\s*|\s+)([+-]?\d+)\s*$/);
 		if (size == null) {
 			return;
 		}
 
-		var newWorld = new gameOfLife.World(parseInt(size[1]), parseInt(size[2]), world.a, world.b, world.c, world.d);
+		var newWorld = new World(parseInt(size[1]), parseInt(size[2]), world.a, world.b, world.c, world.d);
 		newWorld.forEach(function (value, x, y) {
 			return world.get(x, y);
 		});
 		world = newWorld;
 	});
 
-	form.ruleset.addEventListener("input", function () {
+	form.ruleset.addEventListener("change", function () {
 		var ruleset = form.ruleset.value.match(form.ruleset.pattern);
 		if (ruleset == null) {
 			return;
@@ -43,7 +46,7 @@
 		world.d = parseInt(ruleset[4]);
 	});
 
-	form.wrap.addEventListener("input", function () {
+	form.wrap.addEventListener("change", function () {
 		world.wrap = form.wrap.checked;
 	});
 
@@ -52,15 +55,15 @@
 	});
 
 	canvas.addEventListener("mousedown", function (event) {
+		mouseX = event.clientX - canvas.getBoundingClientRect().x;
+		mouseY = event.clientY - canvas.getBoundingClientRect().y;
+
 		switch (event.button) {
 			case 0:
 				leftDown = true;
-				event.preventDefault();
 				break;
-
 			case 2:
 				rightDown = true;
-				event.preventDefault();
 				break;
 		}
 
@@ -69,24 +72,6 @@
 				Math.round(world.width / canvas.width * mouseX - brushSize / 2),
 				Math.round(world.height / canvas.height * mouseY - brushSize / 2)
 			);
-		}
-	});
-
-	document.addEventListener("mouseup", function (event) {
-		switch (event.button) {
-			case 0:
-				leftDown = false;
-				if (mouseInCanvas()) {
-					event.preventDefault();
-				}
-				break;
-
-			case 2:
-				rightDown = false;
-				if (mouseInCanvas()) {
-					event.preventDefault();
-				}
-				break;
 		}
 	});
 
@@ -114,9 +99,19 @@
 
 		mouseX = newMouseX;
 		mouseY = newMouseY;
+	});
 
-		if (mouseInCanvas()) {
-			event.preventDefault();
+	document.addEventListener("mouseup", function (event) {
+		mouseX = NaN;
+		mouseY = NaN;
+
+		switch (event.button) {
+			case 0:
+				leftDown = false;
+				break;
+			case 2:
+				rightDown = false;
+				break;
 		}
 	});
 
@@ -125,26 +120,23 @@
 		event.preventDefault();
 	});
 
-	document.addEventListener("keydown", function (event) {
-		switch (event.key) {
-			case "f":
-			case "F":
-				if (mouseInCanvas()) {
-					if (!document.fullscreenElement) {
-						canvas.requestFullscreen();
-					} else {
-						document.exitFullscreen();
-					}
-					event.preventDefault();
-				}
-				break;
+	canvas.addEventListener("touchstart", function (event) {
+		canvas.dispatchEvent(touchToMouse(event, "mousedown"));
+		event.preventDefault();
+	});
 
-			case " ":
-				if (mouseInCanvas()) {
-					paused = !paused;
-					event.preventDefault();
-				}
-				break;
+	document.addEventListener("touchmove", function (event) {
+		document.dispatchEvent(touchToMouse(event, "mousemove"));
+	});
+
+	document.addEventListener("touchend", function (event) {
+		document.dispatchEvent(touchToMouse(event, "mouseup"));
+	});
+
+	document.addEventListener("keydown", function (event) {
+		if (event.key === " " && mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+			paused = !paused;
+			event.preventDefault();
 		}
 	});
 
@@ -173,7 +165,7 @@
 			}
 		});
 
-		if (mouseInCanvas()) {
+		if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
 			context.lineWidth = 2;
 			context.strokeStyle = "#777";
 			context.strokeRect(
@@ -183,10 +175,6 @@
 				Math.ceil(canvas.height / world.height * brushSize) - 2
 			);
 		}
-	}
-
-	function mouseInCanvas() {
-		return mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight;
 	}
 
 	function setCells(x0, y0) {
