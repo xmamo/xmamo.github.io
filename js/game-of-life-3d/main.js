@@ -95,19 +95,19 @@
 		switch (event.key) {
 			case "f":
 			case "F":
-				if (!document.fullscreenElement) {
-					canvas.requestFullscreen();
-				} else {
-					document.exitFullscreen();
-				}
 				if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+					if (!document.fullscreenElement) {
+						canvas.requestFullscreen();
+					} else {
+						document.exitFullscreen();
+					}
 					event.preventDefault();
 				}
 				break;
 
 			case " ":
-				paused = !paused;
 				if (mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight) {
+					paused = !paused;
 					event.preventDefault();
 				}
 				break;
