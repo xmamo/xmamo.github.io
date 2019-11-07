@@ -28,7 +28,7 @@
 		var middle = mathify(formula.substring(selectionStart, selectionEnd));
 		var right = mathify(formula.substring(selectionEnd, formula.length));
 		formulaField.value = formula = left + middle + right;
-		formulaField.setSelectionRange(left.length, Math.min(left.length + middle.length, formula.length));
+		formulaField.setSelectionRange(left.length, left.length + middle.length);
 	});
 
 	formulaField.addEventListener("change", function () {

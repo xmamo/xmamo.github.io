@@ -9,7 +9,6 @@ scripts:
 ---
 
 # {{ page.title }} #
-
 <noscript><p>Error: JavaScript is disabled.</p></noscript>
 
 <form id="game-of-life" class="js-only">
