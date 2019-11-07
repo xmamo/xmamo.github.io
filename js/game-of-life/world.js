@@ -4,11 +4,11 @@ var gameOfLife = gameOfLife || {};
 
 gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 	var self = this;
-	var arrays = [[], []];
 	var current = 0;
+	var arrays = [[], []];
 	for (var i = 0, area = width * height; i < area; i++) {
-		arrays[current].push(false);
-		arrays[1 - current].push(false);
+		arrays[0].push(false);
+		arrays[1].push(false);
 	}
 
 	self.a = a;
@@ -36,47 +36,45 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 	});
 
 	self.get = function (x, y) {
-		if (x < 0 || x >= width) {
+		if (x < 0 || x >= width || y < 0 || y >= height) {
 			return false;
 		}
-		if (y < 0 || y >= height) {
-			return false;
-		}
-
 		return arrays[current][x + y * width];
 	};
 
 	self.set = function (x, y, value) {
-		if (x < 0 || x >= width) {
+		if (x < 0 || x >= width || y < 0 || y >= height) {
 			return;
 		}
-		if (y < 0 || y >= height) {
-			return;
-		}
-
 		arrays[current][x + y * width] = value;
 	};
 
 	self.forEach = function (callback) {
+		var currentArray = arrays[current];
+
 		for (var y = 0; y < height; y++) {
 			for (var x = 0; x < width; x++) {
-				var value = callback(arrays[current][x + y * width], x, y);
+				var index = x + y * width;
+				var value = callback(currentArray[index], x, y);
 				if (value !== undefined) {
-					arrays[current][x + y * width] = value;
+					currentArray[index] = value;
 				}
 			}
 		}
 	};
 
 	self.updateCells = function () {
+		var currentArray = arrays[current];
+		var otherArray = arrays[1 - current];
+
 		for (var y = 0; y < height; y++) {
 			for (var x = 0; x < width; x++) {
 				var neighbours = 0;
 				for (var dy = -1; dy <= 1; dy++) {
 					for (var dx = -1; dx <= 1; dx++) {
-						if (dx != 0 || dy != 0) {
+						if (dx !== 0 || dy !== 0) {
 							if (wrap) {
-								if (arrays[current][(x + dx + width) % width + (y + dy + height) % height * width]) {
+								if (currentArray[(x + dx + width) % width + ((y + dy + height) % height) * width]) {
 									neighbours++;
 								}
 							} else {
@@ -88,10 +86,10 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 					}
 				}
 
-				if (arrays[current][x + y * width]) {
-					arrays[1 - current][x + y * width] = neighbours >= self.a && neighbours <= self.b;
+				if (currentArray[x + y * width]) {
+					otherArray[x + y * width] = neighbours >= self.a && neighbours <= self.b;
 				} else {
-					arrays[1 - current][x + y * width] = neighbours >= self.c && neighbours <= self.d;
+					otherArray[x + y * width] = neighbours >= self.c && neighbours <= self.d;
 				}
 			}
 		}
