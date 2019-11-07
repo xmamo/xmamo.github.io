@@ -23,7 +23,7 @@
 	var canvas = document.getElementById("game-of-life-3d-canvas");
 	var gl = canvas.getContext("webgl");
 	var camera = new Camera({ z: 64 });
-	var update = "cells";
+	var update = "buffers";
 	var mouseX = NaN;
 	var mouseY = NaN;
 	var mouseDown = false;
@@ -42,13 +42,24 @@
 	};
 
 	var renderer = new Renderer(gl, world);
-	renderer.updateBuffers(world.volume);
 	renderer.onUpdateComplete = function () {
 		update = "cells";
 	};
 
 	form.addEventListener("submit", function (event) {
 		event.preventDefault();
+	});
+
+	form.ruleset.addEventListener("input", function () {
+		var ruleset = form.ruleset.value.match(form.ruleset.pattern);
+		if (ruleset == null) {
+			return;
+		}
+
+		world.a = parseInt(ruleset[1]);
+		world.b = parseInt(ruleset[2]);
+		world.c = parseInt(ruleset[3]);
+		world.d = parseInt(ruleset[4]);
 	});
 
 	canvas.addEventListener("contextmenu", function (event) {
@@ -227,11 +238,10 @@
 			if (!paused) {
 				switch (update) {
 					case "cells":
-						world.updateCells(world.volume * Math.min(delta, 0.1) * 2);
+						world.updateCells(world.volume * 2 * Math.min(delta, 0.1));
 						break;
-
 					case "buffers":
-						renderer.updateBuffers(world.volume * Math.min(delta, 0.1) * 2);
+						renderer.updateBuffers(world.volume * 2 * Math.min(delta, 0.1));
 						break;
 				}
 			}

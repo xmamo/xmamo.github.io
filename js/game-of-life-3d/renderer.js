@@ -1,16 +1,15 @@
-"use strict";
-
 var gameOfLife3d = gameOfLife3d || {};
 
 gameOfLife3d.Renderer = function (gl, world) {
 	var self = this;
+	var updated = 0;
+	var current = 0;
+	var io = 0; // Index offset
+	var bo = 0; // Buffers array offset
 	var positions = [];
 	var normals = [];
 	var indices = [];
-	var arrays = [{ positions: positions, normals: normals, indices: indices }];
-	var io = 0; // Index offset
-	var updated = 0;
-	var buffers = [];
+	var buffersArrayInfos = [{ buffersArray: [], count: 0 }, { buffersArray: [], count: 0 }];
 
 	self.world = world;
 	self.onUpdateComplete = function () { };
@@ -22,21 +21,28 @@ gameOfLife3d.Renderer = function (gl, world) {
 	});
 
 	self.updateBuffers = function (count) {
-		for (; count > 0; count--) {
-			var x = updated % self.world.xMax;
-			var z = Math.floor(updated / self.world.xMax) % self.world.zMax;
-			var y = Math.floor(Math.floor(updated / self.world.xMax) / self.world.zMax);
-			var dx = -self.world.xMax / 2;
-			var dy = -self.world.yMax / 2;
-			var dz = -self.world.zMax / 2;
+		var world = self.world;
+		var xMax = world.xMax;
+		var yMax = world.yMax;
+		var zMax = world.zMax;
 
-			if (self.world.get(x, y, z)) {
-				if (!self.world.get(x - 1, y, z)) {
+		for (; count > 0; count--) {
+			var x = updated % xMax;
+			var z = Math.floor(updated / xMax) % zMax;
+			var y = Math.floor(updated / (xMax * zMax)) % yMax;
+
+			if (world.get(x, y, z)) {
+				// Offsets to move the center of the cube to (0, 0, 0)
+				var dx = -xMax / 2;
+				var dy = -yMax / 2;
+				var dz = -zMax / 2;
+
+				if (!world.get(x - 1, y, z)) {
 					positions.push(
 						x + dx, y + dy, z + dz,
-						x + dx, y + dy, z + 1 + dz,
-						x + dx, y + 1 + dy, z + 1 + dz,
-						x + dx, y + 1 + dy, z + dz
+						x + dx, y + dy, z + dz + 1,
+						x + dx, y + dy + 1, z + dz + 1,
+						x + dx, y + dy + 1, z + dz
 					);
 					normals.push(
 						-1, 0, 0,
@@ -51,12 +57,12 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!self.world.get(x + 1, y, z)) {
+				if (!world.get(x + 1, y, z)) {
 					positions.push(
-						x + 1 + dx, y + dy, z + dz,
-						x + 1 + dx, y + 1 + dy, z + dz,
-						x + 1 + dx, y + 1 + dy, z + 1 + dz,
-						x + 1 + dx, y + dy, z + 1 + dz
+						x + dx + 1, y + dy, z + dz + 1,
+						x + dx + 1, y + dy, z + dz,
+						x + dx + 1, y + dy + 1, z + dz,
+						x + dx + 1, y + dy + 1, z + dz + 1
 					);
 					normals.push(
 						1, 0, 0,
@@ -71,12 +77,12 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!self.world.get(x, y - 1, z)) {
+				if (!world.get(x, y - 1, z)) {
 					positions.push(
 						x + dx, y + dy, z + dz,
-						x + 1 + dx, y + dy, z + dz,
-						x + 1 + dx, y + dy, z + 1 + dz,
-						x + dx, y + dy, z + 1 + dz
+						x + dx + 1, y + dy, z + dz,
+						x + dx + 1, y + dy, z + dz + 1,
+						x + dx, y + dy, z + dz + 1
 					);
 					normals.push(
 						0, -1, 0,
@@ -91,12 +97,12 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!self.world.get(x, y + 1, z)) {
+				if (!world.get(x, y + 1, z)) {
 					positions.push(
-						x + dx, y + 1 + dy, z + dz,
-						x + dx, y + 1 + dy, z + 1 + dz,
-						x + 1 + dx, y + 1 + dy, z + 1 + dz,
-						x + 1 + dx, y + 1 + dy, z + dz
+						x + dx, y + dy + 1, z + dz + 1,
+						x + dx + 1, y + dy + 1, z + dz + 1,
+						x + dx + 1, y + dy + 1, z + dz,
+						x + dx, y + dy + 1, z + dz
 					);
 					normals.push(
 						0, 1, 0,
@@ -111,12 +117,12 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!self.world.get(x, y, z - 1)) {
+				if (!world.get(x, y, z - 1)) {
 					positions.push(
+						x + dx + 1, y + dy, z + dz,
 						x + dx, y + dy, z + dz,
-						x + dx, y + 1 + dy, z + dz,
-						x + 1 + dx, y + 1 + dy, z + dz,
-						x + 1 + dx, y + dy, z + dz
+						x + dx, y + dy + 1, z + dz,
+						x + dx + 1, y + dy + 1, z + dz
 					);
 					normals.push(
 						0, 0, -1,
@@ -131,12 +137,12 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (!self.world.get(x, y, z + 1)) {
+				if (!world.get(x, y, z + 1)) {
 					positions.push(
-						x + dx, y + dy, z + 1 + dz,
-						x + 1 + dx, y + dy, z + 1 + dz,
-						x + 1 + dx, y + 1 + dy, z + 1 + dz,
-						x + dx, y + 1 + dy, z + 1 + dz
+						x + dx, y + dy, z + dz + 1,
+						x + dx + 1, y + dy, z + dz + 1,
+						x + dx + 1, y + dy + 1, z + dz + 1,
+						x + dx, y + dy + 1, z + dz + 1
 					);
 					normals.push(
 						0, 0, 1,
@@ -151,66 +157,19 @@ gameOfLife3d.Renderer = function (gl, world) {
 					io += 4;
 				}
 
-				if (io + 36 > 65535) {
-					positions = [];
-					normals = [];
-					indices = [];
-					arrays.push({ positions: positions, normals: normals, indices: indices });
-					io = 0;
+				if (io > 65511) {
+					moveArraysToBuffers();
 				}
 			}
 
-			if (++updated === self.world.volume) {
-				var arrayLength = arrays.length;
-
-				while (buffers.length < arrayLength) {
-					buffers.push({
-						positionsBuffer: gl.createBuffer(),
-						normalsBuffer: gl.createBuffer(),
-						indicesBuffer: gl.createBuffer(),
-						count: 0
-					});
-				}
-
-				for (var i = 0; i < arrayLength; i++) {
-					var buffer = buffers[i];
-					var array = arrays[i];
-
-					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.positionsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array.positions), gl.DYNAMIC_DRAW);
-
-					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.normalsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array.normals), gl.DYNAMIC_DRAW);
-
-					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indicesBuffer);
-					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(array.indices), gl.DYNAMIC_DRAW);
-
-					buffers[i].count = array.indices.length;
-				}
-
-				for (var i = arrayLength, buffersLength = buffers.length; i < buffersLength; i++) {
-					var buffer = buffers[i];
-
-					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.positionsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([]), gl.DYNAMIC_DRAW);
-
-					gl.bindBuffer(gl.ARRAY_BUFFER, buffer.normalsBuffer);
-					gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([]), gl.DYNAMIC_DRAW);
-
-					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indicesBuffer);
-					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([]), gl.DYNAMIC_DRAW);
-
-					buffers[i].count = 0;
-				}
-
-				positions = [];
-				normals = [];
-				indices = [];
-				arrays = [{ positions: positions, normals: normals, indices: indices }];
-				io = 0;
+			if (++updated >= world.volume) {
+				moveArraysToBuffers();
+				current = 1 - current;
+				buffersArrayInfos[current].count = bo;
+				bo = 0;
 				updated = 0;
-
 				self.onUpdateComplete();
+				break;
 			}
 		}
 	};
@@ -219,16 +178,48 @@ gameOfLife3d.Renderer = function (gl, world) {
 		gl.enableVertexAttribArray(aPositionLocation);
 		gl.enableVertexAttribArray(aNormalLocation);
 
-		for (var i = 0, buffersLength = buffers.length; i < buffersLength; i++) {
-			gl.bindBuffer(gl.ARRAY_BUFFER, buffers[i].positionsBuffer);
+		var buffersArrayInfo = buffersArrayInfos[current];
+		var buffersArray = buffersArrayInfo.buffersArray;
+
+		for (var i = 0, count = buffersArrayInfo.count; i < count; i++) {
+			var buffers = buffersArray[i];
+
+			gl.bindBuffer(gl.ARRAY_BUFFER, buffers.positions);
 			gl.vertexAttribPointer(aPositionLocation, 3, gl.FLOAT, false, 0, 0);
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, buffers[i].normalsBuffer);
+			gl.bindBuffer(gl.ARRAY_BUFFER, buffers.normals);
 			gl.vertexAttribPointer(aNormalLocation, 3, gl.FLOAT, false, 0, 0);
 
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers[i].indicesBuffer);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
-			gl.drawElements(gl.TRIANGLES, buffers[i].count, gl.UNSIGNED_SHORT, 0);
+			gl.drawElements(gl.TRIANGLES, buffers.count, gl.UNSIGNED_SHORT, 0);
 		}
 	};
+
+	function moveArraysToBuffers() {
+		var otherBuffersArray = buffersArrayInfos[1 - current].buffersArray;
+
+		bo++;
+		while (otherBuffersArray.length < bo) {
+			otherBuffersArray.push({ positions: gl.createBuffer(), normals: gl.createBuffer(), indices: gl.createBuffer(), count: 0 });
+		}
+
+		var otherBuffers = otherBuffersArray[bo - 1];
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, otherBuffers.positions);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, otherBuffers.normals);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.DYNAMIC_DRAW);
+
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, otherBuffers.indices);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.DYNAMIC_DRAW);
+
+		otherBuffers.count = indices.length;
+
+		io = 0;
+		positions = [];
+		normals = [];
+		indices = [];
+	}
 };
