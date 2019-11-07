@@ -1,19 +1,19 @@
 "use strict";
 
-var fol = fol || {};
+var firstOrderLogicTool = firstOrderLogicTool || {};
 
 (function () {
 	var firstStarting = util.firstStarting;
-	var ast = fol.ast;
+	var ast = firstOrderLogicTool.ast;
 	var Symbol = ast.Symbol;
 	var UnaryFormula = ast.UnaryFormula;
 	var BinaryFormula = ast.BinaryFormula;
 	var QuantifiedFormula = ast.QuantifiedFormula;
 	var Call = ast.Call;
 
-	var parser = fol.parser || {};
+	var parser = firstOrderLogicTool.parser || {};
 	parser.parse = parse;
-	fol.parser = parser;
+	firstOrderLogicTool.parser = parser;
 
 	function parse(context) {
 		var position = context.position;

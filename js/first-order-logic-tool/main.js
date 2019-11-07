@@ -1,16 +1,16 @@
 "use strict";
 
 (function () {
-	var analyzer = fol.analyzer;
+	var analyzer = firstOrderLogicTool.analyzer;
 	var Context = parse.Context;
-	var parseFormula = fol.parser.parse;
+	var parseFormula = firstOrderLogicTool.parser.parse;
 	var AnalysisError = analyzer.AnalysisError;
 	var analyze = analyzer.analyze;
 
-	var form = document.forms.fol;
+	var form = document.forms["first-order-logic-tool"];
 	var formulaField = form.formula;
 	var errorElement = form.error;
-	var resultElement = document.getElementById("fol-result");
+	var resultElement = document.getElementById("first-order-logic-tool-result");
 	var interpretationElement = form.interpretation;
 	var parsedElement = form.parsed;
 	var heightElement = form.height;

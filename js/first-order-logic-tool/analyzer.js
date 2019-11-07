@@ -1,14 +1,14 @@
 "use strict";
 
-var fol = fol || {};
+var firstOrderLogicTool = firstOrderLogicTool || {};
 
 (function () {
 	var Scope = scope.Scope;
 
-	var analyzer = fol.analyzer || {};
+	var analyzer = firstOrderLogicTool.analyzer || {};
 	analyzer.Info = Info;
 	analyzer.AnalysisError = AnalysisError;
-	fol.analyzer = analyzer;
+	firstOrderLogicTool.analyzer = analyzer;
 
 	analyzer.analyze = function (formula) {
 		var visitor = new FormulaVisitor();
