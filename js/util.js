@@ -18,3 +18,23 @@ util.firstStarting = function (string, candidates) {
 		}
 	}
 };
+
+util.touchToMouse = function (event, type) {
+	var mouseEventInit = {
+		ctrlKey: event.ctrlKey,
+		shiftKey: event.shiftKey,
+		altKey: event.altKey,
+		metaKey: event.metaKey,
+		relatedTarget: event.relatedTarget
+	};
+	var touches = event.touches;
+	if (touches.length > 0) {
+		var touch = touches[0];
+		mouseEventInit.screenX = touch.screenX;
+		mouseEventInit.screenY = touch.screenY;
+		mouseEventInit.clientX = touch.clientX;
+		mouseEventInit.clientY = touch.clientY;
+		mouseEventInit.ctrlKey = event.ctrlKey;
+	}
+	return new MouseEvent(type, mouseEventInit);
+};

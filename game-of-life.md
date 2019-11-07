@@ -3,11 +3,13 @@ title: 'Game of Life'
 permalink: '/game-of-life/index.xhtml'
 canonical: '/game-of-life/'
 scripts:
+  - '/js/util.js'
   - '/js/game-of-life/world.js'
   - '/js/game-of-life/main.js'
 ---
 
 # {{ page.title }} #
+
 <noscript><p>Error: JavaScript is disabled.</p></noscript>
 
 <form id="game-of-life" class="js-only">
@@ -26,8 +28,6 @@ scripts:
 				<dd>Increase/decrease brush size</dd>
 				<dt><kbd>Space</kbd></dt>
 				<dd>Enable/disable simulation</dd>
-				<dt><kbd>F</kbd></dt>
-				<dd>Toggle fullscreen mode</dd>
 			</dl>
 		</div>
 		<div class="column">
