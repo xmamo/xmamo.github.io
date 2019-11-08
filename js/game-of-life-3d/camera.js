@@ -129,7 +129,7 @@ gameOfLife3d.Camera = function (options) {
 
 	Object.defineProperty(self, "projectionMatrix", {
 		get: function () {
-			if (projectionMatrix === null) {
+			if (projectionMatrix == null) {
 				projectionMatrix = [
 					1 / (Math.tan(self.fov / 2) * self.aspect), 0, 0, 0,
 					0, 1 / Math.tan(self.fov / 2), 0, 0,
@@ -137,14 +137,13 @@ gameOfLife3d.Camera = function (options) {
 					0, 0, (2 * self.far * self.near) / (self.near - self.far), 0
 				];
 			}
-
 			return projectionMatrix;
 		}
 	});
 
 	Object.defineProperty(self, "viewMatrix", {
 		get: function () {
-			if (viewMatrix === null) {
+			if (viewMatrix == null) {
 				// (R_y * R_x * T)^-1 = T^-1 * R_y^-1 * R_x^-1
 				viewMatrix = [
 					Math.cos(self.ry), Math.sin(self.rx) * Math.sin(self.ry), Math.cos(self.rx) * Math.sin(self.ry), 0,
@@ -153,7 +152,6 @@ gameOfLife3d.Camera = function (options) {
 					-self.x, -self.y, -self.z, 1
 				];
 			}
-
 			return viewMatrix;
 		}
 	});

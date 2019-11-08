@@ -13,15 +13,15 @@ p2pPaint.startServer = function (onOpen) {
 	peer.on("connection", function (connection) {
 		connections.push(connection);
 
-		connection.on("open", function() {
+		connection.on("open", function () {
 			connection.send(p2pPaint.context[0].getImageData(0, 0, p2pPaint.canvas[0].width, p2pPaint.canvas[0].height).data);
 		});
 
 		connection.on("data", function (data) {
-			for (var i = 0, count = connections.length; i < count; i++) {
-				if (connections[i] !== connection) {
+			connections.forEach(function (c) {
+				if (c !== connection) {
 					// Unpack and repack data in order to avoid forwarding forged data objects
-					connections[i].send({
+					c.send({
 						x0: parseFloat(data.x0),
 						y0: parseFloat(data.y0),
 						x1: parseFloat(data.x1),
@@ -30,7 +30,7 @@ p2pPaint.startServer = function (onOpen) {
 						width: parseFloat(data.width)
 					});
 				}
-			}
+			});
 		});
 	});
 
