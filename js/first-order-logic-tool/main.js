@@ -233,7 +233,7 @@
 
 			var box = createBox(formula.height);
 
-			if (left.priority < priority) {
+			if (left.isAssociative ? left.priority < priority : left.priority <= priority) {
 				box.appendChild(document.createTextNode("("));
 				box.appendChild(left.accept(self));
 				box.appendChild(document.createTextNode(")"));
