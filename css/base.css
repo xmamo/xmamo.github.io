@@ -59,3 +59,17 @@ input[type="checkbox"] {
 option {
 	padding: 0;
 }
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th {
+	border-bottom: 2px solid #CCC;
+}
+
+td {
+	border-top: 1px solid #CCC;
+	text-align: center;
+}
