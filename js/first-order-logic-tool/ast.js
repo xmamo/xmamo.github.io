@@ -132,6 +132,21 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			}
 		});
 
+		Object.defineProperty(self, "isAssociative", {
+			get: function () {
+				switch (self.operator) {
+					case "∧":
+					case "∨":
+					case "⊻":
+					case "↔":
+						return true;
+					case "→":
+					case "←":
+						return false;
+				}
+			}
+		});
+
 		self.accept = function (visitor) {
 			return visitor.visitBinaryFormula(self);
 		};
@@ -140,7 +155,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			var left = self.left;
 			var right = self.right;
 			var priority = self.priority;
-			return (left.priority < priority ? "(" + left + ")" : left) + " " + self.operator + " " + (right.priority <= priority ? "(" + right + ")" : right);
+			return ((left.isAssociative ? left.priority < priority : left.priority <= priority) ? "(" + left + ")" : left) + " " + self.operator + " " + (right.priority <= priority ? "(" + right + ")" : right);
 		};
 	};
 
