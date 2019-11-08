@@ -63,6 +63,9 @@
 			return;
 		}
 
+		var height = formula.height;
+		var degree = formula.degree;
+
 		interpretationElement.innerHTML = "";
 		var interpretationListElement = document.createElement("ul");
 		interpretationListElement.style.margin = "0";
@@ -74,25 +77,115 @@
 		interpretationElement.appendChild(interpretationListElement);
 
 		parsedElement.innerHTML = "";
-		var formulaElement = formula.accept(new FormulaVisitor(formula.height));
-		if (formulaElement.nodeType === Node.TEXT_NODE) {
-			var box = document.createElement("span");
-			box.style = "display: inline-block; padding: 0.5em; border: 2px solid hsl(210, 100%, 50%); border-radius: 0.5em;";
-			box.appendChild(formulaElement);
-			formulaElement = box;
-		}
-		parsedElement.appendChild(formulaElement);
+		parsedElement.appendChild(formula.accept({
+			visitSymbol: function (symbol) {
+				if (height > 1) {
+					return document.createTextNode(symbol.identifier);
+				} else {
+					var box = createBox(1);
+					box.innerText = symbol.identifier;
+					return box;
+				}
+			},
 
-		heightElement.value = formula.height;
-		degreeElement.value = formula.degree;
+			visitUnaryFormula: function (formula) {
+				var operand = formula.operand;
+				var height = formula.height;
 
-		if (!formula.isPropositional) {
+				var box = createBox(height);
+				box.appendChild(createText(height, formula.operator));
+
+				if (operand.priority < formula.priority) {
+					box.appendChild(document.createTextNode("("));
+					box.appendChild(operand.accept(this));
+					box.appendChild(document.createTextNode(")"));
+				} else {
+					box.appendChild(operand.accept(this));
+				}
+
+				return box;
+			},
+
+			visitBinaryFormula: function (formula) {
+				var left = formula.left;
+				var right = formula.right;
+				var priority = formula.priority;
+				var height = formula.height;
+
+				var box = createBox(formula.height);
+
+				if (left.isAssociative ? left.priority < priority : left.priority <= priority) {
+					box.appendChild(document.createTextNode("("));
+					box.appendChild(left.accept(this));
+					box.appendChild(document.createTextNode(")"));
+				} else {
+					box.appendChild(left.accept(this));
+				}
+
+				box.appendChild(document.createTextNode(" "));
+				box.appendChild(createText(height, formula.operator));
+				box.appendChild(document.createTextNode(" "));
+
+				if (right.priority <= priority) {
+					box.appendChild(document.createTextNode("("));
+					box.appendChild(right.accept(this));
+					box.appendChild(document.createTextNode(")"));
+				} else {
+					box.appendChild(right.accept(this));
+				}
+
+				return box;
+			},
+
+			visitQuantifiedFormula: function (formula) {
+				var height = formula.height;
+
+				var box = createBox(height);
+				box.appendChild(createText(height, formula.quantifier + formula.variable));
+
+				if (formula.formula.priority < formula.priority) {
+					box.appendChild(document.createTextNode("("));
+					box.appendChild(formula.formula.accept(this));
+					box.appendChild(document.createTextNode(")"));
+				} else {
+					box.appendChild(document.createTextNode(" "));
+					box.appendChild(formula.formula.accept(this));
+				}
+
+				return box;
+			},
+
+			visitCall: function (call) {
+				var args = call.args;
+				var height = call.height;
+
+				var box = createBox(height);
+				box.appendChild(createText(height, call.identifier));
+				box.appendChild(document.createTextNode("("));
+
+				for (var i = 0, count = args.length; i < count; i++) {
+					if (i > 0) {
+						box.appendChild(document.createTextNode(", "));
+					}
+					box.appendChild(args[i].accept(this));
+				}
+
+				box.appendChild(document.createTextNode(")"));
+				return box;
+			}
+		}));
+
+		heightElement.value = height;
+		degreeElement.value = degree;
+
+		if (degree === 0 || !formula.isPropositional) {
 			truthTableResultElement.style.display = "none";
 		} else {
 			var table = document.createElement("table");
 
 			var terms = [];
 			var values = [];
+
 			formula.accept({
 				visitSymbol: function (symbol) {
 					if (terms.indexOf(symbol.identifier) < 0) {
@@ -100,14 +193,17 @@
 						values.push(false);
 					}
 				},
+
 				visitUnaryFormula: function (formula) {
 					formula.operand.accept(this);
 				},
+
 				visitBinaryFormula: function (formula) {
 					formula.left.accept(this);
 					formula.right.accept(this);
 				}
 			});
+
 			var length = terms.length;
 
 			var tr = document.createElement("tr");
@@ -172,6 +268,20 @@
 		}
 
 		resultElement.style.removeProperty("display");
+
+		function createText(h, text) {
+			var span = document.createElement("span");
+			span.style.color = "hsl(" + (360 / (height - 1) * (h - 1) + 210) + ", 100%, " + 100 / 3 + "%)";
+			span.innerText = text;
+			return span;
+		}
+
+		function createBox(h) {
+			var box = document.createElement("span");
+			box.className = "first-order-logic-tool-box";
+			box.style.borderColor = "hsl(" + (360 / (height - 1) * (h - 1) + 210) + ", 100%, 50%)";
+			return box;
+		}
 	});
 
 	function mathify(string) {
@@ -197,117 +307,5 @@
 		var td = document.createElement("td");
 		td.innerText = text;
 		return td;
-	}
-
-	function FormulaVisitor(height) {
-		var self = this;
-		self.height = height;
-
-		self.visitSymbol = function (symbol) {
-			return document.createTextNode(symbol.identifier);
-		};
-
-		self.visitUnaryFormula = function (formula) {
-			var operand = formula.operand;
-			var height = formula.height;
-
-			var box = createBox(height);
-			box.appendChild(createText(height, formula.operator));
-
-			if (operand.priority < formula.priority) {
-				box.appendChild(document.createTextNode("("));
-				box.appendChild(operand.accept(self));
-				box.appendChild(document.createTextNode(")"));
-			} else {
-				box.appendChild(operand.accept(self));
-			}
-
-			return box;
-		};
-
-		self.visitBinaryFormula = function (formula) {
-			var left = formula.left;
-			var right = formula.right;
-			var priority = formula.priority;
-			var height = formula.height;
-
-			var box = createBox(formula.height);
-
-			if (left.isAssociative ? left.priority < priority : left.priority <= priority) {
-				box.appendChild(document.createTextNode("("));
-				box.appendChild(left.accept(self));
-				box.appendChild(document.createTextNode(")"));
-			} else {
-				box.appendChild(left.accept(self));
-			}
-
-			box.appendChild(document.createTextNode(" "));
-			box.appendChild(createText(height, formula.operator));
-			box.appendChild(document.createTextNode(" "));
-
-			if (right.priority <= priority) {
-				box.appendChild(document.createTextNode("("));
-				box.appendChild(right.accept(self));
-				box.appendChild(document.createTextNode(")"));
-			} else {
-				box.appendChild(right.accept(self));
-			}
-
-			return box;
-		};
-
-		self.visitQuantifiedFormula = function (formula) {
-			var height = formula.height;
-
-			var box = createBox(height);
-			box.appendChild(createText(height, formula.quantifier + formula.variable));
-
-			if (formula.formula.priority < formula.priority) {
-				box.appendChild(document.createTextNode("("));
-				box.appendChild(formula.formula.accept(self));
-				box.appendChild(document.createTextNode(")"));
-			} else {
-				box.appendChild(document.createTextNode(" "));
-				box.appendChild(formula.formula.accept(self));
-			}
-
-			return box;
-		};
-
-		self.visitCall = function (call) {
-			var args = call.args;
-			var height = call.height;
-
-			var box = createBox(height);
-			box.appendChild(createText(height, call.identifier));
-			box.appendChild(document.createTextNode("("));
-
-			for (var i = 0, count = args.length; i < count; i++) {
-				if (i > 0) {
-					box.appendChild(document.createTextNode(", "));
-				}
-				box.appendChild(args[i].accept(self));
-			}
-
-			box.appendChild(document.createTextNode(")"));
-			return box;
-		};
-
-		function createText(height, text) {
-			var span = document.createElement("span");
-			span.style.color = "hsl(" + (360 / (self.height - 1) * (height - 1) + 210) + ", 100%, " + 100 / 3 + "%)";
-			span.innerText = text;
-			return span;
-		}
-
-		function createBox(height) {
-			var box = document.createElement("span");
-			var style = box.style;
-			style.display = "inline-block";
-			style.padding = "0.5em";
-			style.border = "2px solid hsl(" + (360 / (self.height - 1) * (height - 1) + 210) + ", 100%, 50%)";
-			style.borderRadius = "0.5em";
-			return box;
-		}
 	}
 })();
