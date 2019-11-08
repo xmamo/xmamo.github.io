@@ -43,9 +43,9 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 	}
 
 	function parseImpliesOrEquivalenceFormula(context) {
-		var formula = parseAndOrOrFormula(context);
+		var formula = parseAndOrXorOrOrFormula(context);
 		if (formula == null) {
-			context.error = "Expected ∧-formula, ∨-formula or higher priority formula";
+			context.error = "Expected ∧-formula, ∨-formula, ⊻-formula or higher priority formula";
 			return null;
 		}
 		var position = context.position;
@@ -91,7 +91,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			}
 			context.advance(advance.length);
 			skipWhitespace(context);
-			var right = parseAndOrOrFormula(context);
+			var right = parseAndOrXorOrOrFormula(context);
 			if (right == null) {
 				context.error = "Expected right operand";
 				context.position = position;
@@ -105,7 +105,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		return formula;
 	}
 
-	function parseAndOrOrFormula(context) {
+	function parseAndOrXorOrOrFormula(context) {
 		var formula = parseNotFormula(context);
 		if (formula == null) {
 			context.error = "Expected ¬-formula, ∀-formula, ∃-formula or higher priority formula";
@@ -115,7 +115,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		skipWhitespace(context);
 		var peek = context.peek(1);
 		context.position = position;
-		if (!["&", "∧", "|", "∨"].includes(peek)) {
+		if (!["&", "∧", "|", "∨", "^", "⊻"].includes(peek)) {
 			return formula;
 		}
 		var match;
@@ -130,6 +130,11 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			case "∨":
 				match = ["|", "∨"];
 				operator = "∨";
+				break;
+			case "^":
+			case "⊻":
+				match = ["^", "⊻"];
+				operator = "⊻";
 				break;
 		}
 		while (true) {
