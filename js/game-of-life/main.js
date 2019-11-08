@@ -67,7 +67,7 @@
 				break;
 		}
 
-		if (leftDown ^ rightDown) {
+		if (leftDown !== rightDown) {
 			setCells(
 				Math.round(world.width / canvas.width * mouseX - brushSize / 2),
 				Math.round(world.height / canvas.height * mouseY - brushSize / 2)
@@ -79,7 +79,7 @@
 		var newMouseX = event.clientX - canvas.getBoundingClientRect().x;
 		var newMouseY = event.clientY - canvas.getBoundingClientRect().y;
 
-		if (leftDown ^ rightDown) {
+		if (leftDown != rightDown) {
 			var x0 = Math.round(world.width / canvas.width * mouseX - brushSize / 2);
 			var y0 = Math.round(world.height / canvas.height * mouseY - brushSize / 2);
 			var x1 = Math.round(world.width / canvas.width * newMouseX - brushSize / 2);
