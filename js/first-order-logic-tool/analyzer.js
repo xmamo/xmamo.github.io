@@ -23,7 +23,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		self.arity = arity;
 
 		self.equals = function (other) {
-			return other instanceof Info && other.type === self.type && other.arity === self.arity;
+			return other.type === self.type && other.arity === self.arity;
 		};
 
 		self.toString = function () {
