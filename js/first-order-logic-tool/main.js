@@ -134,13 +134,13 @@
 							case "∨":
 								return formula.left.accept(this) || formula.right.accept(this);
 							case "⊻":
-								return !!(formula.left.accept(this) ^ formula.right.accept(this));
+								return formula.left.accept(this) !== formula.right.accept(this);
 							case "→":
 								return !formula.left.accept(this) || formula.right.accept(this);
 							case "←":
 								return formula.left.accept(this) || !formula.right.accept(this);
 							case "↔":
-								return formula.left.accept(this) == formula.right.accept(this);
+								return formula.left.accept(this) === formula.right.accept(this);
 						}
 					}
 				});
