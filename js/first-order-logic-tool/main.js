@@ -4,8 +4,8 @@
 	var analyzer = firstOrderLogicTool.analyzer;
 	var Context = parse.Context;
 	var parseFormula = firstOrderLogicTool.parser.parse;
-	var AnalysisError = analyzer.AnalysisError;
 	var analyze = analyzer.analyze;
+	var AnalysisError = analyzer.AnalysisError;
 
 	var form = document.forms["first-order-logic-tool"];
 	var formulaField = form.formula;
@@ -15,6 +15,8 @@
 	var parsedElement = form.parsed;
 	var heightElement = form.height;
 	var degreeElement = form.degree;
+	var truthTableResultElement = document.getElementById("first-order-logic-tool-truth-table-result");
+	var truthTableElement = form["truth-table"];
 
 	form.addEventListener("submit", function (event) {
 		event.preventDefault();
@@ -49,6 +51,7 @@
 		var infoMap;
 		try {
 			infoMap = analyze(formula);
+			errorElement.style.display = "none";
 		} catch (e) {
 			if (!(e instanceof AnalysisError)) {
 				throw e;
@@ -59,8 +62,6 @@
 			errorElement.style.removeProperty("display");
 			return;
 		}
-
-		errorElement.style.display = "none";
 
 		interpretationElement.innerHTML = "";
 		var interpretationListElement = document.createElement("ul");
@@ -85,6 +86,91 @@
 		heightElement.value = formula.height;
 		degreeElement.value = formula.degree;
 
+		if (!formula.isPropositional) {
+			truthTableResultElement.style.display = "none";
+		} else {
+			var table = document.createElement("table");
+
+			var terms = [];
+			var values = [];
+			formula.accept({
+				visitSymbol: function (symbol) {
+					if (terms.indexOf(symbol.identifier) < 0) {
+						terms.push(symbol.identifier);
+						values.push(false);
+					}
+				},
+				visitUnaryFormula: function (formula) {
+					formula.operand.accept(this);
+				},
+				visitBinaryFormula: function (formula) {
+					formula.left.accept(this);
+					formula.right.accept(this);
+				}
+			});
+			var length = terms.length;
+
+			var tr = document.createElement("tr");
+			terms.forEach(function (term) {
+				tr.appendChild(createTh(term));
+			});
+			tr.appendChild(createTh(formula));
+			table.appendChild(tr);
+
+			do {
+				var result = formula.accept({
+					visitSymbol: function (symbol) {
+						return values[terms.indexOf(symbol.identifier)];
+					},
+
+					visitUnaryFormula: function (formula) {
+						return !formula.operand.accept(this);
+					},
+
+					visitBinaryFormula: function (formula) {
+						switch (formula.operator) {
+							case "∧":
+								return formula.left.accept(this) && formula.right.accept(this);
+							case "∨":
+								return formula.left.accept(this) || formula.right.accept(this);
+							case "⊻":
+								return !!(formula.left.accept(this) ^ formula.right.accept(this));
+							case "→":
+								return !formula.left.accept(this) || formula.right.accept(this);
+							case "←":
+								return formula.left.accept(this) || !formula.right.accept(this);
+							case "↔":
+								return formula.left.accept(this) == formula.right.accept(this);
+						}
+					}
+				});
+
+				tr = document.createElement("tr");
+				values.forEach(function (value) {
+					tr.appendChild(createTd(value ? "𝕋" : "𝔽"));
+				});
+				tr.appendChild(createTd(result ? "𝕋" : "𝔽"));
+				table.appendChild(tr);
+			} while (next());
+
+			truthTableElement.innerHTML = "";
+			truthTableElement.appendChild(table);
+			truthTableResultElement.style.removeProperty("display");
+
+			function next() {
+				for (var i = length - 1; i >= 0; i--) {
+					if (!values[i]) {
+						values[i] = true;
+						for (var j = i + 1; j < length; j++) {
+							values[j] = false;
+						}
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
 		resultElement.style.removeProperty("display");
 	});
 
@@ -98,9 +184,19 @@
 			.replace(/->/g, "→")
 			.replace(/<-([^>])/g, "←$1")
 			.replace(/\\A/gi, "∀")
-			.replace(/\\E/gi, "∃")
-			.replace(/\\T/gi, "⊤")
-			.replace(/\\F/gi, "⊥");
+			.replace(/\\E/gi, "∃");
+	}
+
+	function createTh(text) {
+		var th = document.createElement("th");
+		th.innerText = text;
+		return th;
+	}
+
+	function createTd(text) {
+		var td = document.createElement("td");
+		td.innerText = text;
+		return td;
 	}
 
 	function FormulaVisitor(height) {

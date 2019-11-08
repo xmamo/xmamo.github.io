@@ -35,5 +35,9 @@ scripts:
 			<label for="first-order-logic-tool-degree">Degree: </label>
 			<output id="first-order-logic-tool-degree" name="degree">0</output>
 		</p>
+		<p id="first-order-logic-tool-truth-table-result" style="display: none;">
+			<label for="first-order-logic-truth-table">Truth table:</label>
+			<output id="first-order-logic-truth-table" name="truth-table"></output>
+		</p>
 	</div>
 </form>
