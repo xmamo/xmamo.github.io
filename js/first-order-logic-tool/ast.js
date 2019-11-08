@@ -32,6 +32,12 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			}
 		});
 
+		Object.defineProperty(self, "isPropositional", {
+			get: function () {
+				return true;
+			}
+		});
+
 		self.accept = function (visitor) {
 			return visitor.visitSymbol(self);
 		};
@@ -65,6 +71,12 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		Object.defineProperty(self, "degree", {
 			get: function () {
 				return self.operand.degree + 1;
+			}
+		});
+
+		Object.defineProperty(self, "isPropositional", {
+			get: function () {
+				return self.operand.isPropositional;
 			}
 		});
 
@@ -114,6 +126,12 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			}
 		});
 
+		Object.defineProperty(self, "isPropositional", {
+			get: function () {
+				return self.left.isPropositional && self.right.isPropositional;
+			}
+		});
+
 		self.accept = function (visitor) {
 			return visitor.visitBinaryFormula(self);
 		};
@@ -154,6 +172,12 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			}
 		});
 
+		Object.defineProperty(self, "isPropositional", {
+			get: function () {
+				return false;
+			}
+		});
+
 		self.accept = function (visitor) {
 			return visitor.visitQuantifiedFormula(self);
 		};
@@ -188,6 +212,12 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		Object.defineProperty(self, "degree", {
 			get: function () {
 				return 0;
+			}
+		});
+
+		Object.defineProperty(self, "isPropositional", {
+			get: function () {
+				return false;
 			}
 		});
 
