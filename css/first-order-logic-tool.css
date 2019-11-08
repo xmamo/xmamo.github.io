@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+.first-order-logic-tool-box {
+	display: inline-block;
+	padding: 0.5em;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 0.5em;
+}

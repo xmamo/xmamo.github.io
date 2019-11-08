@@ -13,6 +13,9 @@
 		{% if page.canonical != nil %}<link rel="canonical" href="{{ page.canonical }}" />{% endif %}
 		{% comment %}<link rel="icon" href="favicon.ico" />{% endcomment %}
 		<link rel="stylesheet" href="/css/main.css" />
+		{% for style in page.styles %}
+			<link rel="stylesheet" href="{{ style }}" />
+		{% endfor %}
 	</head>
 
 	<body>
