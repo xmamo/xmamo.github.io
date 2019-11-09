@@ -72,7 +72,7 @@
 		}
 
 		form.result.innerHTML = v0.x + ", " + v0.y + ", " + v0.z;
-		form.command.value = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion:[" + v0.x + "D," + v0.y + "D," + v0.z + "D],Time:1,DropItem:0B}";
+		form.command.value = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
 	}
 
 	function random(min, max) {
