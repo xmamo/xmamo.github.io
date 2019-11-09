@@ -2,8 +2,8 @@
   url: '/'
 - title: 'Projects'
   subitems:
-    - title: "BiLoMa's theorem"
-      url: '/biloma/'
+    - title: "Discrete-time projectile motion calculator"
+      url: '/discrete-time-projectile-motion-calculator/'
     - title: 'VanillaVotifier'
       url: '/vanillavotifier/'
     - title: 'Website source code'
