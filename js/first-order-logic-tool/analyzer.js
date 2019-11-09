@@ -32,7 +32,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 				case "predicate":
 				case "function":
 					return type + " of arity " + self.arity;
-				case "formula":
+				case "sentence":
 				case "variable":
 				case "constant":
 					return type;
@@ -57,7 +57,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 
 		self.visitSymbol = function (symbol) {
 			var identifier = symbol.identifier;
-			setInfo(symbol, identifier, new Info(expectFormula ? "formula" : scope.has(identifier) ? "variable" : "constant"));
+			setInfo(symbol, identifier, new Info(expectFormula ? "sentence" : scope.has(identifier) ? "variable" : "constant"));
 		};
 
 		self.visitUnaryFormula = function (formula) {
