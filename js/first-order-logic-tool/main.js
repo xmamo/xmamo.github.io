@@ -71,7 +71,7 @@
 		interpretationListElement.style.margin = "0";
 		for (var identifier in infoMap) {
 			var interpretationListItemElement = document.createElement("li");
-			interpretationListItemElement.innerText = "‘" + identifier + "’ is a " + infoMap[identifier];
+			interpretationListItemElement.innerText = "“" + identifier + "” is a " + infoMap[identifier];
 			interpretationListElement.appendChild(interpretationListItemElement);
 		}
 		interpretationElement.appendChild(interpretationListElement);
