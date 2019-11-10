@@ -3,7 +3,7 @@ title: 'Game of Life'
 permalink: '/game-of-life/index.xhtml'
 canonical: '/game-of-life/'
 scripts:
-  - '/js/util.js'
+  - '/js/utils.js'
   - '/js/game-of-life/world.js'
   - '/js/game-of-life/main.js'
 ---

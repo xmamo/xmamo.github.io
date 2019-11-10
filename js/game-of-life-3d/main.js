@@ -1,7 +1,7 @@
 "use strict";
 
 (function () {
-	var touchToMouse = util.touchToMouse;
+	var touchToMouse = utils.touchToMouse;
 	var Camera = gameOfLife3d.Camera;
 	var World = gameOfLife3d.World;
 	var Renderer = gameOfLife3d.Renderer;
