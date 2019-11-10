@@ -1,7 +1,7 @@
 "use strict";
 
 (function () {
-	var touchToMouse = util.touchToMouse;
+	var touchToMouse = utils.touchToMouse;
 	var World = gameOfLife.World;
 
 	var form = document.forms["game-of-life"];

@@ -5,7 +5,7 @@ canonical: '/first-order-logic-tool/'
 styles:
   - '/css/first-order-logic-tool.css'
 scripts:
-  - '/js/util.js'
+  - '/js/utils.js'
   - '/js/parse.js'
   - '/js/scope.js'
   - '/js/first-order-logic-tool/ast.js'

@@ -1,8 +1,8 @@
 "use strict";
 
-var util = util || {};
+var utils = utils || {};
 
-util.getSize = function (object) {
+utils.getSize = function (object) {
 	var size = 0;
 	for (var key in object) {
 		size++;
@@ -10,7 +10,7 @@ util.getSize = function (object) {
 	return size;
 };
 
-util.firstStarting = function (string, candidates) {
+utils.firstStarting = function (string, candidates) {
 	for (var i = 0, count = candidates.length; i < count; i++) {
 		var candidate = candidates[i];
 		if (string.startsWith(candidate)) {
@@ -19,7 +19,7 @@ util.firstStarting = function (string, candidates) {
 	}
 };
 
-util.touchToMouse = function (event, type) {
+utils.touchToMouse = function (event, type) {
 	var mouseEventInit = {
 		ctrlKey: event.ctrlKey,
 		shiftKey: event.shiftKey,

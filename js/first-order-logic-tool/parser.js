@@ -3,7 +3,7 @@
 var firstOrderLogicTool = firstOrderLogicTool || {};
 
 (function () {
-	var firstStarting = util.firstStarting;
+	var firstStarting = utils.firstStarting;
 	var ast = firstOrderLogicTool.ast;
 	var Symbol = ast.Symbol;
 	var UnaryFormula = ast.UnaryFormula;

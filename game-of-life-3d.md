@@ -3,7 +3,7 @@ title: 'Game of Life 3D'
 permalink: '/game-of-life-3d/index.xhtml'
 canonical: '/game-of-life-3d/'
 scripts:
-  - '/js/util.js'
+  - '/js/utils.js'
   - '/js/game-of-life-3d/camera.js'
   - '/js/game-of-life-3d/world.js'
   - '/js/game-of-life-3d/renderer.js'

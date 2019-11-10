@@ -3,7 +3,7 @@
 var scope = scope || {};
 
 (function () {
-	var getSize = util.getSize;
+	var getSize = utils.getSize;
 
 	scope.Scope = function (parent) {
 		var self = this;
