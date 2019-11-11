@@ -44,16 +44,14 @@ scripts:
 	</div>
 </form>
 
-## Syntax ##
+## Syntax and semantics of first order formulas ##
 From a syntactical point of view, first order formulas are strings of symbols connected by logical operators,
-quantifiers and punctuation marks. Each symbol can represent a variable, constant, predicate or function. Let's take a
+quantifiers and punctuation marks. Each symbol can represent a variable, constant, predicate, or function. Let's take a
 look at an example:
 
 "¬∃person(tallerThan(person, father(Mark)) ∧ tallerThan(person, mother(Mark)))"
 
-In the formula above, "person" would be a variable, "tallerThan" a binary predicate, "father" and "mother" unary
-functions, "Mark" a constant. "∧" and "¬" are binary and unary logical operators respectively, "∀" is the universal
-quantifier, "(", ")", "," are punctuation marks. The meaning of that formula will be explained later.
+The formula above states that in our domain of discourse there exists no person wich is taller than both the father and the mother of Mark. In this case, "person" is a variable, "tallerThan" a binary predicate, "father" and "mother" unary functions, "Mark" a constant. "∧" and "¬" are logical operators, "∀" is the universal quantifier, "(", ")", "," are punctuation marks.
 
 ### First order language ###
 A _first order language_ is a language characterized by:
@@ -71,17 +69,19 @@ defined recursively as follows:
  * Every variable symbol is a term;
  * Every constant symbol is a term;
  * "f(t<sub>1</sub>, ..., t<sub>n</sub>)" is a term if "t<sub>1</sub>", ..., "t<sub>n</sub>" are terms and "f" is a
-   function symbol of arity n.
+   function of arity n.
+
+In the example above, "Mark", "father(Mark)", "mother(Mark)" and "person" are all terms of the formula.
 
 ### Formulas ###
 A _first order formula_ can be defined recursively as follows:
  * "p(t<sub>1</sub>, ..., t<sub>n</sub>)" is a formula if "t<sub>1</sub>", ..., "t<sub>n</sub>" are terms and "p" is a
-   predicate symbol of arity n. A formula of this kind is called _atomic formula_;
+   predicate of arity n. A formula of this kind is called _atomic_;
  * "(¬F)" is a formula if "F" is a formula;
  * "(F ∧ G)", "(F ∨ G)", "(F ⊻ G)", "(F → G)", "(F ← G)", "(F ↔ G)" are formulas if both "F" and "G" are formulas;
  * "(∀x F)", "(∃x F)" are formulas if "x" is a variable and "F" is a formula.
 
-In order to increase readability, parentheses can be dropped according to the following informal _convention_:
+In order to increase readability, parentheses can be dropped according to the following convention:
  * The outermost parentheses are omitted;
  * "¬", "∀", "∃" have precedence on all other operators, making "∀x F ∨ G" equivalent to "(∀x F) ∨ G";
  * "∧", "∨", "⊻" have precedence over "→", "←", "↔", making "F ∧ G → H" equivalent to "(F ∧ G) → H";
@@ -96,18 +96,9 @@ different in the two cases: the first formula is neither true nor false as "pers
 second formula is false since it is not true that all people live in Italy.
 
 Formally, if "F" is a formula and "x" is a variable appearing in "F", all occurrences of "x" in "F" are said to be
-_bound_ in formulas of the kind "∀x F" or "∃x F". Any variable which is not bound is said to be _free_. Any formula
-containing at least one free variable is called an _open formula_. If a formula is not open, it is said to be a
-_sentence_ or _closed formula_.
+_bound_ in formulas of the kind "∀x F" or "∃x F". Any occurrence of a variable which is not bound is said to be _free_.
+Any formula containing at least one free occurrence of a variable is called an _open formula_. If a formula is not
+open, it is said to be a _sentence_ or _closed formula_.
 
 Please note that different occurrences of the same variable can be free in one case and bound in anoher. For example,
-in the formula "p(x) ∧ ∃x q(x)" the first occurrence of "x" is free while the second occurrence is bound.
-
-## Semantics ##
-While the syntactic definition describes which strings are valid formulas, _semantics_ are needed in order to explain
-the meaning of a given formula. Let's again take a look at the previous example:
-
-"¬∃person(tallerThan(person, father(Mark)) ∧ tallerThan(person, mother(Mark)))"
-
-The semantic meaning of the formula above is that in our domain of discourse, there exists no person wich is taller
-than both the father and the mother of Mark.
+in the formula "p(x) ∧ ∃x q(x)" the first occurrence of "x" is free while the second one is bound.
