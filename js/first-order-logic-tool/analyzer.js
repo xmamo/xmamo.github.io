@@ -5,12 +5,10 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 (function () {
 	var Scope = scope.Scope;
 
-	var analyzer = firstOrderLogicTool.analyzer || {};
-	analyzer.Info = Info;
-	analyzer.AnalysisError = AnalysisError;
-	firstOrderLogicTool.analyzer = analyzer;
+	firstOrderLogicTool.Info = Info;
+	firstOrderLogicTool.AnalysisError = AnalysisError;
 
-	analyzer.analyze = function (formula) {
+	firstOrderLogicTool.analyze = function (formula) {
 		var visitor = new FormulaVisitor();
 		formula.accept(visitor);
 		return visitor.infoMap;

@@ -2,6 +2,14 @@
 
 var utils = utils || {};
 
+utils.random = function (min, max) {
+	return Math.random() * (max - min) + min;
+};
+
+utils.randomInt = function (min, max) {
+	return Math.floor(Math.random() * (max - min) + min);
+};
+
 utils.getSize = function (object) {
 	var size = 0;
 	for (var key in object) {
@@ -37,4 +45,10 @@ utils.touchToMouse = function (event, type) {
 		mouseEventInit.ctrlKey = event.ctrlKey;
 	}
 	return new MouseEvent(type, mouseEventInit);
+};
+
+utils.createElement = function (tag, text) {
+	var element = document.createElement(tag);
+	element.innerText = text;
+	return element;
 };
