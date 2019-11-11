@@ -4,18 +4,13 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 
 (function () {
 	var firstStarting = utils.firstStarting;
-	var ast = firstOrderLogicTool.ast;
-	var Symbol = ast.Symbol;
-	var UnaryFormula = ast.UnaryFormula;
-	var BinaryFormula = ast.BinaryFormula;
-	var QuantifiedFormula = ast.QuantifiedFormula;
-	var Call = ast.Call;
+	var Symbol = firstOrderLogicTool.Symbol;
+	var UnaryFormula = firstOrderLogicTool.UnaryFormula;
+	var BinaryFormula = firstOrderLogicTool.BinaryFormula;
+	var QuantifiedFormula = firstOrderLogicTool.QuantifiedFormula;
+	var Call = firstOrderLogicTool.Call;
 
-	var parser = firstOrderLogicTool.parser || {};
-	parser.parse = parse;
-	firstOrderLogicTool.parser = parser;
-
-	function parse(context) {
+	firstOrderLogicTool.parse = function (context) {
 		var position = context.position;
 		skipWhitespace(context);
 		var formula = parseFormula(context);
@@ -31,7 +26,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			return null;
 		}
 		return formula;
-	}
+	};
 
 	function parseFormula(context) {
 		var formula = parseImpliesOrEquivalenceFormula(context);

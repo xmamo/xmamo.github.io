@@ -5,6 +5,7 @@ keywords: 'BiLoMa, theorem, tool, calculator, formula, proof, projectile motion,
 permalink: '/discrete-time-projectile-motion-calculator/index.xhtml'
 canonical: '/discrete-time-projectile-motion-calculator/'
 scripts:
+  - '/js/utils.js'
   - '/js/discrete-time-projectile-motion-calculator.js'
 ---
 

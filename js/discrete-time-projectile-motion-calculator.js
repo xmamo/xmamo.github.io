@@ -1,6 +1,8 @@
 "use strict";
 
 (function () {
+	var randomInt = utils.randomInt;
+
 	var decimal = "([+-]?(?:[0-9]+(?:.[0-9]*)?|.[0-9]+))";
 	var delimiter = "(?:\\s*,\\s*|\\s+)";
 	var singleDecimal = "\\s*" + decimal + "\\s*";
@@ -73,13 +75,5 @@
 
 		form.result.innerHTML = v0.x + ", " + v0.y + ", " + v0.z;
 		form.command.value = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
-	}
-
-	function random(min, max) {
-		return Math.random() * (max - min) + min;
-	}
-
-	function randomInt(min, max) {
-		return Math.floor(random(min, max));
 	}
 })();

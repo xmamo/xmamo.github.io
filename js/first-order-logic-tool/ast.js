@@ -3,10 +3,7 @@
 var firstOrderLogicTool = firstOrderLogicTool || {};
 
 (function () {
-	var ast = firstOrderLogicTool.ast || {};
-	firstOrderLogicTool.ast = ast;
-
-	ast.Symbol = function (source, start, end, identifier) {
+	firstOrderLogicTool.Symbol = function (source, start, end, identifier) {
 		var self = this;
 
 		self.source = source;
@@ -47,7 +44,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		};
 	};
 
-	ast.UnaryFormula = function (source, start, end, operator, operand) {
+	firstOrderLogicTool.UnaryFormula = function (source, start, end, operator, operand) {
 		var self = this;
 
 		self.source = source;
@@ -89,7 +86,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		};
 	};
 
-	ast.BinaryFormula = function (source, start, end, left, operator, right) {
+	firstOrderLogicTool.BinaryFormula = function (source, start, end, left, operator, right) {
 		var self = this;
 
 		self.source = source;
@@ -159,7 +156,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		};
 	};
 
-	ast.QuantifiedFormula = function (source, start, end, quantifier, variable, formula) {
+	firstOrderLogicTool.QuantifiedFormula = function (source, start, end, quantifier, variable, formula) {
 		var self = this;
 
 		self.source = source;
@@ -203,7 +200,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		};
 	};
 
-	ast.Call = function (source, start, end, identifier, args) {
+	firstOrderLogicTool.Call = function (source, start, end, identifier, args) {
 		var self = this;
 
 		self.source = source;
