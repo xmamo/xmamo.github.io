@@ -9,7 +9,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 	firstOrderLogicTool.AnalysisError = AnalysisError;
 
 	firstOrderLogicTool.analyze = function (formula) {
-		var visitor = new FormulaVisitor();
+		var visitor = new FormulaAnalyzeVisitor();
 		formula.accept(visitor);
 		return visitor.infoMap;
 	};
@@ -38,15 +38,15 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		};
 	}
 
-	function AnalysisError(source, message) {
+	function AnalysisError(message, source) {
 		var self = this;
 
 		self.name = "AnalysisError";
-		self.source = source;
 		self.message = message;
+		self.source = source;
 	}
 
-	function FormulaVisitor() {
+	function FormulaAnalyzeVisitor() {
 		var self = this;
 		var scope = new Scope();
 		var expectFormula = true;
@@ -60,7 +60,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 
 		self.visitUnaryFormula = function (formula) {
 			if (!expectFormula) {
-				throw new AnalysisError(formula, "¬-formula not permitted here");
+				throw new AnalysisError("¬-formula not permitted here", formula);
 			}
 
 			formula.operand.accept(self);
@@ -68,7 +68,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 
 		self.visitBinaryFormula = function (formula) {
 			if (!expectFormula) {
-				throw new AnalysisError(formula, formula.operator + "-formula not permitted here");
+				throw new AnalysisError(formula.operator + "-formula not permitted here", formula);
 			}
 
 			formula.left.accept(self);
@@ -77,11 +77,11 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 
 		self.visitQuantifiedFormula = function (formula) {
 			if (!expectFormula) {
-				throw new AnalysisError(formula, formula.quantifier + "-formula not permitted here");
+				throw new AnalysisError(formula.quantifier + "-formula not permitted here", formula);
 			}
 			var variable = formula.variable;
 			if (scope.has(variable)) {
-				throw new AnalysisError(formula, "Variable ‘" + variable + "’ already bound");
+				throw new AnalysisError("Variable “" + variable + "” already bound", formula);
 			}
 			setInfo(formula, variable, new Info("variable"));
 
@@ -108,7 +108,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			var infoMap = self.infoMap;
 			var oldInfo;
 			if (identifier in infoMap && !newInfo.equals(oldInfo = infoMap[identifier])) {
-				throw new AnalysisError(source, "‘" + identifier + "’ is used both as a " + oldInfo + " and a " + newInfo);
+				throw new AnalysisError("“" + identifier + "” is used both as a " + oldInfo + " and a " + newInfo, source);
 			}
 			infoMap[identifier] = newInfo;
 		}

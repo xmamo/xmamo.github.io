@@ -11,6 +11,7 @@ scripts:
   - '/js/first-order-logic-tool/ast.js'
   - '/js/first-order-logic-tool/parser.js'
   - '/js/first-order-logic-tool/analyzer.js'
+  - '/js/first-order-logic-tool/prenex.js'
   - '/js/first-order-logic-tool/main.js'
 ---
 
@@ -36,6 +37,9 @@ scripts:
 			<br />
 			<label for="first-order-logic-tool-degree">Degree: </label>
 			<output id="first-order-logic-tool-degree" name="degree">0</output>
+			<br />
+			<label for="first-order-logic-tool-prenex">Prenex normal form:</label><br />
+			<output id="first-order-logic-tool-prenex" name="prenex"></output>
 		</p>
 		<p id="first-order-logic-tool-truth-table-result" style="display: none;">
 			<label for="first-order-logic-truth-table">Truth table:</label>
@@ -59,7 +63,7 @@ A _first order language_ is a language characterized by:
  * A set of _constant symbols_ (like "a", "b", "c", ...);
  * A set of _predicate symbols_, each with an associated arity (for example "p" with arity 2, "q" with arity 1, ...);
  * A set of _function symbols_, each with an associated arity (for example "f" with arity 1, "g" with arity 3, ...);
- * The _logic symbols_ "¬", "∧", "∨", "⊻", "→", "←", "↔";
+ * The _logic symbols_ "¬", "∧", "∨", "→", "←", "↔";
  * The _quantifier symbols_ "∀", "∃";
  * The _punctuation symbols_ "(", ")", ",".
 
@@ -78,15 +82,15 @@ A _first order formula_ can be defined recursively as follows:
  * "p(t<sub>1</sub>, ..., t<sub>n</sub>)" is a formula if "t<sub>1</sub>", ..., "t<sub>n</sub>" are terms and "p" is a
    predicate of arity n. A formula of this kind is called _atomic_;
  * "(¬F)" is a formula if "F" is a formula;
- * "(F ∧ G)", "(F ∨ G)", "(F ⊻ G)", "(F → G)", "(F ← G)", "(F ↔ G)" are formulas if both "F" and "G" are formulas;
+ * "(F ∧ G)", "(F ∨ G)", "(F → G)", "(F ← G)", "(F ↔ G)" are formulas if both "F" and "G" are formulas;
  * "(∀x F)", "(∃x F)" are formulas if "x" is a variable and "F" is a formula.
 
 In order to increase readability, parentheses can be dropped according to the following convention:
  * The outermost parentheses are omitted;
  * "¬", "∀", "∃" have precedence on all other operators, making "∀x F ∨ G" equivalent to "(∀x F) ∨ G";
- * "∧", "∨", "⊻" have precedence over "→", "←", "↔", making "F ∧ G → H" equivalent to "(F ∧ G) → H";
+ * "∧", "∨" have precedence over "→", "←", "↔", making "F ∧ G → H" equivalent to "(F ∧ G) → H";
  * Parentheses may be omitted in formulas where the same binary operator is used multiple times, if the operator is one
-   of "∧", "∨", "⊻", "↔". This makes "F ↔ G ↔ H" equivalent to "(F ↔ G) ↔ H". Parentheses must not be dropped if mixed
+   of "∧", "∨", "↔". This makes "F ↔ G ↔ H" equivalent to "(F ↔ G) ↔ H". Parentheses must not be dropped if mixed
    operators are used: for instance, "F ∧ G ∨ H" is _not_ a valid formula.
 
 ### Free and bound variables, open and closed formulas ###

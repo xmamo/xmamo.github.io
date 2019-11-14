@@ -40,7 +40,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 	function parseImpliesOrEquivalenceFormula(context) {
 		var formula = parseAndOrXorOrOrFormula(context);
 		if (formula == null) {
-			context.error = "Expected ∧-formula, ∨-formula, ⊻-formula or higher priority formula";
+			context.error = "Expected ∧-formula, ∨-formula or higher priority formula";
 			return null;
 		}
 		var position = context.position;
@@ -92,7 +92,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 				context.position = position;
 				break;
 			}
-			formula = new BinaryFormula(context.source, formula.start, context.position, formula, operator, right);
+			formula = new BinaryFormula(formula, operator, right, context.source, formula.start, context.position);
 			if (operator !== "↔") {
 				break;
 			}
@@ -110,7 +110,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		skipWhitespace(context);
 		var peek = context.peek(1);
 		context.position = position;
-		if (!["&", "∧", "|", "∨", "^", "⊻"].includes(peek)) {
+		if (["&", "∧", "|", "∨"].indexOf(peek) < 0) {
 			return formula;
 		}
 		var match;
@@ -126,16 +126,11 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 				match = ["|", "∨"];
 				operator = "∨";
 				break;
-			case "^":
-			case "⊻":
-				match = ["^", "⊻"];
-				operator = "⊻";
-				break;
 		}
 		while (true) {
 			position = context.position;
 			skipWhitespace(context);
-			if (!match.includes(context.peek(1))) {
+			if (match.indexOf(context.peek(1)) < 0) {
 				context.position = position;
 				break;
 			}
@@ -147,13 +142,13 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 				context.position = position;
 				break;
 			}
-			formula = new BinaryFormula(context.source, formula.start, context.position, formula, operator, right);
+			formula = new BinaryFormula(formula, operator, right, context.source, formula.start, context.position);
 		}
 		return formula;
 	}
 
 	function parseNotFormula(context) {
-		if (!["!", "~", "¬"].includes(context.peek(1))) {
+		if (["!", "~", "¬"].indexOf(context.peek(1)) < 0) {
 			return parseQuantifiedFormula(context);
 		}
 		var position = context.position;
@@ -165,7 +160,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			context.position = position;
 			return null;
 		}
-		return new UnaryFormula(context.source, position, context.position, "¬", operand);
+		return new UnaryFormula("¬", operand, context.source, position, context.position);
 	}
 
 	function parseQuantifiedFormula(context) {
@@ -202,7 +197,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 			context.position = position;
 			return null;
 		}
-		return new QuantifiedFormula(context.source, position, context.position, quantifier, identifier, formula);
+		return new QuantifiedFormula(quantifier, identifier, formula, context.source, position, context.position);
 	}
 
 	function parseParenthesizedFormula(context) {
@@ -239,7 +234,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		skipWhitespace(context);
 		if (context.peek(1) !== "(") {
 			context.position = position;
-			return new Symbol(context.source, initialPosition, position, identifier);
+			return new Symbol(identifier, context.source, initialPosition, position);
 		}
 		context.advance(1);
 		skipWhitespace(context);
@@ -255,7 +250,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 				if (arg == null) {
 					context.error = "Expected formula";
 					context.position = position;
-					return new Symbol(context.source, initialPosition, position, identifier);
+					return new Symbol(identifier, context.source, initialPosition, position);
 				}
 				args.push(arg);
 				skipWhitespace(context);
@@ -264,10 +259,10 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		if (context.peek(1) !== ")") {
 			context.error = "Expected closing parenthesis";
 			context.position = position;
-			return new Symbol(context.source, initialPosition, position, identifier);
+			return new Symbol(identifier, context.source, initialPosition, position);
 		}
 		context.advance(1);
-		return new Call(context.source, initialPosition, context.position, identifier, args);
+		return new Call(identifier, args, context.source, initialPosition, context.position);
 	}
 
 	function parseIdentifier(context) {
