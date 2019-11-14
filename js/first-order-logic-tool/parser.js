@@ -186,7 +186,7 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		skipWhitespace(context);
 		var identifier = parseIdentifier(context);
 		if (identifier == null) {
-			context.error = "Expected constant or variable";
+			context.error = "Expected variable";
 			context.position = position;
 			return null;
 		}
