@@ -1,13 +1,5 @@
 @charset "UTF-8";
 
-.h1 {
-	height: 1em;
-}
-
-.w1 {
-	width: 1em;
-}
-
 .bordered {
 	border: solid;
 }
