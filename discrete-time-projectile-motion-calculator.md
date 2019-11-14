@@ -17,10 +17,10 @@ theory behind the calculator _BiLoMa's theorem_. The name of the theorem origina
 
 We initially worked on this theorem because of [Minecraft](https://www.minecraft.net/), to calculate the initial
 velocity needed to launch blocks of sand in such a way that they land at an exact point in
-space. <span class="js-only">If you own Minecraft and have some knowledge of command blocks, you can fill out the form
-below and see how our theorem works in practice.<span>
+space. If you own Minecraft and have some knowledge of command blocks, you can fill out the form
+below and see how our theorem works in practice.
 
-<form id="discrete-time-projectile-motion-calculator" class="js-only">
+<form id="discrete-time-projectile-motion-calculator">
 	<p>
 		<label for="discrete-time-projectile-motion-calculator-source-pos">Source position</label>
 		<input id="discrete-time-projectile-motion-calculator-source-pos" name="source-pos" required="required" placeholder="x, y, z" spellcheck="false" />

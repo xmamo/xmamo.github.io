@@ -9,9 +9,7 @@ scripts:
 ---
 
 # {{ page.title }} #
-<noscript><p>Error: JavaScript is disabled.</p></noscript>
-
-<form id="game-of-life" class="js-only">
+<form id="game-of-life">
 	<output class="bordered" style="display: block;">
 		<canvas id="game-of-life-canvas" style="background: #FFF;"></canvas>
 	</output>
