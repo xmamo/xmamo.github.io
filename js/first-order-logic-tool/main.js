@@ -6,6 +6,7 @@
 	var parseFormula = firstOrderLogicTool.parse;
 	var analyze = firstOrderLogicTool.analyze;
 	var AnalysisError = firstOrderLogicTool.AnalysisError;
+	var toPrenex = firstOrderLogicTool.toPrenex;
 
 	var form = document.forms["first-order-logic-tool"];
 	var resultElement = document.getElementById("first-order-logic-tool-result");
@@ -69,10 +70,11 @@
 		form.interpretation.appendChild(interpretationListElement);
 
 		form.parsed.innerHTML = "";
-		form.parsed.appendChild(formula.accept(new FormulaToHTMLConverter(height)));
+		form.parsed.appendChild(formula.accept(new FormulaToHTMLVisitor(height)));
 
 		form.height.value = height;
 		form.degree.value = degree;
+		form.prenex.value = toPrenex(formula, infoMap);
 
 		if (degree === 0 || !formula.isPropositional) {
 			truthTableResultElement.style.display = "none";
@@ -110,7 +112,6 @@
 		return string
 			.replace(/&/g, "∧")
 			.replace(/\|/g, "∨")
-			.replace(/\^/g, "⊻")
 			.replace(/[!~]/g, "¬")
 			.replace(/<->/g, "↔")
 			.replace(/->/g, "→")
@@ -133,7 +134,7 @@
 		return false;
 	}
 
-	function FormulaToHTMLConverter(height) {
+	function FormulaToHTMLVisitor(height) {
 		var self = this;
 
 		self.visitSymbol = function (symbol) {
@@ -166,13 +167,14 @@
 
 		self.visitBinaryFormula = function (formula) {
 			var left = formula.left;
+			var operator = formula.operator;
 			var right = formula.right;
 			var priority = formula.priority;
 			var height = formula.height;
 
 			var box = createBox(formula.height);
 
-			if (left.isAssociative ? left.priority < priority : left.priority <= priority) {
+			if (left.operator === operator && left.isAssociative ? left.priority < priority : left.priority <= priority) {
 				box.appendChild(document.createTextNode("("));
 				box.appendChild(left.accept(self));
 				box.appendChild(document.createTextNode(")"));
@@ -233,9 +235,8 @@
 		};
 
 		function createText(h, text) {
-			var span = document.createElement("span");
+			var span = createElement("span", text);
 			span.style.color = "hsl(" + ((height > 1 ? 360 / (height - 1) * (h - 1) : 0) + 210) + ", 100%, " + 100 / 3 + "%)";
-			span.innerText = text;
 			return span;
 		}
 
@@ -287,8 +288,6 @@
 					return formula.left.accept(self) && formula.right.accept(self);
 				case "∨":
 					return formula.left.accept(self) || formula.right.accept(self);
-				case "⊻":
-					return formula.left.accept(self) !== formula.right.accept(self);
 				case "→":
 					return !formula.left.accept(self) || formula.right.accept(self);
 				case "←":
