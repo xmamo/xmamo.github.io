@@ -11,9 +11,7 @@ scripts:
 ---
 
 # {{ page.title }} #
-<noscript><p>Error: JavaScript is disabled.</p></noscript>
-
-<form id="game-of-life-3d" class="js-only">
+<form id="game-of-life-3d">
 	<output class="bordered" style="display: block;">
 		<canvas id="game-of-life-3d-canvas" style="background: #FFF;"></canvas>
 	</output>

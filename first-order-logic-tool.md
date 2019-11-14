@@ -16,9 +16,7 @@ scripts:
 ---
 
 # {{ page.title }} #
-<noscript><p>Error: JavaScript is disabled.</p></noscript>
-
-<form id="first-order-logic-tool" class="js-only">
+<form id="first-order-logic-tool">
 	<label for="first-order-logic-tool-formula">Formula</label>
 	<input id="first-order-logic-tool-formula" name="formula" />
 	<output name="error" style="display: none;"></output>
