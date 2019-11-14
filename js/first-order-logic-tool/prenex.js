@@ -87,7 +87,7 @@
 		Object.defineProperty(self, "prefix", {
 			get: function () {
 				return prefix.map(function (p) {
-					return negated ? { quantifier: p.quantifier === "∀" ? "∃" : "∀", variable: p.variable } : p;
+					return p;
 				});
 			}
 		});
@@ -95,7 +95,7 @@
 		Object.defineProperty(self, "negatedPrefix", {
 			get: function () {
 				return prefix.map(function (p) {
-					return negated ? p : { quantifier: p.quantifier === "∀" ? "∃" : "∀", variable: p.variable };
+					return { quantifier: p.quantifier === "∀" ? "∃" : "∀", variable: p.variable };
 				});
 			}
 		});
@@ -135,7 +135,8 @@
 		};
 
 		self.negate = function () {
-			negated = !negated;
+			prefix = self.negatedPrefix;
+			negated = !negated
 		};
 
 		self.rename = function (symbol1, symbol2) {
