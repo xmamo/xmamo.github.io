@@ -6,7 +6,7 @@
 	var parseFormula = firstOrderLogicTool.parse;
 	var analyze = firstOrderLogicTool.analyze;
 	var AnalysisError = firstOrderLogicTool.AnalysisError;
-	var toPrenex = firstOrderLogicTool.toPrenex;
+	var normalize = firstOrderLogicTool.normalize;
 
 	var form = document.forms["first-order-logic-tool"];
 	var resultElement = document.getElementById("first-order-logic-tool-result");
@@ -58,9 +58,6 @@
 
 		form.error.style.display = "none";
 
-		var height = formula.height;
-		var degree = formula.degree;
-
 		form.interpretation.innerHTML = "";
 		var interpretationListElement = document.createElement("ul");
 		interpretationListElement.style.margin = "0";
@@ -69,17 +66,23 @@
 		}
 		form.interpretation.appendChild(interpretationListElement);
 
+		var height = formula.height;
+		var degree = formula.degree;
+		var normalized = normalize(formula, infoMap);
+
 		form.parsed.innerHTML = "";
 		form.parsed.appendChild(formula.accept(new FormulaToHTMLVisitor(height)));
 
 		form.height.value = height;
 		form.degree.value = degree;
-		form.prenex.value = toPrenex(formula, infoMap);
+		form.prenex.value = normalized.prenex;
+		form["prenex-dnf"].value = normalized.prenexDNF;
+		form["prenex-cnf"].value = normalized.prenexCNF;
 
 		if (degree === 0 || !formula.isPropositional) {
 			truthTableResultElement.style.display = "none";
 		} else {
-			var terms = formula.accept(new PropositionalFormulaTermsCollector());
+			var terms = formula.accept(new PropositionalFormulaCollectTermsVisitor());
 			var values = new Array(terms.length).fill(false);
 
 			var table = document.createElement("table");
@@ -91,7 +94,7 @@
 			table.appendChild(tr);
 
 			do {
-				var result = formula.accept(new PropositionalFormulaEvaluator(terms, values));
+				var result = formula.accept(new PropositionalFormulaEvaluateVisitor(terms, values));
 				tr = document.createElement("tr");
 				values.forEach(function (value) {
 					tr.appendChild(createElement("td", value ? "𝕋" : "𝔽"));
@@ -248,7 +251,7 @@
 		}
 	}
 
-	function PropositionalFormulaTermsCollector() {
+	function PropositionalFormulaCollectTermsVisitor() {
 		var self = this;
 		var terms = [];
 
@@ -271,7 +274,7 @@
 		};
 	}
 
-	function PropositionalFormulaEvaluator(terms, values) {
+	function PropositionalFormulaEvaluateVisitor(terms, values) {
 		var self = this;
 
 		self.visitSymbol = function (symbol) {
