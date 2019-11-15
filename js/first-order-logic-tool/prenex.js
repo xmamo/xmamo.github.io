@@ -7,8 +7,28 @@
 	var QuantifiedFormula = firstOrderLogicTool.QuantifiedFormula;
 	var Call = firstOrderLogicTool.Call;
 
-	firstOrderLogicTool.toPrenex = function (formula, infoMap) {
-		return formula.accept(new FormulaToPrenexVisitor(infoMap)).formula;
+	firstOrderLogicTool.normalize = function (formula, infoMap) {
+		var prenex = formula.accept(new FormulaToPrenexVisitor(infoMap));
+		var prefix = prenex.prefix;
+		var matrix = prenex.matrix;
+
+		return {
+			prenex: prenex.formula,
+
+			prenexDNF: new PrenexFormula(prefix, matrix.accept(new FormulaNormalizeVisitor("DNF")).reduce(function (formula, conjunct) {
+				conjunct = conjunct.reduce(function (conjunct, literal) {
+					return conjunct != null ? new BinaryFormula(conjunct, "∧", literal) : literal;
+				}, null);
+				return formula != null ? new BinaryFormula(formula, "∨", conjunct) : conjunct;
+			}, null)).formula,
+
+			prenexCNF: new PrenexFormula(prefix, matrix.accept(new FormulaNormalizeVisitor("CNF")).reduce(function (formula, disjunct) {
+				disjunct = disjunct.reduce(function (disjunct, literal) {
+					return disjunct != null ? new BinaryFormula(disjunct, "∨", literal) : literal;
+				}, null);
+				return formula != null ? new BinaryFormula(formula, "∧", disjunct) : disjunct;
+			}, null)).formula
+		};
 	};
 
 	function FormulaToPrenexVisitor(infoMap) {
@@ -32,11 +52,7 @@
 			if (operator === "↔") {
 				var leftFormula = left.formula;
 				var rightFormula = right.formula;
-				return new BinaryFormula(
-					new BinaryFormula(leftFormula, "→", rightFormula),
-					"∧",
-					new BinaryFormula(leftFormula, "←", rightFormula)
-				).accept(self);
+				return new BinaryFormula(new BinaryFormula(leftFormula, "→", rightFormula), "∧", new BinaryFormula(leftFormula, "←", rightFormula)).accept(self);
 			}
 
 			var leftVariables = left.variables;
@@ -63,10 +79,18 @@
 				}
 			}
 
-			return new PrenexFormula(
-				("→←".indexOf(operator) < 0 ? left.prefix : left.negatedPrefix).concat(right.prefix),
-				new BinaryFormula(left.matrix, operator, right.matrix)
-			);
+			var prefix;
+			switch (operator) {
+				case "∧":
+				case "∨":
+					prefix = left.prefix;
+					break;
+				case "→":
+				case "←":
+					prefix = left.negatedPrefix;
+					break;
+			}
+			return new PrenexFormula(prefix.concat(right.prefix), new BinaryFormula(left.matrix, operator, right.matrix));
 		};
 
 		self.visitQuantifiedFormula = function (formula) {
@@ -78,6 +102,97 @@
 		self.visitCall = function (call) {
 			return new PrenexFormula([], call);
 		};
+	}
+
+	function FormulaNormalizeVisitor(form) {
+		var self = this;
+
+		self.visitSymbol = function (symbol) {
+			return [[symbol]];
+		};
+
+		self.visitUnaryFormula = function (formula) {
+			return formula.operand.accept({
+				visitSymbol: function () {
+					return [[formula]];
+				},
+
+				visitUnaryFormula: function (f) {
+					return f.accept(self);
+				},
+
+				visitBinaryFormula: function (f) {
+					var left = f.left;
+					var right = f.right;
+
+					switch (f.operator) {
+						case "∧":
+							return new BinaryFormula(new UnaryFormula("¬", left), "∨", new UnaryFormula("¬", right)).accept(self);
+						case "∨":
+							return new BinaryFormula(new UnaryFormula("¬", left), "∧", new UnaryFormula("¬", right)).accept(self);
+						case "→":
+							return new BinaryFormula(left, "∧", new UnaryFormula("¬", right)).accept(self);
+						case "←":
+							return new BinaryFormula(new UnaryFormula("¬", left), "∧", right).accept(self);
+						case "↔":
+							return new UnaryFormula("¬", new BinaryFormula(new BinaryFormula(left, "→", right), "∧", new BinaryFormula(left, "←", right))).accept(self);
+					}
+				},
+
+				visitCall: function () {
+					return [[formula]];
+				}
+			});
+		};
+
+		self.visitBinaryFormula = function (formula) {
+			var left = formula.left;
+			var operator = formula.operator;
+			var right = formula.right;
+
+			switch (operator) {
+				case "∧":
+					switch (form) {
+						case "DNF":
+							return combine(left.accept(self), right.accept(self));
+						case "CNF":
+							return left.accept(self).concat(right.accept(self));
+					}
+					break;
+
+				case "∨":
+					switch (form) {
+						case "DNF":
+							return left.accept(self).concat(right.accept(self));
+						case "CNF":
+							return combine(left.accept(self), right.accept(self));
+					}
+					break;
+
+				case "→":
+					return new BinaryFormula(new UnaryFormula("¬", left), "∨", right).accept(self);
+
+				case "←":
+					return new BinaryFormula(left, "∨", new UnaryFormula("¬", right)).accept(self);
+
+				case "↔":
+					return new BinaryFormula(new BinaryFormula(left, "→", right), "∧", new BinaryFormula(left, "←", right)).accept(self);
+			}
+		};
+
+		self.visitCall = function (call) {
+			return [[call]];
+		};
+
+		function combine(left, right) {
+			var result = [];
+			left.forEach(function (le) {
+				right.forEach(function (re) {
+					result.push(le.concat(re));
+				});
+			});
+			return result;
+		}
 	}
 
 	function PrenexFormula(prefix, matrix) {
@@ -95,7 +210,16 @@
 		Object.defineProperty(self, "negatedPrefix", {
 			get: function () {
 				return prefix.map(function (p) {
-					return { quantifier: p.quantifier === "∀" ? "∃" : "∀", variable: p.variable };
+					var quantifier;
+					switch (p.quantifier) {
+						case "∀":
+							quantifier = "∃";
+							break;
+						case "∃":
+							quantifier = "∀";
+							break;
+					}
+					return { quantifier: quantifier, variable: p.variable };
 				});
 			}
 		});

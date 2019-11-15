@@ -17,7 +17,7 @@ scripts:
 
 # {{ page.title }} #
 Use the input field below to write a first order formula. Confirm your input by pressing enter.<br />
-To insert "∧", "∨", "→", "←", "↔", "∀", "∃" type "&", "\|" "->", "<-", "<->", "\A", "\E" respectively.
+To insert "¬", "∧", "∨", "→", "←", "↔", "∀", "∃" type "!", "&", "\|" "->", "<-", "<->", "\A", "\E" respectively.
 
 <form id="first-order-logic-tool">
 	<label for="first-order-logic-tool-formula">Formula</label>
@@ -38,9 +38,18 @@ To insert "∧", "∨", "→", "←", "↔", "∀", "∃" type "&", "\|" "->", "
 			<br />
 			<label for="first-order-logic-tool-degree">Degree: </label>
 			<output id="first-order-logic-tool-degree" name="degree">0</output>
-			<br />
+		</p>
+		<p>
 			<label for="first-order-logic-tool-prenex">Prenex normal form:</label><br />
 			<output id="first-order-logic-tool-prenex" name="prenex"></output>
+		</p>
+		<p>
+			<label for="first-order-logic-tool-prenex-dnf">Prenex disjunctive normal form:</label><br />
+			<output id="first-order-logic-tool-prenex-dnf" name="prenex-dnf"></output>
+		</p>
+		<p>
+			<label for="first-order-logic-tool-prenex-cnf">Prenex conjunctive normal form:</label><br />
+			<output id="first-order-logic-tool-prenex-cnf" name="prenex-cnf"></output>
 		</p>
 		<p id="first-order-logic-tool-truth-table-result" style="display: none;">
 			<label for="first-order-logic-truth-table">Truth table:</label>
@@ -55,9 +64,9 @@ The purpose of this tool is to analyze propositional formulas like "A → B ∧ 
 
 Given any formula of these types, the tool is able to calculate the degree and the height of the formula. It is also able to infer the meaning of each used symbol, which means it understands if the symbol stands for a variable, constant, predicate, or function. In addition, the tool derives a formula in prenex normal form which is logically equivalent to the initial formula. Given a propositional formula, it automatically generates the corresponding truth table.
 
-To use the tool, simply write the formula to be analyzed in the input field above and press enter. The symbols "∧",
-"∨", "→", "←", "↔", "∀", "∃" can be inserted by typing "&", "\|" "->", "<-", "<->", "\A" (or "\a"), "\E" (or "\e")
-respectively.
+To use the tool, simply write the formula to be analyzed in the input field above and press enter. The symbols "¬",
+"∧", "∨", "→", "←", "↔", "∀", "∃" can be inserted by typing "!", "&", "\|" "->", "<-", "<->", "\A" (or "\a"), "\E" (or
+"\e") respectively.
 
 ## Syntax and semantics of first order formulas ##
 From a syntactical point of view, first order formulas are strings of symbols connected by logical operators,
