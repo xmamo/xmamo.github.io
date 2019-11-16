@@ -1,7 +1,5 @@
 ---
 title: 'Game of Life 3D'
-permalink: '/game-of-life-3d/index.xhtml'
-canonical: '/game-of-life-3d/'
 scripts:
   - '/js/utils.js'
   - '/js/game-of-life-3d/camera.js'

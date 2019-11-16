@@ -1,7 +1,5 @@
 ---
 title: 'Game of Life'
-permalink: '/game-of-life/index.xhtml'
-canonical: '/game-of-life/'
 scripts:
   - '/js/utils.js'
   - '/js/game-of-life/world.js'

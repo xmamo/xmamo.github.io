@@ -1,7 +1,5 @@
 ---
 title: 'First order logic tool'
-permalink: '/first-order-logic-tool/index.xhtml'
-canonical: '/first-order-logic-tool/'
 styles:
   - '/css/first-order-logic-tool.css'
 scripts:

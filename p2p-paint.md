@@ -1,7 +1,5 @@
 ---
 title: 'P2P Paint'
-permalink: '/p2p-paint/index.xhtml'
-canonical: '/p2p-paint/'
 scripts:
   - 'https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js'
   - '/js/p2p-paint/common.js'
