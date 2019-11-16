@@ -118,7 +118,7 @@
 				},
 
 				visitUnaryFormula: function (f) {
-					return f.accept(self);
+					return f.operand.accept(self);
 				},
 
 				visitBinaryFormula: function (f) {
