@@ -1,8 +1,10 @@
 - title: 'About'
   url: '/'
-- title: 'Projects'
+- title: 'Projects and tools'
   subitems:
-    - title: "Discrete-time projectile motion calculator"
+    - title: 'First order logic tool'
+      url: '/first-order-logic-tool/'
+    - title: 'Discrete-time projectile motion calculator'
       url: '/discrete-time-projectile-motion-calculator/'
     - title: 'VanillaVotifier'
       url: '/vanillavotifier/'
