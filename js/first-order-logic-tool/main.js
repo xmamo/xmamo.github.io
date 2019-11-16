@@ -9,36 +9,46 @@
 	var normalize = firstOrderLogicTool.normalize;
 
 	var form = document.forms["first-order-logic-tool"];
+	var formulaElement = form.elements.formula;
+	var errorElement = document.getElementById("first-order-logic-tool-error");
 	var resultElement = document.getElementById("first-order-logic-tool-result");
+	var parsedElement = document.getElementById("first-order-logic-tool-parsed");
+	var interpretationElement = document.getElementById("first-order-logic-tool-interpretation");
+	var heightElement = document.getElementById("first-order-logic-tool-height");
+	var degreeElement = document.getElementById("first-order-logic-tool-degree");
+	var prenexElement = document.getElementById("first-order-logic-tool-prenex");
+	var prenexDNFElement = document.getElementById("first-order-logic-tool-prenex-dnf");
+	var prenexCNFElement = document.getElementById("first-order-logic-tool-prenex-cnf");
 	var truthTableResultElement = document.getElementById("first-order-logic-tool-truth-table-result");
+	var truthTableElement = document.getElementById("first-order-logic-truth-table");
 
 	form.addEventListener("submit", function (event) {
 		event.preventDefault();
 	});
 
-	form.formula.addEventListener("input", function () {
-		var formula = form.formula.value;
-		var selectionStart = Math.min(form.formula.selectionStart, form.formula.selectionEnd);
-		var selectionEnd = Math.max(form.formula.selectionStart, form.formula.selectionEnd);
+	formulaElement.addEventListener("input", function () {
+		var formula = formulaElement.value;
+		var selectionStart = Math.min(formulaElement.selectionStart, formulaElement.selectionEnd);
+		var selectionEnd = Math.max(formulaElement.selectionStart, formulaElement.selectionEnd);
 		var left = mathify(formula.substring(0, selectionStart));
 		var middle = mathify(formula.substring(selectionStart, selectionEnd));
 		var right = mathify(formula.substring(selectionEnd, formula.length));
-		form.formula.value = left + middle + right;
-		form.formula.setSelectionRange(left.length, left.length + middle.length);
+		formulaElement.value = left + middle + right;
+		formulaElement.setSelectionRange(left.length, left.length + middle.length);
 	});
 
-	form.formula.addEventListener("change", function () {
-		var context = new Context(form.formula.value.normalize("NFC"));
+	formulaElement.addEventListener("change", function () {
+		var context = new Context(String.prototype.normalize ? formulaElement.value.normalize("NFC") : formulaElement.value);
 		var formula = parseFormula(context);
 
 		if (formula == null) {
 			resultElement.style.display = "none";
-			if (context.errorPosition === form.formula.value.length) {
-				form.formula.value += " ";
+			if (context.errorPosition === formulaElement.value.length) {
+				formulaElement.value += " ";
 			}
-			form.formula.setSelectionRange(context.errorPosition, form.formula.value.length);
-			form.error.value = context.error;
-			form.error.style.removeProperty("display");
+			formulaElement.setSelectionRange(context.errorPosition, formulaElement.value.length);
+			errorElement.innerText = context.error;
+			errorElement.style.removeProperty("display");
 			return;
 		}
 
@@ -50,44 +60,45 @@
 				throw e;
 			}
 			resultElement.style.display = "none";
-			form.formula.setSelectionRange(e.source.start, e.source.end);
-			form.error.value = e.message;
-			form.error.style.removeProperty("display");
+			formulaElement.setSelectionRange(e.source.start, e.source.end);
+			errorElement.innerText = e.message;
+			errorElement.style.removeProperty("display");
 			return;
 		}
 
-		form.error.style.display = "none";
+		errorElement.style.display = "none";
 
-		form.interpretation.innerHTML = "";
+		interpretationElement.innerHTML = "";
 		var interpretationListElement = document.createElement("ul");
 		interpretationListElement.style.margin = "0";
 		for (var identifier in infoMap) {
 			interpretationListElement.appendChild(createElement("li", "“" + identifier + "” is a " + infoMap[identifier]));
 		}
-		form.interpretation.appendChild(interpretationListElement);
+		interpretationElement.appendChild(interpretationListElement);
 
 		var height = formula.height;
 		var degree = formula.degree;
 		var normalized = normalize(formula, infoMap);
 
-		form.parsed.innerHTML = "";
-		form.parsed.appendChild(formula.accept(new FormulaToHTMLVisitor(height)));
+		parsedElement.innerHTML = "";
+		parsedElement.appendChild(formula.accept(new FormulaToHTMLVisitor(height)));
 
-		form.height.value = height;
-		form.degree.value = degree;
-		form.prenex.value = normalized.prenex;
-		form["prenex-dnf"].value = normalized.prenexDNF;
-		form["prenex-cnf"].value = normalized.prenexCNF;
+		heightElement.innerText = height;
+		degreeElement.innerText = degree;
+		prenexElement.innerText = normalized.prenex;
+		prenexDNFElement.innerText = normalized.prenexDNF;
+		prenexCNFElement.innerText = normalized.prenexCNF;
 
 		if (degree === 0 || !formula.isPropositional) {
 			truthTableResultElement.style.display = "none";
 		} else {
 			var terms = formula.accept(new PropositionalFormulaCollectTermsVisitor());
-			var values = new Array(terms.length).fill(false);
+			var values = [];
 
 			var table = document.createElement("table");
 			var tr = document.createElement("tr");
 			terms.forEach(function (term) {
+				values.push(false);
 				tr.appendChild(createElement("th", term));
 			});
 			tr.appendChild(createElement("th", formula));
@@ -103,8 +114,8 @@
 				table.appendChild(tr);
 			} while (nextBinary(values));
 
-			form["truth-table"].innerHTML = "";
-			form["truth-table"].appendChild(table);
+			truthTableElement.innerHTML = "";
+			truthTableElement.appendChild(table);
 			truthTableResultElement.style.removeProperty("display");
 		}
 

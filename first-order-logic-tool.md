@@ -21,39 +21,36 @@ To insert "¬", "∧", "∨", "→", "←", "↔", "∀", "∃" type "!", "&", "
 
 <form id="first-order-logic-tool">
 	<label for="first-order-logic-tool-formula">Formula</label>
-	<input id="first-order-logic-tool-formula" name="formula" />
-	<output name="error" style="display: none;"></output>
+	<input id="first-order-logic-tool-formula" name="formula" spellcheck="false" />
+	<span id="first-order-logic-tool-error"></span>
 	<div id="first-order-logic-tool-result" style="display: none;">
 		<p>
-			<label for="first-order-logic-tool-parsed">Parsed formula:</label>
-			<output id="first-order-logic-tool-parsed" name="parsed" spellcheck="false" style="display: block; line-height: 1; white-space: nowrap; overflow-x: auto;"></output>
+			Parsed formula:
+			<div id="first-order-logic-tool-parsed" style="line-height: 1; white-space: nowrap; overflow-x: auto;"></div>
 		</p>
 		<p>
-			<label for="first-order-logic-tool-interpretation">Interpretation:</label>
-			<output id="first-order-logic-tool-interpretation" name="interpretation"></output>
+			Interpretation:
+			<div id="first-order-logic-tool-interpretation"></div>
 		</p>
 		<p>
-			<label for="first-order-logic-tool-height">Height: </label>
-			<output id="first-order-logic-tool-height" name="height">0</output>
-			<br />
-			<label for="first-order-logic-tool-degree">Degree: </label>
-			<output id="first-order-logic-tool-degree" name="degree">0</output>
+			Height: <span id="first-order-logic-tool-height"></span><br />
+			Degree: <span id="first-order-logic-tool-degree"></span>
 		</p>
 		<p>
-			<label for="first-order-logic-tool-prenex">Prenex normal form:</label><br />
-			<output id="first-order-logic-tool-prenex" name="prenex"></output>
+			Prenex normal form:<br />
+			<span id="first-order-logic-tool-prenex"></span>
 		</p>
 		<p>
-			<label for="first-order-logic-tool-prenex-dnf">Prenex disjunctive normal form:</label><br />
-			<output id="first-order-logic-tool-prenex-dnf" name="prenex-dnf"></output>
+			Prenex disjunctive normal form:<br />
+			<span id="first-order-logic-tool-prenex-dnf"></span>
 		</p>
 		<p>
-			<label for="first-order-logic-tool-prenex-cnf">Prenex conjunctive normal form:</label><br />
-			<output id="first-order-logic-tool-prenex-cnf" name="prenex-cnf"></output>
+			Prenex conjunctive normal form:<br />
+			<span id="first-order-logic-tool-prenex-cnf" name="prenex-cnf"></span>
 		</p>
-		<p id="first-order-logic-tool-truth-table-result" style="display: none;">
-			<label for="first-order-logic-truth-table">Truth table:</label>
-			<output id="first-order-logic-truth-table" name="truth-table"></output>
+		<p id="first-order-logic-tool-truth-table-result">
+			Truth table:
+			<div id="first-order-logic-truth-table" name="truth-table"></div>
 		</p>
 	</div>
 </form>

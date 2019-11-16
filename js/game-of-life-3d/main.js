@@ -20,6 +20,7 @@
 	fragmentShaderRequest.send();
 
 	var form = document.forms["game-of-life-3d"];
+	var rulesetElement = form.elements.ruleset;
 	var canvas = document.getElementById("game-of-life-3d-canvas");
 	var gl = canvas.getContext("webgl");
 	var camera = new Camera({ z: 64 });
@@ -51,8 +52,8 @@
 		event.preventDefault();
 	});
 
-	form.ruleset.addEventListener("input", function () {
-		var ruleset = form.ruleset.value.match(form.ruleset.pattern);
+	rulesetElement.addEventListener("input", function () {
+		var ruleset = rulesetElement.value.match(rulesetElement.pattern);
 		if (ruleset == null) {
 			return;
 		}
