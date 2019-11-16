@@ -11,7 +11,7 @@ scripts:
   - '/js/first-order-logic-tool/ast.js'
   - '/js/first-order-logic-tool/parser.js'
   - '/js/first-order-logic-tool/analyzer.js'
-  - '/js/first-order-logic-tool/prenex.js'
+  - '/js/first-order-logic-tool/normal.js'
   - '/js/first-order-logic-tool/main.js'
 ---
 
