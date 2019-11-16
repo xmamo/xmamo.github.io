@@ -12,9 +12,9 @@ scripts:
 
 # {{ page.title }} #
 <form id="game-of-life-3d">
-	<output class="bordered" style="display: block;">
-		<canvas id="game-of-life-3d-canvas" style="background: #FFF;"></canvas>
-	</output>
+	<div class="bordered">
+		<canvas id="game-of-life-3d-canvas"></canvas>
+	</div>
 	<div class="columns">
 		<div class="column">
 			<h2>Controls</h2>

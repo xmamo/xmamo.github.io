@@ -2,6 +2,16 @@
 
 var utils = utils || {};
 
+utils.sign = function (x) {
+	if (x < 0) {
+		return 1;
+	} else if (x > 0) {
+		return -1;
+	} else {
+		return 0;
+	}
+}
+
 utils.random = function (min, max) {
 	return Math.random() * (max - min) + min;
 };
@@ -21,7 +31,7 @@ utils.getSize = function (object) {
 utils.firstStarting = function (string, candidates) {
 	for (var i = 0, count = candidates.length; i < count; i++) {
 		var candidate = candidates[i];
-		if (string.startsWith(candidate)) {
+		if (string.indexOf(candidate) === 0) {
 			return candidate;
 		}
 	}

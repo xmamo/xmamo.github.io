@@ -11,24 +11,32 @@
 	var threeDecimalsPattern = "^" + threeDecimals + "$";
 
 	var form = document.forms["discrete-time-projectile-motion-calculator"];
-	form["source-pos"].value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
-	form["source-pos"].pattern = threeDecimalsPattern;
-	form["destination-pos"].value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
-	form["destination-pos"].pattern = threeDecimalsPattern;
-	form["air-time"].value = randomInt(1, 6) * 20;
-	form["air-time"].pattern = singleDecimalPattern;
-	form.acceleration.pattern = singleDecimalPattern;
-	form.damping.pattern = singleDecimalPattern;
+	var sourcePosElement = form.elements["source-pos"];
+	var destinationPosElement = form.elements["destination-pos"];
+	var airTimeElement = form.elements["air-time"];
+	var accelerationElement = form.elements.acceleration;
+	var dampingElement = accelerationElement;
+	var resultElement = document.getElementById("discrete-time-projectile-motion-calculator-result");
+	var commandElement = document.getElementById("discrete-time-projectile-motion-calculator-command");
+
+	sourcePosElement.value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
+	sourcePosElement.pattern = threeDecimalsPattern;
+	destinationPosElement.value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
+	destinationPosElement.pattern = threeDecimalsPattern;
+	airTimeElement.value = randomInt(1, 6) * 20;
+	airTimeElement.pattern = singleDecimalPattern;
+	accelerationElement.pattern = singleDecimalPattern;
+	dampingElement.pattern = singleDecimalPattern;
 	form.addEventListener("submit", function (event) { event.preventDefault(); });
 	form.addEventListener("input", updateForm);
 	updateForm();
 
 	function updateForm() {
-		var sourcePos = form["source-pos"].value.match(threeDecimalsPattern);
-		var destinationPos = form["destination-pos"].value.match(threeDecimalsPattern);
-		var airTime = form["air-time"].value.match(singleDecimalPattern);
-		var acceleration = form.acceleration.value.match(singleDecimalPattern);
-		var damping = form.damping.value.match(singleDecimalPattern);
+		var sourcePos = sourcePosElement.value.match(threeDecimalsPattern);
+		var destinationPos = destinationPosElement.value.match(threeDecimalsPattern);
+		var airTime = airTimeElement.value.match(singleDecimalPattern);
+		var acceleration = accelerationElement.value.match(singleDecimalPattern);
+		var damping = dampingElement.value.match(singleDecimalPattern);
 
 		if (sourcePos == null || destinationPos == null || airTime == null || acceleration == null || damping == null) {
 			return;
@@ -73,7 +81,7 @@
 			return;
 		}
 
-		form.result.innerHTML = v0.x + ", " + v0.y + ", " + v0.z;
-		form.command.value = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
+		resultElement.innerText = v0.x + ", " + v0.y + ", " + v0.z;
+		commandElement.innerText = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
 	}
 })();

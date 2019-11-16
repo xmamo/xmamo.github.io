@@ -1,10 +1,14 @@
 "use strict";
 
 (function () {
+	var sign = utils.sign;
 	var touchToMouse = utils.touchToMouse;
 	var World = gameOfLife.World;
 
 	var form = document.forms["game-of-life"];
+	var sizeElement = form.elements.size;
+	var rulesetElement = form.elements.ruleset;
+	var wrapElement = form.elements.wrap;
 	var canvas = document.getElementById("game-of-life-canvas");
 	var context = canvas.getContext("2d");
 
@@ -21,8 +25,8 @@
 		event.preventDefault();
 	});
 
-	form.size.addEventListener("change", function () {
-		var size = form.size.value.match(/^\s*([+-]?\d+)(?:\s*[x×]\s*|\s+)([+-]?\d+)\s*$/);
+	sizeElement.addEventListener("change", function () {
+		var size = sizeElement.value.match(/^\s*([+-]?\d+)(?:\s*[x×]\s*|\s+)([+-]?\d+)\s*$/);
 		if (size == null) {
 			return;
 		}
@@ -34,8 +38,8 @@
 		world = newWorld;
 	});
 
-	form.ruleset.addEventListener("input", function () {
-		var ruleset = form.ruleset.value.match(form.ruleset.pattern);
+	rulesetElement.addEventListener("input", function () {
+		var ruleset = rulesetElement.value.match(rulesetElement.pattern);
 		if (ruleset == null) {
 			return;
 		}
@@ -46,8 +50,8 @@
 		world.d = parseInt(ruleset[4]);
 	});
 
-	form.wrap.addEventListener("change", function () {
-		world.wrap = form.wrap.checked;
+	wrapElement.addEventListener("change", function () {
+		world.wrap = wrapElement.checked;
 	});
 
 	canvas.addEventListener("contextmenu", function (event) {
@@ -116,7 +120,7 @@
 	});
 
 	canvas.addEventListener("wheel", function (event) {
-		brushSize = Math.max(1, Math.min(brushSize - Math.sign(event.deltaY), Math.min(world.width, world.height)));
+		brushSize = Math.max(1, Math.min(brushSize - sign(event.deltaY), Math.min(world.width, world.height)));
 		event.preventDefault();
 	});
 

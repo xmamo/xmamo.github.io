@@ -10,9 +10,7 @@ scripts:
 
 # {{ page.title }} #
 <form id="game-of-life">
-	<output class="bordered" style="display: block;">
-		<canvas id="game-of-life-canvas" style="background: #FFF;"></canvas>
-	</output>
+	<canvas class="bordered" id="game-of-life-canvas"></canvas>
 	<div class="columns">
 		<div class="column">
 			<h2>Controls</h2>

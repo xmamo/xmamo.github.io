@@ -42,11 +42,8 @@ below and see how our theorem works in practice.
 		<input id="discrete-time-projectile-motion-calculator-damping" name="damping" required="required" spellcheck="false" value="0.98" />
 	</p>
 	<p>
-		<label for="discrete-time-projectile-motion-calculator-result">Required initial velocity:</label>
-		<output id="discrete-time-projectile-motion-calculator-result" name="result"></output>
-		<br />
-		<label for="discrete-time-projectile-motion-calculator-command">Minecraft command:</label>
-		<code><output id="discrete-time-projectile-motion-calculator-command" name="command"></output></code>
+		Required initial velocity: <span id="discrete-time-projectile-motion-calculator-result"></span><br />
+		Minecraft command: <span id="discrete-time-projectile-motion-calculator-command"></span>
 	</p>
 </form>
 

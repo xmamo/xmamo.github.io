@@ -29,6 +29,7 @@ iframe {
 canvas {
 	display: block;
 	width: 100%;
+	background: #FFF;
 }
 
 pre {
