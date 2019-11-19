@@ -24,6 +24,7 @@
 
 	form.addEventListener("submit", function (event) {
 		event.preventDefault();
+		update();
 	});
 
 	formulaElement.addEventListener("input", function () {
@@ -37,7 +38,9 @@
 		formulaElement.setSelectionRange(left.length, left.length + middle.length);
 	});
 
-	formulaElement.addEventListener("change", function () {
+	formulaElement.addEventListener("change", update);
+
+	function update() {
 		var context = new Context(String.prototype.normalize ? formulaElement.value.normalize("NFC") : formulaElement.value);
 		var formula = parseFormula(context);
 
@@ -46,9 +49,12 @@
 			if (context.errorPosition === formulaElement.value.length) {
 				formulaElement.value += " ";
 			}
-			formulaElement.setSelectionRange(context.errorPosition, formulaElement.value.length);
 			errorElement.innerText = context.error;
 			errorElement.style.removeProperty("display");
+			setTimeout(function () {
+				formulaElement.focus();
+				formulaElement.setSelectionRange(context.errorPosition, formulaElement.value.length);
+			}, 1);
 			return;
 		}
 
@@ -120,7 +126,7 @@
 		}
 
 		resultElement.style.removeProperty("display");
-	});
+	}
 
 	function mathify(string) {
 		return string
