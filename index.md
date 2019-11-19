@@ -1,4 +1,5 @@
 ---
+article: true
 title: 'About me'
 description: 'My name is Matteo Morena. I like skiing, music, nature, hiking, and programming. This website is dedicated to share my interest in this last subject.'
 keywords: 'Matteo Morena, Mamo, developer, sofware engineer, programmer, software, skills'

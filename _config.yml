@@ -1,3 +1,11 @@
+defaults:
+  - scope:
+      path: ''
+    values:
+      article: true
+      styles: []
+      scripts: []
+
 exclude:
   - '/img/biloma/*.txt'
   - '/js/first-order-logic-tool/generate_regex.py'
