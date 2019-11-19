@@ -1,5 +1,6 @@
 ---
 title: 'Game of Life 3D'
+article: false
 scripts:
   - '/js/utils.js'
   - '/js/game-of-life-3d/camera.js'

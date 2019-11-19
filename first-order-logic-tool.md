@@ -14,8 +14,8 @@ scripts:
 ---
 
 # {{ page.title }} #
-Use the input field below to write a first order formula. Confirm your input by pressing enter.<br />
-To insert "¬", "∧", "∨", "→", "←", "↔", "∀", "∃" type "!", "&", "\|" "->", "<-", "<->", "\A", "\E" respectively.
+Use the input field below to write a first order formula. Confirm your input by pressing enter. To insert "¬", "∧",
+"∨", "→", "←", "↔", "∀", "∃" type "!", "&", "\|" "->", "<-", "<->", "\A", "\E" respectively.
 
 <form id="first-order-logic-tool">
 	<label for="first-order-logic-tool-formula">Formula</label>

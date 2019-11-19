@@ -6,7 +6,7 @@
 		<meta name="author" content="Matteo Morena" />
 		{% if page.description != nil %}<meta name="description" content="{{ page.description | smartify }}" />{% endif %}
 		{% if page.keywords != nil %}<meta name="keywords" content="{{ page.keywords | smartify }}" />{% endif %}
-		<meta name="theme-color" content="#000" />
+		<meta name="theme-color" content="#222" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{{ page.title | smartify }} — Mamo.dev</title>
 		<base target="_blank" />
@@ -19,28 +19,26 @@
 
 	<body>
 		<header id="header">
-			<div class="content">
-				<img id="header-image" src="/img/mamo.png" width="512" height="512" alt="" />
-				<div class="title">Matteo Morena</div>
-				<div class="subtitle blinking-cursor">Software developer</div>
+			<div id="header-top">
+				<span id="header-title">Matteo Morena</span>
+				<span id="header-subtitle" class="blinking-cursor">Software developer</span>
 			</div>
-			<nav>
-				<ul class="menu">
+			<nav class="menu">
+				<span class="menu-hamburger">≡</span>
+				<ul class="menu-item-list">
 					{% for item in site.data.navigation %}
-						<li class="menu-item">
+						<li class="menu-item {% if item.subitems != nil %}has-submenu{% endif %}">
 							{% if item.url != nil %}
-								{% assign url = item.url | append: 'index.xhtml' %}
-								<a class="menu-item-content {% if page.url == url %}active{% endif %} {% if item.subitems != nil %}more{% endif %}" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title | smartify }}</a>
+								<a class="menu-item-content" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title | smartify }}</a>
 							{% else %}
-								<span class="menu-item-content {% if item.subitems %}more{% endif %}">{{ item.title | smartify }}</span>
+								<span class="menu-item-content">{{ item.title | smartify }}</span>
 							{% endif %}
 							{% if item.subitems != nil %}
-								<ul class="submenu">
+								<ul class="submenu-item-list">
 									{% for subitem in item.subitems %}
 										<li class="submenu-item">
 											{% if subitem.url != nil %}
-												{% assign suburl = subitem.url | append: 'index.xhtml' %}
-												<a class="submenu-item-content {% if page.url == suburl %}active{% endif %}" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title | smartify }}</a>
+												<a class="submenu-item-content" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title | smartify }}</a>
 											{% else %}
 												<span class="submenu-item-content">{{ subitem.title | smartify }}</span>
 											{% endif %}
@@ -54,10 +52,14 @@
 			</nav>
 		</header>
 
-		<main class="content">
-			<article>
-				{{ content }}
-			</article>
+		<main>
+			{% if page.article %}
+				<article>
+					{{ content }}
+				</article>
+			{% else %}
+				{{ content}}
+			{% endif %}
 		</main>
 
 		<script src="/js/main.js" defer="defer"></script>

@@ -1,5 +1,6 @@
 ---
 title: 'P2P Paint'
+article: false
 scripts:
   - 'https://unpkg.com/peerjs@1.0.0/dist/peerjs.min.js'
   - '/js/p2p-paint/common.js'

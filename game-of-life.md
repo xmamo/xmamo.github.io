@@ -1,5 +1,6 @@
 ---
 title: 'Game of Life'
+article: false
 scripts:
   - '/js/utils.js'
   - '/js/game-of-life/world.js'

@@ -1,5 +1,5 @@
 ---
-title: "Discrete-time projectile motion calculator"
+title: 'Discrete-time projectile motion calculator'
 description: "BiLoMa's theorem provides formulas for projectile motion, but in discrete time. An online tool is provided to calculate the initial velocity given range and gravity."
 keywords: 'BiLoMa, theorem, tool, calculator, formula, proof, projectile motion, projectile, motion, initial velocity, velocity, position, displacement, discrete time, discrete'
 scripts:
