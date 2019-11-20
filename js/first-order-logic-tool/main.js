@@ -54,7 +54,7 @@
 			setTimeout(function () {
 				formulaElement.focus();
 				formulaElement.setSelectionRange(context.errorPosition, formulaElement.value.length);
-			}, 1);
+			}, 0);
 			return;
 		}
 

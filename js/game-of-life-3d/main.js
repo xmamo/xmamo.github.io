@@ -213,14 +213,12 @@
 		window.requestAnimationFrame(function (timeStamp) {
 			var now = timeStamp;
 			var delta = 0;
-			window.requestAnimationFrame(callback);
-
-			function callback(timeStamp) {
-				window.requestAnimationFrame(callback);
+			window.requestAnimationFrame(function callback(timeStamp) {
 				delta = (delta + (timeStamp - now) / 1000) / 2; // Exponential moving average
 				now = timeStamp;
 				render(delta);
-			}
+				window.requestAnimationFrame(callback);
+			});
 		});
 
 		function render(delta) {
