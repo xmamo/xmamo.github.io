@@ -101,16 +101,14 @@ p2pPaint.startClient = function (serverId) {
 		event.preventDefault();
 	});
 
-	window.requestAnimationFrame(render);
-
-	function render() {
-		window.requestAnimationFrame(render);
-
+	window.requestAnimationFrame(function render() {
 		p2pPaint.context[1].clearRect(0, 0, p2pPaint.canvas[1].width, p2pPaint.canvas[1].height);
 		if (canDraw) {
 			drawLine(1, mouseX, mouseY, mouseX, mouseY, "rgba(0, 0, 0, 0.2)", brushSize);
 		}
-	}
+
+		window.requestAnimationFrame(render);
+	});
 
 	function drawLine(which, x0, y0, x1, y1, style, width) {
 		p2pPaint.context[which].strokeStyle = style;

@@ -144,11 +144,7 @@
 		}
 	});
 
-	window.requestAnimationFrame(render);
-
-	function render(timeStamp) {
-		window.requestAnimationFrame(render);
-
+	window.requestAnimationFrame(function render(timeStamp) {
 		if (!paused && timeStamp >= lastUpdate + 1000) {
 			world.updateCells();
 			lastUpdate = timeStamp;
@@ -179,7 +175,9 @@
 				Math.ceil(canvas.height / world.height * brushSize) - 2
 			);
 		}
-	}
+
+		window.requestAnimationFrame(render);
+	});
 
 	function setCells(x0, y0) {
 		var y1 = y0 + brushSize;
