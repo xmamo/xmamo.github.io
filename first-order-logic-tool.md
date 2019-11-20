@@ -18,17 +18,19 @@ Use the input field below to write a first order formula. Confirm your input by 
 "∨", "→", "←", "↔", "∀", "∃" type "!", "&", "\|", "->", "<-", "<->", "\A", "\E" respectively.
 
 <form id="first-order-logic-tool">
-	<label for="first-order-logic-tool-formula">Formula</label>
-	<input id="first-order-logic-tool-formula" name="formula" spellcheck="false" />
-	<span id="first-order-logic-tool-error"></span>
+	<p>
+		<label for="first-order-logic-tool-formula">Formula</label>
+		<input id="first-order-logic-tool-formula" name="formula" spellcheck="false" />
+		<small id="first-order-logic-tool-error"></small>
+	</p>
 	<div id="first-order-logic-tool-result" style="display: none;">
 		<p>
-			Parsed formula:
-			<div id="first-order-logic-tool-parsed" style="line-height: 1; white-space: nowrap; overflow-x: auto;"></div>
+			Parsed formula:<br />
+			<span id="first-order-logic-tool-parsed"></span>
 		</p>
 		<p>
 			Interpretation:
-			<div id="first-order-logic-tool-interpretation"></div>
+			<span id="first-order-logic-tool-interpretation"></span>
 		</p>
 		<p>
 			Height: <span id="first-order-logic-tool-height"></span><br />
@@ -44,11 +46,11 @@ Use the input field below to write a first order formula. Confirm your input by 
 		</p>
 		<p>
 			Prenex conjunctive normal form:<br />
-			<span id="first-order-logic-tool-prenex-cnf" name="prenex-cnf"></span>
+			<span id="first-order-logic-tool-prenex-cnf"></span>
 		</p>
 		<p id="first-order-logic-tool-truth-table-result">
-			Truth table:
-			<div id="first-order-logic-truth-table" name="truth-table"></div>
+			Truth table:<br />
+			<span id="first-order-logic-truth-table"></span>
 		</p>
 	</div>
 </form>
