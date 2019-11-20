@@ -1,9 +1,14 @@
 @charset "UTF-8";
 
+#first-order-logic-tool-parsed {
+	line-height: 1;
+	white-space: nowrap;
+	overflow-x: auto;
+}
+
 .first-order-logic-tool-box {
 	display: inline-block;
 	padding: 0.5em;
-	border-width: 2px;
-	border-style: solid;
+	border: 2px solid;
 	border-radius: 0.5em;
 }
