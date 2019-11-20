@@ -1,6 +1,6 @@
 - title: 'About'
   url: '/'
-- title: 'Projects and tools'
+- title: 'Software, projects and tools'
   subitems:
     - title: 'First order logic tool'
       url: '/first-order-logic-tool'
