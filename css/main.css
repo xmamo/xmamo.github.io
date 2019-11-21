@@ -119,6 +119,10 @@ input[type="checkbox"] {
 	flex-grow: 1;
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
 .menu {
 	display: block;
 	margin: 1em 0;

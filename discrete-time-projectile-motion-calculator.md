@@ -54,7 +54,7 @@ velocity of <i>v</i><sub>0</sub>, we have the following formulas for the velocit
 ![BiLoMa’s theorem](/img/discrete-time-projectile-motion-calculator/theorem.svg)
 
 The damping factor <i>d</i> is used in Minecraft to prevent objects from incrementing their velocity indefinitely.
-Using these formulas with <i>d</i> → 1 means having no damping at all.
+Using these formulas with <span class="nowrap"><i>d</i> → 1</span> means having no damping at all.
 
 ### Proof of the formula for <i>v<sub>n</sub></i> ###
 ![Proof of the formula for vn](/img/discrete-time-projectile-motion-calculator/vn-proof.svg)
