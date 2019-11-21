@@ -27,12 +27,12 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		self.toString = function () {
 			var type = self.type;
 			switch (type) {
-				case "predicate":
 				case "function":
+				case "predicate":
 					return type + " of arity " + self.arity;
-				case "sentence":
-				case "variable":
 				case "constant":
+				case "variable":
+				case "sentence":
 					return type;
 			}
 		};
