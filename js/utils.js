@@ -10,7 +10,7 @@ utils.sign = function (x) {
 	} else {
 		return 0;
 	}
-}
+};
 
 utils.random = function (min, max) {
 	return Math.random() * (max - min) + min;
@@ -23,7 +23,9 @@ utils.randomInt = function (min, max) {
 utils.getSize = function (object) {
 	var size = 0;
 	for (var key in object) {
-		size++;
+		if (Object.prototype.hasOwnProperty.call(object, key)) {
+			size++;
+		}
 	}
 	return size;
 };
@@ -35,6 +37,7 @@ utils.firstStarting = function (string, candidates) {
 			return candidate;
 		}
 	}
+	return null;
 };
 
 utils.touchToMouse = function (event, type) {

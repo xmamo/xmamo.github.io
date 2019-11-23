@@ -49,9 +49,7 @@ var scope = scope || {};
 
 		self.get = function (key) {
 			var scope = self.getScope(key);
-			if (scope != null) {
-				return scope.data[key];
-			}
+			return scope != null ? scope.data[key] : null;
 		};
 
 		self.set = function (key, value) {

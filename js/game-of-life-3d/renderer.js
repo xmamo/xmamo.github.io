@@ -1,3 +1,5 @@
+"use strict";
+
 var gameOfLife3d = gameOfLife3d || {};
 
 gameOfLife3d.Renderer = function (gl, world) {

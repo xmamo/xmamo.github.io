@@ -78,7 +78,9 @@
 		var interpretationListElement = document.createElement("ul");
 		interpretationListElement.style.margin = "0";
 		for (var identifier in infoMap) {
-			interpretationListElement.appendChild(createElement("li", "“" + identifier + "” is a " + infoMap[identifier]));
+			if (Object.prototype.hasOwnProperty.call(infoMap, identifier)) {
+				interpretationListElement.appendChild(createElement("li", "“" + identifier + "” is a " + infoMap[identifier]));
+			}
 		}
 		interpretationElement.appendChild(interpretationListElement);
 
@@ -135,7 +137,7 @@
 			.replace(/[!~]/g, "¬")
 			.replace(/<->/g, "↔")
 			.replace(/->/g, "→")
-			.replace(/<-([^>])/g, "←$1")
+			.replace(/<-(?:[^>])/g, "←$1")
 			.replace(/\\A/gi, "∀")
 			.replace(/\\E/gi, "∃");
 	}
