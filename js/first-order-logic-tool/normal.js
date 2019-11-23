@@ -260,7 +260,7 @@
 
 		self.negate = function () {
 			prefix = self.negatedPrefix;
-			negated = !negated
+			negated = !negated;
 		};
 
 		self.rename = function (symbol1, symbol2) {

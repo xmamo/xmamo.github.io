@@ -58,10 +58,10 @@
 			return;
 		}
 
-		world.a = parseInt(ruleset[1]);
-		world.b = parseInt(ruleset[2]);
-		world.c = parseInt(ruleset[3]);
-		world.d = parseInt(ruleset[4]);
+		world.a = Number(ruleset[1]);
+		world.b = Number(ruleset[2]);
+		world.c = Number(ruleset[3]);
+		world.d = Number(ruleset[4]);
 	});
 
 	canvas.addEventListener("contextmenu", function (event) {
@@ -87,7 +87,7 @@
 		mouseY = newMouseY;
 	});
 
-	document.addEventListener("mouseup", function (event) {
+	document.addEventListener("mouseup", function () {
 		mouseDown = false;
 	});
 
@@ -186,14 +186,14 @@
 		gl.shaderSource(vertexShader, vertexShaderRequest.responseText);
 		gl.compileShader(vertexShader);
 		if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-			throw "Vertex shader: " + gl.getShaderInfoLog(vertexShader);
+			throw new Error("Vertex shader: " + gl.getShaderInfoLog(vertexShader));
 		}
 
 		var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 		gl.shaderSource(fragmentShader, fragmentShaderRequest.responseText);
 		gl.compileShader(fragmentShader);
 		if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-			throw "Fragment shader: " + gl.getShaderInfoLog(fragmentShader);
+			throw new Error("Fragment shader: " + gl.getShaderInfoLog(fragmentShader));
 		}
 
 		var program = gl.createProgram();
@@ -201,7 +201,7 @@
 		gl.attachShader(program, fragmentShader);
 		gl.linkProgram(program);
 		if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-			throw "Program: " + gl.getProgramInfoLog(program);
+			throw new Error("Program: " + gl.getProgramInfoLog(program));
 		}
 
 		var aPositionLocation = gl.getAttribLocation(program, "aPosition");
@@ -210,14 +210,14 @@
 		var uProjectionMatrixLocation = gl.getUniformLocation(program, "uProjectionMatrix");
 		var uLightDirectionLocation = gl.getUniformLocation(program, "uLightDirection");
 
-		window.requestAnimationFrame(function (timeStamp) {
+		requestAnimationFrame(function (timeStamp) {
 			var now = timeStamp;
 			var delta = 0;
-			window.requestAnimationFrame(function callback(timeStamp) {
+			requestAnimationFrame(function callback(timeStamp) {
 				delta = (delta + (timeStamp - now) / 1000) / 2; // Exponential moving average
 				now = timeStamp;
 				render(delta);
-				window.requestAnimationFrame(callback);
+				requestAnimationFrame(callback);
 			});
 		});
 

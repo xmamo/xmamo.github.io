@@ -1,7 +1,5 @@
 "use strict";
 
-var firstOrderLogicTool = firstOrderLogicTool || {};
-
 (function () {
 	var firstStarting = utils.firstStarting;
 	var Symbol = firstOrderLogicTool.Symbol;

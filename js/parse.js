@@ -15,13 +15,13 @@ parse.Context = function (source) {
 			return position;
 		},
 		set: function (newPosition) {
-			return position = Math.max(0, Math.min(newPosition, self.source.length));
+			position = Math.max(0, Math.min(newPosition, self.source.length));
 		}
 	});
 
 	Object.defineProperty(self, "isAtEnd", {
 		get: function () {
-			return self.position == self.source.length;
+			return self.position === self.source.length;
 		}
 	});
 
@@ -35,7 +35,6 @@ parse.Context = function (source) {
 				error = newError;
 				errorPosition = position;
 			}
-			return error;
 		}
 	});
 

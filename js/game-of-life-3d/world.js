@@ -86,7 +86,7 @@ gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 			for (var dy = -1; dy <= 1; dy++) {
 				for (var dz = -1; dz <= 1; dz++) {
 					for (var dx = -1; dx <= 1; dx++) {
-						if ((dx !== 0 || dy !== 0 || dz !== 0) && currentArray[(x + dx + xMax) % xMax + ((z + dz + zMax) % zMax) * xMax + ((y + dy + yMax) % yMax) * xzArea]) {
+						if ((dx !== 0 || dy !== 0 || dz !== 0) && currentArray[(x + dx + xMax) % xMax + (z + dz + zMax) % zMax * xMax + (y + dy + yMax) % yMax * xzArea]) {
 							neighbours++;
 						}
 					}

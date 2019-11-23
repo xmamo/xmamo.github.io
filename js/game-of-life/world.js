@@ -74,7 +74,7 @@ gameOfLife.World = function (width, height, a, b, c, d, wrap) {
 					for (var dx = -1; dx <= 1; dx++) {
 						if (dx !== 0 || dy !== 0) {
 							if (wrap) {
-								if (currentArray[(x + dx + width) % width + ((y + dy + height) % height) * width]) {
+								if (currentArray[(x + dx + width) % width + (y + dy + height) % height * width]) {
 									neighbours++;
 								}
 							} else {

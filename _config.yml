@@ -3,6 +3,7 @@ exclude:
   - '/js/first-order-logic-tool/generate_regex.py'
   - '/js/first-order-logic-tool/regex.txt'
   - '/node_modules/'
+  - '/.eslintrc.json'
   - '/CNAME'
   - '/Gemfile'
   - '/Gemfile.lock'

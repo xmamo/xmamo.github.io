@@ -31,7 +31,7 @@
 			return;
 		}
 
-		var newWorld = new World(parseInt(size[1]), parseInt(size[2]), world.a, world.b, world.c, world.d);
+		var newWorld = new World(Number(size[1]), Number(size[2]), world.a, world.b, world.c, world.d);
 		newWorld.forEach(function (value, x, y) {
 			return world.get(x, y);
 		});
@@ -44,10 +44,10 @@
 			return;
 		}
 
-		world.a = parseInt(ruleset[1]);
-		world.b = parseInt(ruleset[2]);
-		world.c = parseInt(ruleset[3]);
-		world.d = parseInt(ruleset[4]);
+		world.a = Number(ruleset[1]);
+		world.b = Number(ruleset[2]);
+		world.c = Number(ruleset[3]);
+		world.d = Number(ruleset[4]);
 	});
 
 	wrapElement.addEventListener("change", function () {
@@ -83,7 +83,7 @@
 		var newMouseX = event.clientX - canvas.getBoundingClientRect().x;
 		var newMouseY = event.clientY - canvas.getBoundingClientRect().y;
 
-		if (leftDown != rightDown) {
+		if (leftDown !== rightDown) {
 			var x0 = Math.round(world.width / canvas.width * mouseX - brushSize / 2);
 			var y0 = Math.round(world.height / canvas.height * mouseY - brushSize / 2);
 			var x1 = Math.round(world.width / canvas.width * newMouseX - brushSize / 2);
@@ -144,7 +144,7 @@
 		}
 	});
 
-	window.requestAnimationFrame(function render(timeStamp) {
+	requestAnimationFrame(function render(timeStamp) {
 		if (!paused && timeStamp >= lastUpdate + 1000) {
 			world.updateCells();
 			lastUpdate = timeStamp;
@@ -176,7 +176,7 @@
 			);
 		}
 
-		window.requestAnimationFrame(render);
+		requestAnimationFrame(render);
 	});
 
 	function setCells(x0, y0) {

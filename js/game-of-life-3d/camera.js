@@ -134,7 +134,7 @@ gameOfLife3d.Camera = function (options) {
 					1 / (Math.tan(self.fov / 2) * self.aspect), 0, 0, 0,
 					0, 1 / Math.tan(self.fov / 2), 0, 0,
 					0, 0, (self.far + self.near) / (self.near - self.far), -1,
-					0, 0, (2 * self.far * self.near) / (self.near - self.far), 0
+					0, 0, 2 * self.far * self.near / (self.near - self.far), 0
 				];
 			}
 			return projectionMatrix;
