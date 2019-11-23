@@ -11,7 +11,7 @@ scripts:
 <form id="game-of-life">
 	<canvas class="bordered" id="game-of-life-canvas"></canvas>
 	<div class="columns">
-		<div class="column">
+		<div class="left-column">
 			<h2>Controls</h2>
 			<dl>
 				<dt><kbd>Left-click</kbd></dt>
@@ -24,7 +24,7 @@ scripts:
 				<dd>Enable/disable simulation</dd>
 			</dl>
 		</div>
-		<div class="column">
+		<div class="right-column">
 			<h2>Settings</h2>
 			<p>
 				<label for="game-of-life-size">World size</label>
