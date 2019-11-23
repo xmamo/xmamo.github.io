@@ -15,7 +15,7 @@ scripts:
 		<canvas id="game-of-life-3d-canvas"></canvas>
 	</div>
 	<div class="columns">
-		<div class="column">
+		<div class="left-column">
 			<h2>Controls</h2>
 			<dl>
 				<dt><kbd>W</kbd>, <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd></dt>
@@ -26,7 +26,7 @@ scripts:
 				<dd>Toggle fullscreen mode</dd>
 			</dl>
 		</div>
-		<div class="column">
+		<div class="right-column">
 			<h2>Settings</h2>
 			<p>
 				<label for="game-of-life-3d-ruleset">Ruleset</label>

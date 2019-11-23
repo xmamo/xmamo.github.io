@@ -111,12 +111,25 @@ input[type="checkbox"] {
 	width: auto;
 }
 
-.columns {
-	display: flex;
+.columns:after {
+	content: "";
+	display: block;
+	clear: both;
 }
 
-.column {
-	flex-grow: 1;
+.left-column, .right-column {
+	display: block;
+	width: 50%;
+}
+
+.left-column {
+	float: left;
+	padding-right: 0.5em;
+}
+
+.right-column {
+	float: right;
+	padding-left: 0.5em;
 }
 
 .nowrap {
@@ -238,15 +251,24 @@ input[type="checkbox"] {
 		font-size: 18px;
 	}
 
-	.columns {
-		flex-direction: column;
+	.left-column, .right-column {
+		width: auto;
+		float: none;
 	}
-	
+
+	.left-column {
+		padding-right: 0;
+	}
+
+	.right-column {
+		padding-left: 0;
+	}
+
 	.menu-item-list {
 		display: none;
 		position: absolute;
 	}
-	
+
 	.menu:hover .menu-item-list {
 		display: block;
 		width: 100%;
@@ -256,11 +278,11 @@ input[type="checkbox"] {
 		display: block;
 		position: static;
 	}
-	
+
 	.menu-hamburger {
 		display: block;
 	}
-	
+
 	.menu-item {
 		float: none;
 	}
