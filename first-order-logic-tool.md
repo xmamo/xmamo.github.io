@@ -58,7 +58,7 @@ Use the input field below to write a first order formula. Confirm your input by 
 ## Purpose and usage of the tool ##
 The purpose of this tool is to analyze propositional formulas like
 <span class="nowrap"><i>A</i> → <i>B</i> ∧ <i>C</i></span> and first order formulas like
-<span class="nowrap">∀<i>x</i> ¬∃<i>y</i>(<i>p</i>(<i>x</i>) → <i>q</i>(<i>y</i>))</span>.
+<span class="nowrap">∀<i>x</i> ¬∃<i>y</i> (<i>p</i>(<i>x</i>) → <i>q</i>(<i>y</i>))</span>.
 
 Given any formula of these types, the tool is able to calculate the degree and the height of the formula. It is also
 able to infer the meaning of each used symbol, which means it understands if the symbol stands for a variable,
@@ -74,7 +74,7 @@ From a syntactical point of view, first order formulas are strings of symbols co
 quantifiers and punctuation marks. Each symbol can represent a variable, constant, function, or predicate. Let's take a
 look at an example:
 
-<p class="nowrap">¬∃<i>x</i>(<i>p</i>(<i>x</i>, <i>f</i>(<i>a</i>)) ∧ <i>p</i>(<i>x</i>, <i>g</i>(<i>a</i>)))</p>
+¬∃<i>x</i> (<i>p</i>(<i>x</i>, <i>f</i>(<i>a</i>)) ∧ <i>p</i>(<i>x</i>, <i>g</i>(<i>a</i>)))
 
 In the formula above, <i>x</i> would be a variable, <i>a</i> a constant, <i>p</i> a binary predicate, <i>f</i> an unary
 function. ¬ and ∧ are logic symbols, ∃ is the existential quantifier, (, ), , are punctuation marks.
@@ -128,7 +128,7 @@ In order to increase readability, parentheses can be dropped according to the fo
 In the example above, <span class="nowrap"><i>p</i>(<i>x</i>, <i>f</i>(<i>a</i>))</span> and
 <span class="nowrap"><i>p</i>(<i>x</i>, <i>g</i>(<i>a</i>))</span> are atomic formulas. In addition,
 <span class="nowrap"><i>p</i>(<i>x</i>, <i>f</i>(<i>a</i>)) ∧ <i>p</i>(<i>x</i>, <i>g</i>(<i>a</i>)</span> and
-<span class="nowrap">∃<i>x</i>(<i>p</i>(<i>x</i>, <i>f</i>(<i>a</i>)) ∧ <i>p</i>(<i>x</i>, <i>g</i>(<i>a</i>)))</span>
+<span class="nowrap">∃<i>x</i> (<i>p</i>(<i>x</i>, <i>f</i>(<i>a</i>)) ∧ <i>p</i>(<i>x</i>, <i>g</i>(<i>a</i>)))</span>
 are proper substrings of the original formula which are also formulas.
 
 ### Free and bound variables, open and closed formulas ###
@@ -155,7 +155,7 @@ father of, mother of, Mark respectively; with this interpretation, assuming that
 formula states that there doesn't exist any person which is taller than both the father and the mother of Mark. We
 could write a formula which is logically equivalent to the one above, but with self-describing symbols:
 
-<p class="nowrap">¬∃<i>person</i>(<i>taller</i>(<i>person</i>, <i>father</i>(<i>Mark</i>)) ∧ <i>taller</i>(<i>person</i>, <i>mother</i>(<i>Mark</i>)))</p>
+¬∃<i>person</i> (<i>taller</i>(<i>person</i>, <i>father</i>(<i>Mark</i>)) ∧ <i>taller</i>(<i>person</i>, <i>mother</i>(<i>Mark</i>)))
 
 In turn, the interpretation of a sentence depends on the domain of discourse. In this case, the domain of discourse
 would be the set of people we're talking about. If the domain of discourse consists only of Mark and we assume that
@@ -168,7 +168,7 @@ symbol of 𝓛 there's an element in <i>D</i>.
 
 An _interpretation_ <i>I</i> of 𝓛 is a function mapping every function and predicate symbol of 𝓛 to its meaning:
  * For every function symbol <i>f</i> of 𝓛 there's a mapping
-   <span class="nowrap"><i>I</i>(<i>f</i>): <i>D</i><sub><i>n</i></sub> → <i>D</i></span>, where <i>n</i> is
+   <span class="nowrap"><i>I</i>(<i>f</i>): <i>D</i><sup><i>n</i></sup> → <i>D</i></span>, where <i>n</i> is
    the arity of <i>f</i>.
  * For every predicate symbol <i>p</i> of 𝓛 there's a set <i>I</i>(<i>p</i>) such that
    <span class="nowrap"><i>I</i>(<i>p</i>) ⊆ <i>D</i></span>.
