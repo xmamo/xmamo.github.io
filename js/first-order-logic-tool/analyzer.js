@@ -6,13 +6,24 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 	var Scope = scope.Scope;
 
 	firstOrderLogicTool.Info = Info;
-	firstOrderLogicTool.AnalysisError = AnalysisError;
 
 	firstOrderLogicTool.analyze = function (formula) {
 		var visitor = new FormulaAnalyzeVisitor();
 		formula.accept(visitor);
 		return visitor.infoMap;
 	};
+
+	var AnalysisError = firstOrderLogicTool.AnalysisError = function (message, source) {
+		var self = this;
+
+		Error.call(self);
+		self.message = message;
+		self.source = source;
+	};
+
+	AnalysisError.prototype = new Error();
+	AnalysisError.prototype.constructor = AnalysisError;
+	AnalysisError.prototype.name = AnalysisError.name;
 
 	function Info(type, arity) {
 		var self = this;
@@ -36,14 +47,6 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 					return type;
 			}
 		};
-	}
-
-	function AnalysisError(message, source) {
-		var self = this;
-
-		self.name = "AnalysisError";
-		self.message = message;
-		self.source = source;
 	}
 
 	function FormulaAnalyzeVisitor() {
