@@ -6,7 +6,7 @@
 
 	var inline = false;
 	for (var i = 2, count = process.argv.length; i < count; i++) {
-		if (process.argv[i] == "--inline") {
+		if (process.argv[i] === "--inline") {
 			inline = true;
 			break;
 		}
