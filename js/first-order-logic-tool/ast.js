@@ -297,7 +297,7 @@ firstOrderLogicTool.Call = function Call(identifier, args, source, start, end) {
 		var args = self.args;
 		var otherArgs = other.args;
 
-		return otherArgs.length === args.length && otherArgs.every(function (arg, i) {
+		return other.identifier === self.identifier && otherArgs.length === args.length && otherArgs.every(function (arg, i) {
 			return arg.equals(args[i]);
 		});
 	};
