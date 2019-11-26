@@ -2,7 +2,7 @@
 
 var firstOrderLogicTool = firstOrderLogicTool || {};
 
-firstOrderLogicTool.Symbol = function (identifier, source, start, end) {
+firstOrderLogicTool.Symbol = function Symbol(identifier, source, start, end) {
 	var self = this;
 
 	self.identifier = identifier;
@@ -45,7 +45,7 @@ firstOrderLogicTool.Symbol = function (identifier, source, start, end) {
 	};
 
 	self.equals = function (other) {
-		return self.identifier === other.identifier;
+		return other instanceof Symbol && self.identifier === other.identifier;
 	};
 
 	self.toString = function () {
@@ -53,7 +53,7 @@ firstOrderLogicTool.Symbol = function (identifier, source, start, end) {
 	};
 };
 
-firstOrderLogicTool.UnaryFormula = function (operator, operand, source, start, end) {
+firstOrderLogicTool.UnaryFormula = function UnaryFormula(operator, operand, source, start, end) {
 	var self = this;
 
 	self.operator = operator;
@@ -97,7 +97,7 @@ firstOrderLogicTool.UnaryFormula = function (operator, operand, source, start, e
 	};
 
 	self.equals = function (other) {
-		return self.operator === other.operator && other.operand.equals(self.operand);
+		return other instanceof UnaryFormula && self.operator === other.operator && other.operand.equals(self.operand);
 	};
 
 	self.toString = function () {
@@ -105,7 +105,7 @@ firstOrderLogicTool.UnaryFormula = function (operator, operand, source, start, e
 	};
 };
 
-firstOrderLogicTool.BinaryFormula = function (left, operator, right, source, start, end) {
+firstOrderLogicTool.BinaryFormula = function BinaryFormula(left, operator, right, source, start, end) {
 	var self = this;
 
 	self.left = left;
@@ -172,7 +172,7 @@ firstOrderLogicTool.BinaryFormula = function (left, operator, right, source, sta
 	};
 
 	self.equals = function (other) {
-		return other.left.equals(self.left) && other.operator === self.operator && other.right.equals(self.right);
+		return other instanceof BinaryFormula && other.left.equals(self.left) && other.operator === self.operator && other.right.equals(self.right);
 	};
 
 	self.toString = function () {
@@ -184,7 +184,7 @@ firstOrderLogicTool.BinaryFormula = function (left, operator, right, source, sta
 	};
 };
 
-firstOrderLogicTool.QuantifiedFormula = function (quantifier, variable, formula, source, start, end) {
+firstOrderLogicTool.QuantifiedFormula = function QuantifiedFormula(quantifier, variable, formula, source, start, end) {
 	var self = this;
 
 	self.quantifier = quantifier;
@@ -229,7 +229,7 @@ firstOrderLogicTool.QuantifiedFormula = function (quantifier, variable, formula,
 	};
 
 	self.equals = function (other) {
-		return other.quantifier === self.quantifier && other.variable === self.variable && other.formula.equals(self.formula);
+		return other instanceof QuantifiedFormula && other.quantifier === self.quantifier && other.variable === self.variable && other.formula.equals(self.formula);
 	};
 
 	self.toString = function () {
@@ -238,7 +238,7 @@ firstOrderLogicTool.QuantifiedFormula = function (quantifier, variable, formula,
 	};
 };
 
-firstOrderLogicTool.Call = function (identifier, args, source, start, end) {
+firstOrderLogicTool.Call = function Call(identifier, args, source, start, end) {
 	var self = this;
 
 	self.identifier = identifier;
@@ -290,8 +290,13 @@ firstOrderLogicTool.Call = function (identifier, args, source, start, end) {
 	};
 
 	self.equals = function (other) {
+		if (!(other instanceof Call)) {
+			return false;
+		}
+
 		var args = self.args;
 		var otherArgs = other.args;
+
 		return otherArgs.length === args.length && otherArgs.every(function (arg, i) {
 			return arg.equals(args[i]);
 		});
