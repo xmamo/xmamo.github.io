@@ -99,12 +99,40 @@
 
 		self.visitQuantifiedFormula = function (formula) {
 			var prenex = formula.formula.accept(self);
-			prenex.addToPrefix(formula.quantifier, formula.variable);
+			if (formula.formula.accept(new FormulaUsesIdentifierVisitor(formula.variable))) {
+				prenex.addToPrefix(formula.quantifier, formula.variable);
+			}
 			return prenex;
 		};
 
 		self.visitCall = function (call) {
 			return new PrenexFormula([], call);
+		};
+	}
+
+	function FormulaUsesIdentifierVisitor(identifier) {
+		var self = this;
+
+		self.visitSymbol = function (symbol) {
+			return symbol.identifier === identifier;
+		};
+
+		self.visitUnaryFormula = function (formula) {
+			return formula.operand.accept(self);
+		};
+
+		self.visitBinaryFormula = function (formula) {
+			return formula.left.accept(self) || formula.right.accept(self);
+		};
+
+		self.visitQuantifiedFormula = function (formula) {
+			return formula.variable === identifier || formula.formula.accept(self);
+		};
+
+		self.visitCall = function (call) {
+			return call.identifier === identifier || call.args.some(function (arg) {
+				return arg.accept(self);
+			});
 		};
 	}
 
