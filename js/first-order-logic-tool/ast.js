@@ -34,6 +34,12 @@ firstOrderLogicTool.Symbol = function (identifier, source, start, end) {
 		}
 	});
 
+	Object.defineProperty(self, "hasQuantifiers", {
+		get: function () {
+			return false;
+		}
+	});
+
 	self.accept = function (visitor) {
 		return visitor.visitSymbol(self);
 	};
@@ -77,6 +83,12 @@ firstOrderLogicTool.UnaryFormula = function (operator, operand, source, start, e
 	Object.defineProperty(self, "isPropositional", {
 		get: function () {
 			return self.operand.isPropositional;
+		}
+	});
+
+	Object.defineProperty(self, "hasQuantifiers", {
+		get: function () {
+			return self.operand.hasQuantifiers;
 		}
 	});
 
@@ -132,6 +144,12 @@ firstOrderLogicTool.BinaryFormula = function (left, operator, right, source, sta
 	Object.defineProperty(self, "isPropositional", {
 		get: function () {
 			return self.left.isPropositional && self.right.isPropositional;
+		}
+	});
+
+	Object.defineProperty(self, "hasQuantifiers", {
+		get: function () {
+			return self.left.hasQuantifiers || self.right.hasQuantifiers;
 		}
 	});
 
@@ -200,6 +218,12 @@ firstOrderLogicTool.QuantifiedFormula = function (quantifier, variable, formula,
 		}
 	});
 
+	Object.defineProperty(self, "hasQuantifiers", {
+		get: function () {
+			return true;
+		}
+	});
+
 	self.accept = function (visitor) {
 		return visitor.visitQuantifiedFormula(self);
 	};
@@ -244,6 +268,14 @@ firstOrderLogicTool.Call = function (identifier, args, source, start, end) {
 	Object.defineProperty(self, "isPropositional", {
 		get: function () {
 			return false;
+		}
+	});
+
+	Object.defineProperty(self, "hasQuantifiers", {
+		get: function () {
+			return self.args.some(function (arg) {
+				return arg.hasQuantifiers;
+			});
 		}
 	});
 
