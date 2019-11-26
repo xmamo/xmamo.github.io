@@ -45,22 +45,23 @@
 		};
 
 		self.visitBinaryFormula = function (formula) {
-			var left = formula.left.accept(self);
+			var left = formula.left;
 			var operator = formula.operator;
-			var right = formula.right.accept(self);
+			var right = formula.right;
 
 			if (operator === "↔") {
-				if (formula.hasQuantifiers) {
-					var leftFormula = left.formula;
-					var rightFormula = right.formula;
-					return new BinaryFormula(new BinaryFormula(leftFormula, "→", rightFormula), "∧", new BinaryFormula(leftFormula, "←", rightFormula)).accept(self);
-				} else {
-					return new PrenexFormula([], formula);
+				var prenex = new BinaryFormula(new BinaryFormula(left, "→", right), "∧", new BinaryFormula(left, "←", right)).accept(self);
+				var matrix = prenex.matrix;
+				if (matrix.right.left.equals(matrix.left.left) && matrix.right.right.equals(matrix.left.right)) {
+					prenex = new PrenexFormula(prenex.prefix, new BinaryFormula(matrix.left.left, "↔", matrix.left.right));
 				}
+				return prenex;
 			}
 
-			var leftVariables = left.variables;
-			var rightVariables = right.variables;
+			var leftPrenex = left.accept(self);
+			var rightPrenex = right.accept(self);
+			var leftVariables = leftPrenex.variables;
+			var rightVariables = rightPrenex.variables;
 
 			for (var ri = 0, count = rightVariables.length; ri < count; ri++) {
 				var variable = rightVariables[ri];
@@ -75,7 +76,7 @@
 						var v = variablePrefix + ++variableSuffix;
 
 						if ((!(v in infoMap) || infoMap[v].type === "variable") && leftVariables.indexOf(v) < 0 && rightVariables.indexOf(v) < 0) {
-							right.rename(variable, v);
+							rightPrenex.rename(variable, v);
 							rightVariables[ri] = v;
 							break;
 						}
@@ -87,14 +88,14 @@
 			switch (operator) {
 				case "∧":
 				case "∨":
-					prefix = left.prefix;
+					prefix = leftPrenex.prefix;
 					break;
 				case "→":
 				case "←":
-					prefix = left.negatedPrefix;
+					prefix = leftPrenex.negatedPrefix;
 					break;
 			}
-			return new PrenexFormula(prefix.concat(right.prefix), new BinaryFormula(left.matrix, operator, right.matrix));
+			return new PrenexFormula(prefix.concat(rightPrenex.prefix), new BinaryFormula(leftPrenex.matrix, operator, rightPrenex.matrix));
 		};
 
 		self.visitQuantifiedFormula = function (formula) {
@@ -210,6 +211,10 @@
 				case "↔":
 					return new BinaryFormula(new BinaryFormula(left, "→", right), "∧", new BinaryFormula(left, "←", right)).accept(self);
 			}
+		};
+
+		self.visitQuantifiedFormula = function (formula) {
+			return [[formula]];
 		};
 
 		self.visitCall = function (call) {
