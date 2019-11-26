@@ -50,9 +50,13 @@
 			var right = formula.right.accept(self);
 
 			if (operator === "↔") {
-				var leftFormula = left.formula;
-				var rightFormula = right.formula;
-				return new BinaryFormula(new BinaryFormula(leftFormula, "→", rightFormula), "∧", new BinaryFormula(leftFormula, "←", rightFormula)).accept(self);
+				if (formula.hasQuantifiers) {
+					var leftFormula = left.formula;
+					var rightFormula = right.formula;
+					return new BinaryFormula(new BinaryFormula(leftFormula, "→", rightFormula), "∧", new BinaryFormula(leftFormula, "←", rightFormula)).accept(self);
+				} else {
+					return new PrenexFormula([], formula);
+				}
 			}
 
 			var leftVariables = left.variables;
