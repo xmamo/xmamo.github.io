@@ -38,6 +38,10 @@ firstOrderLogicTool.Symbol = function (identifier, source, start, end) {
 		return visitor.visitSymbol(self);
 	};
 
+	self.equals = function (other) {
+		return self.identifier === other.identifier;
+	};
+
 	self.toString = function () {
 		return self.identifier;
 	};
@@ -78,6 +82,10 @@ firstOrderLogicTool.UnaryFormula = function (operator, operand, source, start, e
 
 	self.accept = function (visitor) {
 		return visitor.visitUnaryFormula(self);
+	};
+
+	self.equals = function (other) {
+		return self.operator === other.operator && other.operand.equals(self.operand);
 	};
 
 	self.toString = function () {
@@ -145,6 +153,10 @@ firstOrderLogicTool.BinaryFormula = function (left, operator, right, source, sta
 		return visitor.visitBinaryFormula(self);
 	};
 
+	self.equals = function (other) {
+		return other.left.equals(self.left) && other.operator === self.operator && other.right.equals(self.right);
+	};
+
 	self.toString = function () {
 		var left = self.left;
 		var operator = self.operator;
@@ -190,6 +202,10 @@ firstOrderLogicTool.QuantifiedFormula = function (quantifier, variable, formula,
 
 	self.accept = function (visitor) {
 		return visitor.visitQuantifiedFormula(self);
+	};
+
+	self.equals = function (other) {
+		return other.quantifier === self.quantifier && other.variable === self.variable && other.formula.equals(self.formula);
 	};
 
 	self.toString = function () {
@@ -239,6 +255,14 @@ firstOrderLogicTool.Call = function (identifier, args, source, start, end) {
 
 	self.accept = function (visitor) {
 		return visitor.visitCall(self);
+	};
+
+	self.equals = function (other) {
+		var args = self.args;
+		var otherArgs = other.args;
+		return otherArgs.length === args.length && otherArgs.every(function (arg, i) {
+			return arg.equals(args[i]);
+		});
 	};
 
 	self.toString = function () {
