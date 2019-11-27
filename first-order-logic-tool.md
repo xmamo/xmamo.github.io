@@ -1,6 +1,7 @@
 ---
 title: 'First order logic tool'
 description: 'This tool analyzes first order logic formulas converting them to prenex conjunctive/discjunctive form and generates the truth table for propositional formulas.'
+keywords: 'first order logic, FOL, first order, predicative logic, predicative, propositional logic, propositional, logic, first order formula, FOL formula, predicative formula, formula, online tool, tool, software, analyzer, converter, normalizer, generator, normal form, NF, normal, prenex normal form, PNF, prenex, disjunctive normal form, DNF, disjunctive, conjunctive normal form, CNF, conjunctive'
 styles:
   - '/css/first-order-logic-tool.css'
 scripts:
