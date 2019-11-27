@@ -28,31 +28,31 @@ Use the input field below to write a first order formula. Confirm your input by 
 	<div id="first-order-logic-tool-result" style="display: none;">
 		<p>
 			Parsed formula:<br />
-			<span id="first-order-logic-tool-parsed"></span>
+			<output id="first-order-logic-tool-parsed" for="first-order-logic-tool-formula"></output>
 		</p>
 		<p>
 			Interpretation:
-			<span id="first-order-logic-tool-interpretation"></span>
+			<output id="first-order-logic-tool-interpretation" for="first-order-logic-tool-formula"></output>
 		</p>
 		<p>
-			Height: <span id="first-order-logic-tool-height"></span><br />
-			Degree: <span id="first-order-logic-tool-degree"></span>
+			Height: <output id="first-order-logic-tool-height" for="first-order-logic-tool-formula"></output><br />
+			Degree: <output id="first-order-logic-tool-degree" for="first-order-logic-tool-formula"></output>
 		</p>
 		<p>
 			Prenex normal form:<br />
-			<span id="first-order-logic-tool-prenex"></span>
+			<output id="first-order-logic-tool-prenex" for="first-order-logic-tool-formula"></output>
 		</p>
 		<p>
 			Prenex disjunctive normal form:<br />
-			<span id="first-order-logic-tool-prenex-dnf"></span>
+			<output id="first-order-logic-tool-prenex-dnf" for="first-order-logic-tool-formula"></output>
 		</p>
 		<p>
 			Prenex conjunctive normal form:<br />
-			<span id="first-order-logic-tool-prenex-cnf"></span>
+			<output id="first-order-logic-tool-prenex-cnf" for="first-order-logic-tool-formula"></output>
 		</p>
 		<p id="first-order-logic-tool-truth-table-result">
 			Truth table:<br />
-			<span id="first-order-logic-truth-table"></span>
+			<output id="first-order-logic-truth-table" for="first-order-logic-tool-formula"></output>
 		</p>
 	</div>
 </form>
@@ -82,19 +82,19 @@ In the formula above, <i>x</i> would be a variable, <i>a</i> a constant, <i>p</i
 function. ¬ and ∧ are logic symbols, ∃ is the existential quantifier, (, ), , are punctuation marks.
 
 ### First order language ###
-A _first order language_ 𝓛 is a language characterized by:
- * A set of _constant symbols_ (like <i>a</i>, <i>b</i>, <i>c</i>, ...);
- * A set of infinite  _variable symbols_ (like <i>x</i>, <i>y</i>, <i>z</i>, ...);
- * A set of _function symbols_, each with an associated arity (for example <i>f</i> with arity 1, <i>g</i> with arity
+A <dfn>first order language</dfn> 𝓛 is a language characterized by:
+ * A set of <dfn>constant symbols</dfn> (like <i>a</i>, <i>b</i>, <i>c</i>, ...);
+ * A set of infinite  <dfn>variable symbols</dfn> (like <i>x</i>, <i>y</i>, <i>z</i>, ...);
+ * A set of <dfn>function symbols</dfn>, each with an associated arity (for example <i>f</i> with arity 1, <i>g</i> with arity
    3, ...);
- * A set of _predicate symbols_ (also called _relation symbols_), each with an associated arity (for example <i>p</i>
+ * A set of <dfn>predicate symbols</dfn> (also called <dfn>relation symbols</dfn>), each with an associated arity (for example <i>p</i>
    with arity 2, <i>q</i> with arity 1, ...);
- * The _logic symbols_ ¬, ∧, ∨, →, ←, ↔;
- * The _quantifier symbols_ ∀, ∃;
- * The _punctuation symbols_ (, ), ,.
+ * The <dfn>logic symbols</dfn> ¬, ∧, ∨, →, ←, ↔;
+ * The <dfn>quantifier symbols</dfn> ∀, ∃;
+ * The <dfn>punctuation symbols</dfn> (, ), ,.
 
 ### Terms ###
-The _terms_ of first order languages are the basic building blocks needed to write first order formulas. They are
+The <dfn>terms</dfn> of first order languages are the basic building blocks needed to write first order formulas. They are
 defined recursively as follows:
  * Every variable is a term;
  * Every constant is a term;
@@ -104,10 +104,10 @@ defined recursively as follows:
 In the example above, <i>a</i>, <i>f</i>(<i>a</i>), <i>g</i>(<i>a</i>) and <i>x</i> are terms of the formula.
 
 ### Formulas ###
-A _first order formula_ can be defined recursively as follows:
+A <dfn>first order formula</dfn> can be defined recursively as follows:
  * <span class="nowrap"><i>p</i>(<i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub>)</span> is a formula if
    <i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub> are terms and <i>p</i> is a predicate of arity <i>n</i>. A
-   formula of this kind is called _atomic_;
+   formula of this kind is called <dfn>atomic</dfn>;
  * (¬<i>F</i>) is a formula if <i>F</i> is a formula;
  * <span class="nowrap">(<i>F</i> ∧ <i>G</i>)</span>, <span class="nowrap">(<i>F</i> ∨ <i>G</i>)</span>,
    <span class="nowrap">(<i>F</i> → <i>G</i>)</span>, <span class="nowrap">(<i>F</i> ← <i>G</i>)</span>,
@@ -141,10 +141,10 @@ different in the two cases: the first formula is neither true nor false as <i>pe
 the second formula is false since it is not true that all people live in Italy.
 
 Formally, if <i>F</i> is a formula and <i>x</i> is a variable appearing in <i>F</i>, all occurrences of <i>x</i> in
-<i>F</i> are said to be _bound_ in formulas of the kind <span class="nowrap">∀<i>x</i> <i>F</i></span> or
-<span class="nowrap">∃<i>x</i> <i>F</i></span>. Any occurrence of a variable which is not bound is said to be _free_.
-Any formula containing at least one free occurrence of a variable is called an _open formula_. If a formula is not
-open, it is said to be a _sentence_ or _closed formula_.
+<i>F</i> are said to be <dfn>bound</dfn> in formulas of the kind <span class="nowrap">∀<i>x</i> <i>F</i></span> or
+<span class="nowrap">∃<i>x</i> <i>F</i></span>. Any occurrence of a variable which is not bound is said to be
+<dfn>free</dfn>. Any formula containing at least one free occurrence of a variable is called an
+<dfn>open formula</dfn>. If a formula is not open, it is said to be a <dfn>sentence</dfn> or <dfn>closed formula</dfn>.
 
 Please note that different occurrences of the same variable can be free in one case and bound in another. For example,
 in the formula <span class="nowrap"><i>p</i>(<i>x</i>) ∧ ∃<i>x</i> <i>q</i>(<i>x</i>)</span> the first occurrence of
@@ -165,10 +165,11 @@ Mark is shorter than his dad, the formula is trivially true; however if the doma
 friends, then the truthfulness of the sentence also depends on the height of all his friends.
 
 ### Interpretation a sentence ###
-Let 𝓛 be a first order language. The _domain of discourse_ <i>D</i> is a non-empty set of elements. For each constant
-symbol of 𝓛 there's an element in <i>D</i>.
+Let 𝓛 be a first order language. The <dfn>domain of discourse</dfn> <i>D</i> is a non-empty set of elements. For each
+constant symbol of 𝓛 there's an element in <i>D</i>.
 
-An _interpretation_ <i>I</i> of 𝓛 is a function mapping every function and predicate symbol of 𝓛 to its meaning:
+An <dfn>interpretation</dfn> <i>I</i> of 𝓛 is a function mapping every function and predicate symbol of 𝓛 to its
+meaning:
  * For every function symbol <i>f</i> of 𝓛 there's a mapping
    <span class="nowrap"><i>I</i>(<i>f</i>): <i>D</i><sup><i>n</i></sup> → <i>D</i></span>, where <i>n</i> is
    the arity of <i>f</i>.
@@ -181,8 +182,8 @@ if <i>f</i> is a function of arity <i>n</i> and <i>t</i><sub>1</sub>, ..., <i>t<
 terms.
 
 ### Truth value of a sentence ###
-Given an interpretation <i>I</i> and a sentence <i>F</i> it is possible to determine its _truth value_, which is either
-true (𝕋) or false (𝔽).
+Given an interpretation <i>I</i> and a sentence <i>F</i> it is possible to determine its <dfn>truth value</dfn>, which
+is either true (𝕋) or false (𝔽).
 
  * <span class="nowrap"><i>p</i>(<i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub>)</span> is true iff
    <span class="nowrap">(<i>I</i>(<i>t</i><sub>1</sub>), ..., <i>I</i>(<i>t</i><sub><i>n</i></sub>)) ∈ <i>I</i>(<i>p</i>)</span>;
@@ -197,5 +198,5 @@ true (𝕋) or false (𝔽).
 Two sentences are logically equivalent if they are yield the same truth value independently of the interpretation given
 to them.
 
-More formally, two sentences <i>F</i> and <i>G</i> are _logically equivalent_ if, for every interpretation, <i>F</i> is
-true if and only if <i>G</i> is also true.
+More formally, two sentences <i>F</i> and <i>G</i> are <dfn>logically equivalent</dfn> if, for every interpretation,
+<i>F</i> is true if and only if <i>G</i> is also true.
