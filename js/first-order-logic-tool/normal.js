@@ -20,14 +20,14 @@
 					return conjunct != null ? new BinaryFormula(conjunct, "∧", literal) : literal;
 				}, null);
 				return formula != null ? new BinaryFormula(formula, "∨", conjunct) : conjunct;
-			}, null) || new Symbol("𝔽")).formula,
+			}, null)).formula,
 
 			prenexCNF: new PrenexFormula(prefix, matrix.accept(new FormulaNormalizeVisitor("CNF")).reduce(function (formula, disjunct) {
 				disjunct = disjunct.reduce(function (disjunct, literal) {
 					return disjunct != null ? new BinaryFormula(disjunct, "∨", literal) : literal;
 				}, null);
 				return formula != null ? new BinaryFormula(formula, "∧", disjunct) : disjunct;
-			}, null) || new Symbol("𝕋")).formula
+			}, null)).formula
 		};
 	};
 
@@ -221,77 +221,59 @@
 			return [[call]];
 		};
 
-		function concat(juncts1, juncts2) {
-			return fix(juncts1.concat(juncts2));
+		function concat(junction1, junction2) {
+			return fix(junction1.concat(junction2));
 		}
 
-		function combine(juncts1, juncts2) {
-			var juncts = [];
-			juncts1.forEach(function (junct1) {
-				juncts2.forEach(function (junct2) {
-					juncts.push(junct1.concat(junct2));
+		function combine(junction1, junction2) {
+			var junction = [];
+			junction1.forEach(function (clause1) {
+				junction2.forEach(function (clause2) {
+					junction.push(clause1.concat(clause2));
 				});
 			});
-			return fix(juncts);
+			return fix(junction);
 		}
 
-		function fix(juncts) {
+		function fix(junction) {
 			// Remove duplicate literals
-			juncts.forEach(function (junct) {
-				for (var i = junct.length - 1; i >= 0; i--) {
-					var literal = junct[i];
+			junction.forEach(function (clause) {
+				for (var i = clause.length - 1; i >= 0; i--) {
+					var literal = clause[i];
 
 					for (var j = i - 1; j >= 0; j--) {
-						if (junct[j].equals(literal)) {
-							junct.splice(i, 1);
+						if (clause[j].equals(literal)) {
+							clause.splice(i, 1);
 							break;
 						}
 					}
 				}
 			});
 
-			// Remove juncts with truth value 𝕋
-			for (var i = juncts.length - 1; i >= 0; i--) {
-				var junct = juncts[i];
+			// Remove duplicate clauses
+			for (var i = junction.length - 1; i >= 0; i--) {
+				var clause1 = junction[i];
+				var count1 = clause1.length;
 
-				if (junct.some(function (literal1) {
-					if (literal1 instanceof UnaryFormula) {
-						var operand = literal1.operand;
-						return junct.some(function (literal2) {
-							return literal2.equals(operand);
-						});
-					} else {
-						return false;
-					}
-				})) {
-					juncts.splice(i, 1);
-				}
-			}
-
-			// Remove duplicate juncts
-			for (var i = juncts.length - 1; i >= 0; i--) {
-				var junct1 = juncts[i];
-				var count1 = junct1.length;
-
-				for (var j = juncts.length - 1; j >= 0; j--) {
+				for (var j = junction.length - 1; j >= 0; j--) {
 					if (i === j) {
 						continue;
 					}
 
-					var junct2 = juncts[j];
+					var clause2 = junction[j];
 
-					if (junct2.length <= count1 && junct2.every(function (literal2) {
-						return junct1.some(function (literal1) {
+					if (clause2.length <= count1 && clause2.every(function (literal2) {
+						return clause1.some(function (literal1) {
 							return literal1.equals(literal2);
 						});
 					})) {
-						juncts.splice(i, 1);
+						junction.splice(i, 1);
 						break;
 					}
 				}
 			}
 
-			return juncts;
+			return junction;
 		}
 	}
 
