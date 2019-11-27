@@ -1,6 +1,6 @@
 ---
 title: 'VanillaVotifier'
-description: 'VanillaVotifier is an application which listens for votes made on Minecraft server lists for your server. It allows to execute some kind of custom action on vote, without requiring a Bukkit server.'
+description: 'VanillaVotifier listens for votes made on Minecraft server lists for your server and executes some kind of custom action on vote, without requiring Bukkit.'
 keywords: 'VanillaVotifier, Minecraft server, Minecraft, server, RCon, vanilla Votifier, vanilla, Votifier, Bukkit, plugin, Minecraft server list, server list'
 styles:
   - '/css/rouge.css'
