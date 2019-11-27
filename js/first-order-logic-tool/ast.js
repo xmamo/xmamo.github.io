@@ -234,7 +234,7 @@ firstOrderLogicTool.QuantifiedFormula = function QuantifiedFormula(quantifier, v
 
 	self.toString = function () {
 		var formula = self.formula;
-		return self.quantifier + self.variable + (formula.priority < self.priority ? "(" + formula + ")" : " " + formula);
+		return self.quantifier + self.variable + (formula.priority < self.priority ? " (" + formula + ")" : " " + formula);
 	};
 };
 

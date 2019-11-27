@@ -6,6 +6,10 @@
 	overflow-x: auto;
 }
 
+#first-order-logic-tool-interpretation ul {
+	margin: 0;
+}
+
 .first-order-logic-tool-box {
 	display: inline-block;
 	padding: 0.5em;

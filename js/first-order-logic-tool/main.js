@@ -75,27 +75,35 @@
 		errorElement.style.display = "none";
 
 		interpretationElement.innerHTML = "";
-		var interpretationListElement = document.createElement("ul");
-		interpretationListElement.style.margin = "0";
+		var ul = document.createElement("ul");
 		for (var identifier in infoMap) {
 			if (Object.prototype.hasOwnProperty.call(infoMap, identifier)) {
-				interpretationListElement.appendChild(createElement("li", "“" + identifier + "” is a " + infoMap[identifier]));
+				var li = document.createElement("li");
+				li.appendChild(createElement("i", identifier));
+				li.appendChild(document.createTextNode(" is a " + infoMap[identifier]));
+				ul.appendChild(li);
 			}
 		}
-		interpretationElement.appendChild(interpretationListElement);
+		interpretationElement.appendChild(ul);
 
 		var height = formula.height;
 		var degree = formula.degree;
 		var normalized = normalize(formula, infoMap);
 
 		parsedElement.innerHTML = "";
-		parsedElement.appendChild(formula.accept(new FormulaToHTMLVisitor(height)));
+		parsedElement.appendChild(formula.accept(new FormulaToHTMLVisualizationVisitor(height)));
 
 		heightElement.innerText = height;
 		degreeElement.innerText = degree;
-		prenexElement.innerText = normalized.prenex;
-		prenexDNFElement.innerText = normalized.prenexDNF;
-		prenexCNFElement.innerText = normalized.prenexCNF;
+
+		prenexElement.innerHTML = "";
+		prenexElement.appendChild(normalized.prenex.accept(new FormulaToHTMLVisitor()));
+
+		prenexDNFElement.innerHTML = "";
+		prenexDNFElement.appendChild(normalized.prenexDNF.accept(new FormulaToHTMLVisitor()));
+
+		prenexCNFElement.innerHTML = "";
+		prenexCNFElement.appendChild(normalized.prenexCNF.accept(new FormulaToHTMLVisitor()));
 
 		if (degree === 0 || !formula.isPropositional) {
 			truthTableResultElement.style.display = "none";
@@ -156,15 +164,16 @@
 		return false;
 	}
 
-	function FormulaToHTMLVisitor(height) {
+	function FormulaToHTMLVisualizationVisitor(height) {
 		var self = this;
 
 		self.visitSymbol = function (symbol) {
 			if (height > 1) {
-				return document.createTextNode(symbol.identifier);
+				return createElement("i", symbol.identifier);
 			} else {
 				var box = createBox(1);
 				box.innerText = symbol.identifier;
+				box.style.fontStyle = "italic";
 				return box;
 			}
 		};
@@ -223,10 +232,11 @@
 			var height = formula.height;
 
 			var box = createBox(height);
-			box.appendChild(createText(height, formula.quantifier + formula.variable));
+			box.appendChild(createText(height, formula.quantifier));
+			box.appendChild(createText(height, formula.variable, true));
 
 			if (formula.formula.priority < formula.priority) {
-				box.appendChild(document.createTextNode("("));
+				box.appendChild(document.createTextNode(" ("));
 				box.appendChild(formula.formula.accept(self));
 				box.appendChild(document.createTextNode(")"));
 			} else {
@@ -242,7 +252,7 @@
 			var height = call.height;
 
 			var box = createBox(height);
-			box.appendChild(createText(height, call.identifier));
+			box.appendChild(createText(height, call.identifier, true));
 			box.appendChild(document.createTextNode("("));
 
 			for (var i = 0, count = args.length; i < count; i++) {
@@ -256,9 +266,12 @@
 			return box;
 		};
 
-		function createText(h, text) {
+		function createText(h, text, italicize) {
 			var span = createElement("span", text);
 			span.style.color = "hsl(" + ((height > 1 ? 360 / (height - 1) * (h - 1) : 0) + 210) + ", 100%, " + 100 / 3 + "%)";
+			if (italicize) {
+				span.style.fontStyle = "italic";
+			}
 			return span;
 		}
 
@@ -268,6 +281,95 @@
 			box.style.borderColor = "hsl(" + ((height > 1 ? 360 / (height - 1) * (h - 1) : 0) + 210) + ", 100%, 50%)";
 			return box;
 		}
+	}
+
+	function FormulaToHTMLVisitor() {
+		var self = this;
+
+		self.visitSymbol = function (symbol) {
+			return createElement("i", symbol.identifier);
+		};
+
+		self.visitUnaryFormula = function (formula) {
+			var operand = formula.operand;
+
+			var span = document.createElement("span");
+			span.appendChild(document.createTextNode(formula.operator));
+
+			if (operand.priority < formula.priority) {
+				span.appendChild(document.createTextNode("("));
+				span.appendChild(operand.accept(self));
+				span.appendChild(document.createTextNode(")"));
+			} else {
+				span.appendChild(operand.accept(self));
+			}
+
+			return span;
+		};
+
+		self.visitBinaryFormula = function (formula) {
+			var left = formula.left;
+			var operator = formula.operator;
+			var right = formula.right;
+			var priority = formula.priority;
+
+			var span = document.createElement("span");
+
+			if (left.operator === operator && left.isAssociative ? left.priority < priority : left.priority <= priority) {
+				span.appendChild(document.createTextNode("("));
+				span.appendChild(left.accept(self));
+				span.appendChild(document.createTextNode(")"));
+			} else {
+				span.appendChild(left.accept(self));
+			}
+
+			span.appendChild(document.createTextNode(" " + operator + " "));
+
+			if (right.priority <= priority) {
+				span.appendChild(document.createTextNode("("));
+				span.appendChild(right.accept(self));
+				span.appendChild(document.createTextNode(")"));
+			} else {
+				span.appendChild(right.accept(self));
+			}
+
+			return span;
+		};
+
+		self.visitQuantifiedFormula = function (formula) {
+			var span = document.createElement("span");
+			span.appendChild(document.createTextNode(formula.quantifier));
+			span.appendChild(createElement("i", formula.variable));
+
+			if (formula.formula.priority < formula.priority) {
+				span.appendChild(document.createTextNode(" ("));
+				span.appendChild(formula.formula.accept(self));
+				span.appendChild(document.createTextNode(")"));
+			} else {
+				span.appendChild(document.createTextNode(" "));
+				span.appendChild(formula.formula.accept(self));
+			}
+
+			return span;
+		};
+
+		self.visitCall = function (call) {
+			var args = call.args;
+
+			var span = document.createElement("span");
+			span.appendChild(createElement("i", call.identifier));
+			span.appendChild(document.createTextNode("("));
+
+			for (var i = 0, count = args.length; i < count; i++) {
+				if (i > 0) {
+					span.appendChild(document.createTextNode(", "));
+				}
+				span.appendChild(args[i].accept(self));
+			}
+
+			span.appendChild(document.createTextNode(")"));
+			return span;
+		};
 	}
 
 	function PropositionalFormulaCollectTermsVisitor() {
