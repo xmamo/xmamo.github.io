@@ -1,5 +1,6 @@
 ---
 title: 'First order logic tool'
+description: 'This tool analyzes first order logic formulas converting them to prenex conjunctive/discjunctive form and generates the truth table for propositional formulas.'
 styles:
   - '/css/first-order-logic-tool.css'
 scripts:
