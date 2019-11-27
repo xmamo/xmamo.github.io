@@ -49,7 +49,7 @@ below and see how our theorem works in practice.
 Let <i>n</i> be the number of time units that have passed since the object was launched and <i>a</i> the
 (gravitational) acceleration. Assuming that the object was launched with an initial position of 0 and an initial
 velocity of <i>v</i><sub>0</sub>, we have the following formulas for the velocity <i>v<sub>n</sub></i> and the position
-<i>p<sub>n</sub><i>:
+<i>p<sub>n</sub></i>:
 
 ![BiLoMa’s theorem](/img/discrete-time-projectile-motion-calculator/theorem.svg)
 
