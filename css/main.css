@@ -180,6 +180,11 @@ input[type="checkbox"] {
 	display: none;
 }
 
+.icon, .icon:hover {
+	color: #000;
+	text-decoration: none;
+}
+
 .blinking-cursor:after {
 	content: "";
 	animation: blinking-cursor-keyframes 1.2s step-end infinite;
