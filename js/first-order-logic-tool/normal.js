@@ -20,14 +20,14 @@
 					return conjunct != null ? new BinaryFormula(conjunct, "∧", literal) : literal;
 				}, null);
 				return formula != null ? new BinaryFormula(formula, "∨", conjunct) : conjunct;
-			}, null)).formula,
+			}, null) || new Symbol("𝔽")).formula,
 
 			prenexCNF: new PrenexFormula(prefix, matrix.accept(new FormulaNormalizeVisitor("CNF")).reduce(function (formula, disjunct) {
 				disjunct = disjunct.reduce(function (disjunct, literal) {
 					return disjunct != null ? new BinaryFormula(disjunct, "∨", literal) : literal;
 				}, null);
 				return formula != null ? new BinaryFormula(formula, "∧", disjunct) : disjunct;
-			}, null)).formula
+			}, null) || new Symbol("𝕋")).formula
 		};
 	};
 

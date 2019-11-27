@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
 #first-order-logic-tool-parsed {
+	display: block;
 	line-height: 1;
 	white-space: nowrap;
 	overflow-x: auto;

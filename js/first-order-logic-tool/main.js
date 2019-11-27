@@ -287,7 +287,8 @@
 		var self = this;
 
 		self.visitSymbol = function (symbol) {
-			return createElement("i", symbol.identifier);
+			var identifier = symbol.identifier;
+			return ["𝕋", "𝔽"].indexOf(identifier) < 0 ? createElement("i", symbol.identifier) : document.createTextNode(identifier);
 		};
 
 		self.visitUnaryFormula = function (formula) {
