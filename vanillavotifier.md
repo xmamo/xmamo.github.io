@@ -3,6 +3,7 @@ title: 'VanillaVotifier'
 description: 'VanillaVotifier listens for votes made on Minecraft server lists for your server and executes some kind of custom action on vote, without requiring Bukkit.'
 keywords: 'VanillaVotifier, Minecraft server, Minecraft, server, RCon, vanilla Votifier, vanilla, Votifier, Bukkit, plugin, Minecraft server list, server list'
 styles:
+  - 'https://use.fontawesome.com/releases/v5.11.2/css/all.css'
   - '/css/rouge.css'
 ---
 
