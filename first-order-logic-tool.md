@@ -184,7 +184,6 @@ terms.
 ### Truth value of a sentence ###
 Given an interpretation <i>I</i> and a sentence <i>F</i> it is possible to determine its <dfn>truth value</dfn>, which
 is either true (𝕋) or false (𝔽).
-
  * <span class="nowrap"><i>p</i>(<i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub>)</span> is true iff
    <span class="nowrap">(<i>I</i>(<i>t</i><sub>1</sub>), ..., <i>I</i>(<i>t</i><sub><i>n</i></sub>)) ∈ <i>I</i>(<i>p</i>)</span>;
  * ¬<i>F</i> is true iff <i>F</i> is false;
