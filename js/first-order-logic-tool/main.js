@@ -112,14 +112,18 @@
 			var values = [];
 
 			var table = document.createElement("table");
+
+			var thead = document.createElement("thead");
 			var tr = document.createElement("tr");
 			terms.forEach(function (term) {
 				values.push(false);
 				tr.appendChild(createElement("th", term));
 			});
 			tr.appendChild(createElement("th", formula));
-			table.appendChild(tr);
+			thead.appendChild(tr);
+			table.appendChild(thead);
 
+			var tbody = document.createElement("tbody");
 			do {
 				var result = formula.accept(new PropositionalFormulaEvaluateVisitor(terms, values));
 				tr = document.createElement("tr");
@@ -127,8 +131,9 @@
 					tr.appendChild(createElement("td", value ? "𝕋" : "𝔽"));
 				});
 				tr.appendChild(createElement("td", result ? "𝕋" : "𝔽"));
-				table.appendChild(tr);
+				tbody.appendChild(tr);
 			} while (nextBinary(values));
+			table.appendChild(tbody);
 
 			truthTableElement.innerHTML = "";
 			truthTableElement.appendChild(table);
