@@ -1,5 +1,8 @@
 {
-	"dependencies": {
+	"name": "mamo.dev",
+	"author": "Matteo Morena",
+	"private": true,
+	"devDependencies": {
 		"eslint": "^7.17.0",
 		"mathjax-node": "^2.1.1"
 	}
