@@ -8,7 +8,10 @@ def get_regex_for_categories(*categories: str) -> str:
 		charset = response.info().get_content_charset('utf-8')
 
 		for line in map(lambda line: line.decode(charset), response):
-			m = match(r'[ \t]*(?P<min>[0-9A-Fa-f]+)(?:[ \t]*\.\.[ \t]*(?P<max>[0-9A-Fa-f]+))?[ \t]*;[ \t]*(?P<category>[A-Z][a-z&])', line)
+			m = match(
+				r'\s*(?P<min>[0-9A-Fa-f]+)(?:\s*\.\.\s*(?P<max>[0-9A-Fa-f]+))?\s*;\s*(?P<category>[A-Z][a-z])',
+				line
+			)
 
 			if m is None:
 				continue
@@ -20,6 +23,7 @@ def get_regex_for_categories(*categories: str) -> str:
 
 			if min > 0xFFFF:
 				continue
+
 			if max > 0xFFFF:
 				max = 0xFFFF
 
