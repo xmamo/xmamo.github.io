@@ -1,19 +1,27 @@
 - title: 'About'
   url: '/'
+
 - title: 'Software, projects and tools'
+
   subitems:
     - title: 'First order logic tool'
       url: '/first-order-logic-tool'
+
     - title: 'Discrete-time projectile motion calculator'
       url: '/discrete-time-projectile-motion-calculator'
+
     - title: 'VanillaVotifier'
       url: '/vanillavotifier'
+
     - title: 'Website source code'
       url: 'https://github.com/xMamo/xMamo.github.io'
       external: true
+
 - title: 'Fun'
+
   subitems:
     - title: 'Game of Life'
       url: '/game-of-life'
+
     - title: 'Game of Life 3D'
       url: '/game-of-life-3d'

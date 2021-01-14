@@ -9,6 +9,7 @@ def get_regex_for_categories(*categories: str) -> str:
 
 		for line in map(lambda line: line.decode(charset), response):
 			m = match(r'[ \t]*(?P<min>[0-9A-Fa-f]+)(?:[ \t]*\.\.[ \t]*(?P<max>[0-9A-Fa-f]+))?[ \t]*;[ \t]*(?P<category>[A-Z][a-z&])', line)
+
 			if m is None:
 				continue
 
