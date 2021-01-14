@@ -22,21 +22,25 @@ utils.randomInt = function (min, max) {
 
 utils.getSize = function (object) {
 	var size = 0;
+
 	for (var key in object) {
 		if (Object.prototype.hasOwnProperty.call(object, key)) {
 			size++;
 		}
 	}
+
 	return size;
 };
 
 utils.firstStarting = function (string, candidates) {
 	for (var i = 0, count = candidates.length; i < count; i++) {
 		var candidate = candidates[i];
+
 		if (string.indexOf(candidate) === 0) {
 			return candidate;
 		}
 	}
+
 	return null;
 };
 
@@ -48,7 +52,9 @@ utils.touchToMouse = function (event, type) {
 		metaKey: event.metaKey,
 		relatedTarget: event.relatedTarget
 	};
+
 	var touches = event.touches;
+
 	if (touches.length > 0) {
 		var touch = touches[0];
 		mouseEventInit.screenX = touch.screenX;
@@ -57,6 +63,7 @@ utils.touchToMouse = function (event, type) {
 		mouseEventInit.clientY = touch.clientY;
 		mouseEventInit.ctrlKey = event.ctrlKey;
 	}
+
 	return new MouseEvent(type, mouseEventInit);
 };
 
