@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,13 +8,11 @@
 		{% if page.keywords != nil %}<meta name="keywords" content="{{ page.keywords | smartify }}" />{% endif %}
 		<meta name="theme-color" content="#222" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>{{ page.title | smartify }} — Mamo.dev</title>
+		<title>{{ page.title | smartify }}—Mamo.dev</title>
 		<base target="_blank" />
 		{% comment %}<link rel="icon" href="favicon.ico" />{% endcomment %}
 		<link rel="stylesheet" href="/css/main.css" />
-		{% for style in page.styles %}
-			<link rel="stylesheet" href="{{ style }}" />
-		{% endfor %}
+		{% for style in page.styles %}<link rel="stylesheet" href="{{ style }}" />{% endfor %}
 	</head>
 
 	<body>
@@ -23,8 +21,10 @@
 				<span id="header-title">Matteo Morena</span>
 				<span id="header-subtitle" class="blinking-cursor">Software developer</span>
 			</div>
+
 			<nav class="menu">
 				<span class="menu-hamburger">≡</span>
+
 				<ul class="menu-item-list">
 					{% for item in site.data.navigation %}
 						<li class="menu-item {% if item.subitems != nil %}has-submenu{% endif %}">
@@ -33,6 +33,7 @@
 							{% else %}
 								<span class="menu-item-content">{{ item.title | smartify }}</span>
 							{% endif %}
+
 							{% if item.subitems != nil %}
 								<ul class="submenu-item-list">
 									{% for subitem in item.subitems %}
@@ -63,8 +64,6 @@
 		</main>
 
 		<script src="/js/main.js" defer="defer"></script>
-		{% for script in page.scripts %}
-			<script src="{{ script }}" defer="defer"></script>
-		{% endfor %}
+		{% for script in page.scripts %}<script src="{{ script }}" defer="defer"></script>{% endfor %}
 	</body>
 </html>
