@@ -95,7 +95,7 @@ p2pPaint.startClient = function (serverId) {
 	});
 
 	p2pPaint.canvas[1].addEventListener("wheel", function (event) {
-		brushSize = Math.max(1, brushSize * Math.exp(-Math.sign(event.deltaY) / 10));
+		brushSize = Math.max(1, brushSize * Math.exp(Math.sign(event.deltaY) / 10));
 		event.preventDefault();
 	});
 
