@@ -33,7 +33,7 @@ Use the input field below to write a first order formula. Confirm your input by 
 <form id="first-order-logic-tool">
 	<p>
 		<label for="first-order-logic-tool-formula">Formula</label>
-		<input id="first-order-logic-tool-formula" name="formula" spellcheck="false" />
+		<input id="first-order-logic-tool-formula" name="formula" value="A ∨ B → C" spellcheck="false" />
 		<small id="first-order-logic-tool-error"></small>
 	</p>
 
