@@ -120,7 +120,7 @@
 	});
 
 	canvas.addEventListener("wheel", function (event) {
-		brushSize = Math.max(1, Math.min(brushSize - sign(event.deltaY), Math.min(world.width, world.height)));
+		brushSize = Math.max(1, Math.min(brushSize + sign(event.deltaY), Math.min(world.width, world.height)));
 		event.preventDefault();
 	});
 
