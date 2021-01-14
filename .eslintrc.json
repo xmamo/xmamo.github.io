@@ -64,7 +64,6 @@
         "no-iterator": "warn",
         "no-labels": ["warn", {"allowLoop": true, "allowSwitch": true}],
         "no-lone-blocks": "warn",
-        "no-loop-func": "warn",
         "no-multi-spaces": "warn",
         "no-multi-str": "warn",
         "no-new-func": "warn",
@@ -92,7 +91,6 @@
         "prefer-promise-reject-errors": "warn",
         "prefer-regex-literals": ["warn", {"disallowRedundantWrapping": true}],
         "radix": "warn",
-        "require-unicode-regexp": "warn",
         "wrap-iife": ["warn", "inside"],
         "yoda": "warn",
 
@@ -107,7 +105,7 @@
         "no-use-before-define": ["warn", {"functions": false, "classes": false}],
 
         "indent": ["warn", "tab", {"SwitchCase": 1}],
-        "quotes": ["warn", {"avoidEscape": true}],
+        "quotes": ["warn", "double", {"avoidEscape": true}],
         "semi": ["warn", "always"]
     }
 }
