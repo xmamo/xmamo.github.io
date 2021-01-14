@@ -40,6 +40,8 @@
 
 	formulaElement.addEventListener("change", update);
 
+	update();
+
 	function update() {
 		var context = new Context(String.prototype.normalize ? formulaElement.value.normalize("NFC") : formulaElement.value);
 		var formula = parseFormula(context);
