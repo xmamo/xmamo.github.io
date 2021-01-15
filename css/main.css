@@ -59,6 +59,7 @@ pre {
 }
 
 canvas {
+	background: #FFF;
 	width: 100%;
 	border: 1px solid;
 }
