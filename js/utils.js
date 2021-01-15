@@ -12,6 +12,20 @@ utils.sign = function (x) {
 	}
 };
 
+utils.clamp = function (x, min, max) {
+	if (Number.isNaN(x)) {
+		return x;
+	} else if (min > max) {
+		return (min + max) / 2;
+	} else if (x < min) {
+		return min;
+	} else if (x > max) {
+		return max;
+	} else {
+		return x;
+	}
+};
+
 utils.random = function (min, max) {
 	return Math.random() * (max - min) + min;
 };
@@ -25,7 +39,7 @@ utils.getSize = function (object) {
 
 	for (var key in object) {
 		if (Object.prototype.hasOwnProperty.call(object, key)) {
-			size++;
+			++size;
 		}
 	}
 
@@ -33,7 +47,7 @@ utils.getSize = function (object) {
 };
 
 utils.firstStarting = function (string, candidates) {
-	for (var i = 0, count = candidates.length; i < count; i++) {
+	for (var i = 0, count = candidates.length; i < count; ++i) {
 		var candidate = candidates[i];
 
 		if (string.indexOf(candidate) === 0) {

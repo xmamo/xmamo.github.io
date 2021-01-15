@@ -12,32 +12,32 @@ scripts:
 
 # {{ page.title }} #
 
-<form id="game-of-life-3d">
-	<div class="bordered">
-		<canvas id="game-of-life-3d-canvas"></canvas>
+<div class="bordered">
+	<canvas id="game-of-life-3d-canvas"></canvas>
+</div>
+
+<div class="columns">
+	<div class="left-column">
+		<h2>Controls</h2>
+
+		<dl>
+			<dt><kbd>W</kbd>, <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd></dt>
+			<dd>Move the camera up, left, down, or right</dd>
+			<dt><kbd>Space</kbd></dt>
+			<dd>Enable/disable simulation</dd>
+			<dt><kbd>F</kbd></dt>
+			<dd>Toggle fullscreen mode</dd>
+		</dl>
 	</div>
 
-	<div class="columns">
-		<div class="left-column">
-			<h2>Controls</h2>
+	<div class="right-column">
+		<h2>Settings</h2>
 
-			<dl>
-				<dt><kbd>W</kbd>, <kbd>A</kbd>, <kbd>S</kbd>, <kbd>D</kbd></dt>
-				<dd>Move the camera up, left, down, or right</dd>
-				<dt><kbd>Space</kbd></dt>
-				<dd>Enable/disable simulation</dd>
-				<dt><kbd>F</kbd></dt>
-				<dd>Toggle fullscreen mode</dd>
-			</dl>
-		</div>
-	
-		<div class="right-column">
-			<h2>Settings</h2>
-
+		<form id="game-of-life-3d">
 			<p>
 				<label for="game-of-life-3d-ruleset">Ruleset</label>
 				<input id="game-of-life-3d-ruleset" name="ruleset" required="required" spellcheck="false" placeholder="a, b, c, d" pattern="^\s*([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)\s*$" value="4, 5, 5, 5" />
 			</p>
-		</div>
+		</form>
 	</div>
-</form>
+</div>
