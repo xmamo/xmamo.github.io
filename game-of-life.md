@@ -10,28 +10,28 @@ scripts:
 
 # {{ page.title }} #
 
-<form id="game-of-life">
-	<canvas class="bordered" id="game-of-life-canvas"></canvas>
+<canvas class="bordered" id="game-of-life-canvas"></canvas>
 
-	<div class="columns">
-		<div class="left-column">
-			<h2>Controls</h2>
+<div class="columns">
+	<div class="left-column">
+		<h2>Controls</h2>
 
-			<dl>
-				<dt><kbd>Left-click</kbd></dt>
-				<dd>Place an alive cell at the cursor’s position</dd>
-				<dt><kbd>Right-click</kbd></dt>
-				<dd>Place a dead cell at the cursor’s position</dd>
-				<dt><kbd>Mouse wheel</kbd></dt>
-				<dd>Increase/decrease brush size</dd>
-				<dt><kbd>Space</kbd></dt>
-				<dd>Enable/disable simulation</dd>
-			</dl>
-		</div>
+		<dl>
+			<dt><kbd>Left-click</kbd></dt>
+			<dd>Place an alive cell at the cursor’s position</dd>
+			<dt><kbd>Right-click</kbd></dt>
+			<dd>Place a dead cell at the cursor’s position</dd>
+			<dt><kbd>Mouse wheel</kbd></dt>
+			<dd>Increase/decrease brush size</dd>
+			<dt><kbd>Space</kbd></dt>
+			<dd>Enable/disable simulation</dd>
+		</dl>
+	</div>
 
-		<div class="right-column">
-			<h2>Settings</h2>
+	<div class="right-column">
+		<h2>Settings</h2>
 
+		<form id="game-of-life">
 			<p>
 				<label for="game-of-life-size">World size</label>
 				<select id="game-of-life-size" name="size">
@@ -58,6 +58,6 @@ scripts:
 				<input id="game-of-life-wrap" name="wrap" type="checkbox" checked="checked" />
 				<label for="game-of-life-wrap">Wrap</label>
 			</p>
-		</div>
+		</form>
 	</div>
-</form>
+</div>
