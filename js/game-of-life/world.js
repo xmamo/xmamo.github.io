@@ -2,98 +2,109 @@
 
 var gameOfLife = gameOfLife || {};
 
-gameOfLife.World = function (width, height, a, b, c, d, wrap) {
-	var self = this;
-	var current = 0;
-	var arrays = [[], []];
-	for (var i = 0, area = width * height; i < area; i++) {
-		arrays[0].push(false);
-		arrays[1].push(false);
-	}
+(function () {
+	var modulo = utils.modulo;
 
-	self.a = a;
-	self.b = b;
-	self.c = c;
-	self.d = d;
-	self.wrap = wrap;
+	gameOfLife.World = function (width, height, a, b, c, d, wrap) {
+		var self = this;
 
-	Object.defineProperty(self, "width", {
-		get: function () {
-			return width;
+		// The state of the game world is represented by a collection of two arrays. Only one of the two arrays is
+		// active at any given time. Updates are computed by querying the inactive array. 
+		var arrays = [[], []];
+		var active = 0;
+
+		for (var i = 0, area = width * height; i < area; ++i) {
+			arrays[0].push(false);
+			arrays[1].push(false);
 		}
-	});
 
-	Object.defineProperty(self, "height", {
-		get: function () {
-			return height;
-		}
-	});
+		self.a = a;
+		self.b = b;
+		self.c = c;
+		self.d = d;
+		self.wrap = wrap;
 
-	Object.defineProperty(self, "area", {
-		get: function () {
-			return arrays[current].length;
-		}
-	});
-
-	self.get = function (x, y) {
-		if (x < 0 || x >= width || y < 0 || y >= height) {
-			return false;
-		}
-		return arrays[current][x + y * width];
-	};
-
-	self.set = function (x, y, value) {
-		if (x < 0 || x >= width || y < 0 || y >= height) {
-			return;
-		}
-		arrays[current][x + y * width] = value;
-	};
-
-	self.forEach = function (callback) {
-		var currentArray = arrays[current];
-
-		for (var y = 0; y < height; y++) {
-			for (var x = 0; x < width; x++) {
-				var index = x + y * width;
-				var value = callback(currentArray[index], x, y);
-				if (value !== undefined) {
-					currentArray[index] = value;
-				}
+		Object.defineProperty(self, "width", {
+			get: function () {
+				return width;
 			}
-		}
-	};
+		});
 
-	self.updateCells = function () {
-		var currentArray = arrays[current];
-		var otherArray = arrays[1 - current];
+		Object.defineProperty(self, "height", {
+			get: function () {
+				return height;
+			}
+		});
 
-		for (var y = 0; y < height; y++) {
-			for (var x = 0; x < width; x++) {
-				var neighbours = 0;
-				for (var dy = -1; dy <= 1; dy++) {
-					for (var dx = -1; dx <= 1; dx++) {
-						if (dx !== 0 || dy !== 0) {
-							if (wrap) {
-								if (currentArray[(x + dx + width) % width + (y + dy + height) % height * width]) {
-									neighbours++;
-								}
-							} else {
-								if (self.get(x + dx, y + dy)) {
-									neighbours++;
+		Object.defineProperty(self, "area", {
+			get: function () {
+				return arrays[active].length;
+			}
+		});
+
+		self.get = function (x, y) {
+			return get(active, x, y);
+		};
+
+		self.set = function (x, y, value) {
+			set(active, x, y, value);
+		};
+
+		self.forEach = function (callback) {
+			forEach(active, callback);
+		};
+
+		self.updateCells = function () {
+			var inactive = 1 - active;
+
+			for (var y = 0; y < height; ++y) {
+				for (var x = 0; x < width; ++x) {
+					var neighbors = 0;
+
+					for (var dy = -1; dy <= 1; ++dy) {
+						for (var dx = -1; dx <= 1; ++dx) {
+							if (dx !== 0 || dy !== 0) {
+								if (wrap) {
+									if (get(active, modulo(x + dx, width), modulo(y + dy, height))) ++neighbors;
+								} else {
+									if (get(active, x + dx, y + dy)) ++neighbors;
 								}
 							}
 						}
 					}
-				}
 
-				if (currentArray[x + y * width]) {
-					otherArray[x + y * width] = neighbours >= self.a && neighbours <= self.b;
-				} else {
-					otherArray[x + y * width] = neighbours >= self.c && neighbours <= self.d;
+					if (get(active, x, y))
+						set(inactive, x, y, neighbors >= self.a && neighbors <= self.b);
+					else
+						set(inactive, x, y, neighbors >= self.c && neighbors <= self.d);
+				}
+			}
+
+			active = inactive;
+		};
+
+		function get(active, x, y) {
+			if (x >= 0 && x < width && y >= 0 && y < height)
+				return arrays[active][x + y * width];
+			else
+				return false;
+		}
+
+		function set(active, x, y, value) {
+			if (x >= 0 && x < width && y >= 0 && y < height)
+				arrays[active][x + y * width] = value;
+		}
+
+		function forEach(active, callback) {
+			var activeArray = arrays[active];
+
+			for (var y = 0; y < height; ++y) {
+				for (var x = 0; x < width; ++x) {
+					var index = x + y * width;
+					var value = callback(x, y, activeArray[index]);
+					if (value != null) activeArray[index] = value;
 				}
 			}
 		}
-
-		current = 1 - current;
 	};
-};
+})();
