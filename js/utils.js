@@ -12,6 +12,10 @@ utils.sign = function (x) {
 	}
 };
 
+utils.modulo = function (x, y) {
+	return (x % y + y) % y;
+};
+
 utils.clamp = function (x, min, max) {
 	if (Number.isNaN(x)) {
 		return x;
