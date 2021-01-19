@@ -2,7 +2,7 @@
 title: First order logic tool
 
 description: >-
-  This tool analyzes first order logic formulas converting them to prenex conjunctive/discjunctive form and generates
+  This tool analyzes first order logic formulas converting them to prenex conjunctive/disjunctive form and generates
   the truth table for propositional formulas.
 
 keywords: >-
@@ -16,12 +16,10 @@ styles:
 
 scripts:
   - /js/utils.js
-  - /js/parse.js
-  - /js/scope.js
-  - /js/first-order-logic-tool/ast.js
+  - /js/first-order-logic-tool/syntax.js
   - /js/first-order-logic-tool/parser.js
   - /js/first-order-logic-tool/analyzer.js
-  - /js/first-order-logic-tool/normal.js
+  - /js/first-order-logic-tool/normalizer.js
   - /js/first-order-logic-tool/main.js
 ---
 
@@ -33,46 +31,47 @@ Use the input field below to write a first order formula. Confirm your input by 
 <form id="first-order-logic-tool">
 	<p>
 		<label for="first-order-logic-tool-formula">Formula</label>
-		<input id="first-order-logic-tool-formula" name="formula" value="A ∨ B → C" spellcheck="false" />
+		<input id="first-order-logic-tool-formula" name="formula" value="A → B ∧ C" spellcheck="false" />
 		<small id="first-order-logic-tool-error"></small>
 	</p>
-
-	<div id="first-order-logic-tool-result" style="display: none;">
-		<p>
-			Parsed formula:<br />
-			<output id="first-order-logic-tool-parsed" for="first-order-logic-tool-formula"></output>
-		</p>
-
-		<p>
-			Interpretation:
-			<output id="first-order-logic-tool-interpretation" for="first-order-logic-tool-formula"></output>
-		</p>
-
-		<p>
-			Height: <output id="first-order-logic-tool-height" for="first-order-logic-tool-formula"></output><br />
-			Degree: <output id="first-order-logic-tool-degree" for="first-order-logic-tool-formula"></output>
-		</p>
-
-		<p>
-			Prenex normal form:<br />
-			<output id="first-order-logic-tool-prenex" for="first-order-logic-tool-formula"></output>
-		</p>
-		<p>
-			Prenex disjunctive normal form:<br />
-			<output id="first-order-logic-tool-prenex-dnf" for="first-order-logic-tool-formula"></output>
-		</p>
-
-		<p>
-			Prenex conjunctive normal form:<br />
-			<output id="first-order-logic-tool-prenex-cnf" for="first-order-logic-tool-formula"></output>
-		</p>
-
-		<p id="first-order-logic-tool-truth-table-result">
-			Truth table:<br />
-			<output id="first-order-logic-truth-table" for="first-order-logic-tool-formula"></output>
-		</p>
-	</div>
 </form>
+
+<div id="first-order-logic-tool-result" style="display: none;">
+	<p>
+		Parsed formula:
+		<output id="first-order-logic-tool-parsed" for="first-order-logic-tool-formula"></output>
+	</p>
+
+	<p>
+		Interpretation:
+		<output id="first-order-logic-tool-interpretation" for="first-order-logic-tool-formula"></output>
+	</p>
+
+	<p>
+		Height: <output id="first-order-logic-tool-height" for="first-order-logic-tool-formula"></output><br />
+		Degree: <output id="first-order-logic-tool-degree" for="first-order-logic-tool-formula"></output>
+	</p>
+
+	<p>
+		Prenex normal form:<br />
+		<output id="first-order-logic-tool-prenex" for="first-order-logic-tool-formula"></output>
+	</p>
+
+	<p>
+		Prenex disjunctive normal form:<br />
+		<output id="first-order-logic-tool-prenex-dnf" for="first-order-logic-tool-formula"></output>
+	</p>
+
+	<p>
+		Prenex conjunctive normal form:<br />
+		<output id="first-order-logic-tool-prenex-cnf" for="first-order-logic-tool-formula"></output>
+	</p>
+
+	<p id="first-order-logic-tool-truth-table-result">
+		Truth table:
+		<output id="first-order-logic-truth-table" for="first-order-logic-tool-formula"></output>
+	</p>
+</div>
 
 
 ## Purpose and usage of the tool ##
