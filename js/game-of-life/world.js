@@ -5,7 +5,7 @@ var gameOfLife = gameOfLife || {};
 (function () {
 	var modulo = utils.modulo;
 
-	gameOfLife.World = function (width, height, a, b, c, d, wrap) {
+	gameOfLife.World = function (width, height, wrap) {
 		var self = this;
 
 		// The state of the game world is represented by a collection of two arrays. Only one of the two arrays is
@@ -18,10 +18,6 @@ var gameOfLife = gameOfLife || {};
 			arrays[1].push(false);
 		}
 
-		self.a = a;
-		self.b = b;
-		self.c = c;
-		self.d = d;
 		self.wrap = wrap;
 
 		Object.defineProperty(self, "width", {
@@ -74,9 +70,9 @@ var gameOfLife = gameOfLife || {};
 					}
 
 					if (get(active, x, y))
-						set(inactive, x, y, neighbors >= self.a && neighbors <= self.b);
+						set(inactive, x, y, neighbors >= 2 && neighbors <= 3);
 					else
-						set(inactive, x, y, neighbors >= self.c && neighbors <= self.d);
+						set(inactive, x, y, neighbors === 3);
 				}
 			}
 

@@ -50,11 +50,6 @@ scripts:
 			</p>
 
 			<p>
-				<label for="game-of-life-ruleset">Ruleset</label>
-				<input id="game-of-life-ruleset" name="ruleset" required="required" spellcheck="false" placeholder="a, b, c, d" pattern="^\s*([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)\s*$" value="2, 3, 3, 3" />
-			</p>
-
-			<p>
 				<input id="game-of-life-wrap" name="wrap" type="checkbox" checked="checked" />
 				<label for="game-of-life-wrap">Wrap</label>
 			</p>

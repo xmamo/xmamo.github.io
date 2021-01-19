@@ -13,7 +13,6 @@
 
 	var form = document.forms["game-of-life"];
 	var sizeElement = form.elements.size;
-	var rulesetElement = form.elements.ruleset;
 	var wrapElement = form.elements.wrap;
 
 	var mouseX = NaN;
@@ -23,7 +22,7 @@
 	var brushSize = 1;
 	var paused = false;
 
-	var world = new World(80, 45, 2, 3, 3, 3, true);
+	var world = new World(80, 45, true);
 	var lastUpdate = 0;  // The timestamp at which the world has last been updated
 
 	form.addEventListener("submit", function (event) {
@@ -37,16 +36,6 @@
 		var newWorld = new World(Number(size[1]), Number(size[2]), world.a, world.b, world.c, world.d);
 		newWorld.forEach(function (x, y) { return world.get(x, y); });
 		world = newWorld;
-	});
-
-	rulesetElement.addEventListener("input", function () {
-		var ruleset = rulesetElement.value.match(rulesetElement.pattern);
-		if (ruleset == null) return;
-
-		world.a = Number(ruleset[1]);
-		world.b = Number(ruleset[2]);
-		world.c = Number(ruleset[3]);
-		world.d = Number(ruleset[4]);
 	});
 
 	wrapElement.addEventListener("change", function () {
