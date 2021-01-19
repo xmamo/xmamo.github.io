@@ -11,12 +11,12 @@
 	var vertexShaderRequest = new XMLHttpRequest();
 	var fragmentShaderRequest = new XMLHttpRequest();
 
-	vertexShaderRequest.onreadystatechange = callback;
+	vertexShaderRequest.onreadystatechange = onReadyStateChange;
 	vertexShaderRequest.open("GET", "/js/game-of-life-3d/shader.vert");
 	vertexShaderRequest.responseType = "text";
 	vertexShaderRequest.send();
 
-	fragmentShaderRequest.onreadystatechange = callback;
+	fragmentShaderRequest.onreadystatechange = onReadyStateChange;
 	fragmentShaderRequest.open("GET", "/js/game-of-life-3d/shader.frag");
 	fragmentShaderRequest.responseType = "text";
 	fragmentShaderRequest.send();
@@ -49,7 +49,7 @@
 	// completed.
 	var update = "cells";
 
-	var world = new World(64, 64, 64, 4, 5, 5, 5);
+	var world = new World(64, 64, 64);
 	world.forEach(function () { return Math.random() < 0.1; });
 	world.onUpdateComplete = function () { update = "buffers"; };
 
@@ -61,14 +61,12 @@
 		event.preventDefault();
 	});
 
-	rulesetElement.addEventListener("input", function () {
+	rulesetElement.addEventListener("change", function () {
 		var ruleset = rulesetElement.value.match(rulesetElement.pattern);
 		if (ruleset == null) return;
 
-		world.a = Number(ruleset[1]);
-		world.b = Number(ruleset[2]);
-		world.c = Number(ruleset[3]);
-		world.d = Number(ruleset[4]);
+		world.environment = (ruleset[1] || "").split(/\s*,\s*/).map(function (s) { return parseInt(s, 10); });
+		world.fertility = (ruleset[2] || "").split(/\s*,\s*/).map(function (s) { return parseInt(s, 10); });
 	});
 
 	canvas.addEventListener("contextmenu", function (event) {
@@ -182,7 +180,7 @@
 		}
 	});
 
-	function callback() {
+	function onReadyStateChange() {
 		if (vertexShaderRequest.readyState !== XMLHttpRequest.DONE || vertexShaderRequest.status !== 200) return;
 		if (fragmentShaderRequest.readyState !== XMLHttpRequest.DONE || fragmentShaderRequest.status !== 200) return;
 

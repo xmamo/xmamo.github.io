@@ -2,7 +2,7 @@
 
 var gameOfLife3d = gameOfLife3d || {};
 
-gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
+gameOfLife3d.World = function (xMax, yMax, zMax, environment, fertility) {
 	var self = this;
 
 	// The state of the game world is represented by a collection of two arrays. Only one of the two arrays is active
@@ -17,10 +17,8 @@ gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 		arrays[1].push(false);
 	}
 
-	self.a = a;
-	self.b = b;
-	self.c = c;
-	self.d = d;
+	self.environment = environment || [4, 5];
+	self.fertility = fertility || [5];
 
 	self.onUpdateComplete = function () { };
 
@@ -80,9 +78,9 @@ gameOfLife3d.World = function (xMax, yMax, zMax, a, b, c, d) {
 			}
 
 			if (get(active, x, y, z))
-				set(inactive, x, y, z, neighbors >= self.a && neighbors <= self.b);
+				set(inactive, x, y, z, self.environment.indexOf(neighbors) >= 0);
 			else
-				set(inactive, x, y, z, neighbors >= self.c && neighbors <= self.d);
+				set(inactive, x, y, z, self.fertility.indexOf(neighbors) >= 0);
 
 			if (++updated >= arrays[active].length) {
 				active = inactive;

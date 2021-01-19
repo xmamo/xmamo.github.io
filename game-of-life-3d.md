@@ -36,8 +36,11 @@ scripts:
 		<form id="game-of-life-3d">
 			<p>
 				<label for="game-of-life-3d-ruleset">Ruleset</label>
-				<input id="game-of-life-3d-ruleset" name="ruleset" required="required" spellcheck="false" placeholder="a, b, c, d" pattern="^\s*([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)(?:\s*,\s*|\s+)([+-]?\d+)\s*$" value="4, 5, 5, 5" />
+				<input id="game-of-life-3d-ruleset" name="ruleset" required="required" spellcheck="false" pattern="^\s*(\d+(?:\s*,\s*\d+)*)?\s*\/\s*(\d+(?:\s*,\s*\d+)*)?\s*$" value="4,5/5" />
 			</p>
 		</form>
 	</div>
 </div>
+
+For information about the ruleset, please take a look at the following paper:
+[A Note About the Discovery of Many New Rules for the Game of Three-Dimensional Life](https://www.complex-systems.com/abstracts/v16_i04_a07/).
