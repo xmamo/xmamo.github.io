@@ -150,8 +150,9 @@
 	});
 
 	canvas.addEventListener("keydown", function (event) {
-		switch (event.code) {
+		switch (event.code || event.keyCode) {
 			case "Space":
+			case 0x20:
 				paused = !paused;
 				event.preventDefault();
 				break;
