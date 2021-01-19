@@ -1,21 +1,42 @@
+# Handling Reading
+
+safe: true
+strict_front_matter: true
+
 exclude:
-  - '/img/biloma/*.txt'
-  - '/node_modules/'
-  - '/.eslintrc.json'
-  - '/CNAME'
-  - '/Gemfile'
-  - '/Gemfile.lock'
-  - '/package-lock.json'
-  - '/package.json'
-  - '/tex2svg.js'
+  - Gemfile
+  - Gemfile.lock
+
+  - package.json
+  - package-lock.json
+  - node_modules/
+
+  - CNAME
+
+  - img/biloma/*.txt
+  - tex2svg.js
+
+
+# Outputting
+
+timezone: Europe/Rome
+
+liquid:
+  error_mode: strict
+  strict_filters: true
+  strict_variables: false
 
 defaults:
-  - scope:
-      path: ''
-    values:
+  - values:
       article: true
+      description: ~
+      keywords: ~
       styles: []
       scripts: []
 
+
+# Markdown Processors
+
 kramdown:
   auto_ids: false
+  show_warnings: true
