@@ -38,6 +38,11 @@ scripts:
 				<label for="game-of-life-3d-ruleset">Ruleset</label>
 				<input id="game-of-life-3d-ruleset" name="ruleset" required="required" spellcheck="false" pattern="^\s*(\d+(?:\s*,\s*\d+)*)?\s*\/\s*(\d+(?:\s*,\s*\d+)*)?\s*$" value="4,5/5" />
 			</p>
+
+			<p>
+				<input id="game-of-life-3d-wrap" name="wrap" type="checkbox" checked="checked" />
+				<label for="game-of-life-3d-wrap">Wrap</label>
+			</p>
 		</form>
 	</div>
 </div>
