@@ -7,12 +7,14 @@
 
 	var World = gameOfLife.World;
 
+	var canvas = document.getElementById("game-of-life-canvas");
+	var context = canvas.getContext("2d");
+	canvas.focus();
+
 	var form = document.forms["game-of-life"];
 	var sizeElement = form.elements.size;
 	var rulesetElement = form.elements.ruleset;
 	var wrapElement = form.elements.wrap;
-	var canvas = document.getElementById("game-of-life-canvas");
-	var context = canvas.getContext("2d");
 
 	var mouseX = NaN;
 	var mouseY = NaN;
@@ -147,13 +149,11 @@
 		document.dispatchEvent(touchToMouse(event, "mouseup"));
 	});
 
-	document.addEventListener("keydown", function (event) {
+	canvas.addEventListener("keydown", function (event) {
 		switch (event.code) {
 			case "Space":
-				if (mouseInCanvas()) {
-					paused = !paused;
-					event.preventDefault();
-				}
+				paused = !paused;
+				event.preventDefault();
 				break;
 		}
 	});
@@ -167,6 +167,8 @@
 		canvas.width = canvas.clientWidth;
 		canvas.height = document.fullscreenElement ? canvas.clientHeight : canvas.width * (9 / 16);
 		context.fillStyle = "#000";
+		context.lineWidth = 2;
+		context.strokeStyle = "#777";
 
 		var cellWidth = canvas.width / world.width;
 		var cellHeight = canvas.height / world.height;
@@ -182,17 +184,12 @@
 			}
 		});
 
-		if (mouseInCanvas()) {
-			context.lineWidth = 2;
-			context.strokeStyle = "#777";
-
-			context.strokeRect(
-				Math.floor(cellWidth * Math.round(mouseX / cellWidth - brushSize / 2)) + 1,
-				Math.floor(cellHeight * Math.round(mouseY / cellHeight - brushSize / 2)) + 1,
-				Math.ceil(cellWidth * brushSize) - 2,
-				Math.ceil(cellHeight * brushSize) - 2
-			);
-		}
+		context.strokeRect(
+			Math.floor(cellWidth * Math.round(mouseX / cellWidth - brushSize / 2)) + 1,
+			Math.floor(cellHeight * Math.round(mouseY / cellHeight - brushSize / 2)) + 1,
+			Math.ceil(cellWidth * brushSize) - 2,
+			Math.ceil(cellHeight * brushSize) - 2
+		);
 
 		requestAnimationFrame(render);
 	});
@@ -204,9 +201,5 @@
 		for (var y = y0; y < y1; ++y)
 			for (var x = x0; x < x1; ++x)
 				world.set(x, y, leftDown);
-	}
-
-	function mouseInCanvas() {
-		return mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight;
 	}
 })();

@@ -21,10 +21,12 @@
 	fragmentShaderRequest.responseType = "text";
 	fragmentShaderRequest.send();
 
-	var form = document.forms["game-of-life-3d"];
-	var rulesetElement = form.elements.ruleset;
 	var canvas = document.getElementById("game-of-life-3d-canvas");
 	var gl = canvas.getContext("webgl");
+	canvas.focus();
+
+	var form = document.forms["game-of-life-3d"];
+	var rulesetElement = form.elements.ruleset;
 
 	var camera = new Camera({ z: 64 });
 	var mouseX = NaN;
@@ -112,48 +114,41 @@
 		document.dispatchEvent(touchToMouse(event, "mouseup"));
 	});
 
-	document.addEventListener("keydown", function (event) {
+	canvas.addEventListener("keydown", function (event) {
 		switch (event.key) {
 			case "f":
 			case "F":
-				if (mouseInCanvas()) {
-					if (!document.fullscreenElement)
-						canvas.requestFullscreen();
-					else
-						document.exitFullscreen();
-
-					event.preventDefault();
-				}
-
+				if (!document.fullscreenElement)
+					canvas.requestFullscreen();
+				else
+					document.exitFullscreen();
 				break;
 		}
 
 		switch (event.code) {
 			case "KeyA":
 				left = true;
-				if (mouseInCanvas()) event.preventDefault();
+				event.preventDefault();
 				break;
 
 			case "KeyD":
 				right = true;
-				if (mouseInCanvas()) event.preventDefault();
+				event.preventDefault();
 				break;
 
 			case "KeyW":
 				up = true;
-				if (mouseInCanvas()) event.preventDefault();
+				event.preventDefault();
 				break;
 
 			case "KeyS":
 				down = true;
-				if (mouseInCanvas()) event.preventDefault();
+				event.preventDefault();
 				break;
 
 			case "Space":
-				if (mouseInCanvas()) {
-					paused = !paused;
-					event.preventDefault();
-				}
+				paused = !paused;
+				event.preventDefault();
 				break;
 		}
 	});
@@ -263,9 +258,5 @@
 
 			renderer.render(aPositionLocation, aNormalLocation);
 		}
-	}
-
-	function mouseInCanvas() {
-		return mouseX >= 0 && mouseX <= canvas.clientWidth && mouseY >= 0 && mouseY <= canvas.clientHeight;
 	}
 })();

@@ -10,7 +10,7 @@ scripts:
 
 # {{ page.title }} #
 
-<canvas class="bordered" id="game-of-life-canvas"></canvas>
+<canvas class="bordered" id="game-of-life-canvas" tabindex="0"></canvas>
 
 <div class="columns">
 	<div class="left-column">
