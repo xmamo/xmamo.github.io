@@ -13,7 +13,7 @@ scripts:
 # {{ page.title }} #
 
 <div class="bordered">
-	<canvas id="game-of-life-3d-canvas"></canvas>
+	<canvas id="game-of-life-3d-canvas" tabindex="0"></canvas>
 </div>
 
 <div class="columns">
