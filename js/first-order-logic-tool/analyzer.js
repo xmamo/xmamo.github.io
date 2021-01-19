@@ -3,29 +3,24 @@
 var firstOrderLogicTool = firstOrderLogicTool || {};
 
 (function () {
-	var Scope = scope.Scope;
-
-	firstOrderLogicTool.Info = Info;
+	firstOrderLogicTool.Semantic = Semantic;
 
 	firstOrderLogicTool.analyze = function (formula) {
-		var visitor = new FormulaAnalyzeVisitor();
+		var visitor = new AnalyzeVisitor();
 		formula.accept(visitor);
-		return visitor.infoMap;
+		return visitor.semantics;
 	};
 
-	var AnalysisError = firstOrderLogicTool.AnalysisError = function (message, source) {
-		var self = this;
-
-		Error.call(self);
-		self.message = message;
-		self.source = source;
+	var AnalysisError = firstOrderLogicTool.AnalysisError = function (message, htmlMessage, source) {
+		Error.call(this, message);
+		this.messageHTML = htmlMessage;
+		this.source = source;
 	};
 
-	AnalysisError.prototype = new Error();
+	AnalysisError.prototype = Object.create(Error.prototype);
 	AnalysisError.prototype.constructor = AnalysisError;
-	AnalysisError.prototype.name = AnalysisError.name;
 
-	function Info(type, arity) {
+	function Semantic(type, arity) {
 		var self = this;
 
 		self.type = type;
@@ -37,10 +32,12 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 
 		self.toString = function () {
 			var type = self.type;
+
 			switch (type) {
 				case "function":
 				case "predicate":
 					return type + " of arity " + self.arity;
+
 				case "constant":
 				case "variable":
 				case "sentence":
@@ -49,29 +46,61 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		};
 	}
 
-	function FormulaAnalyzeVisitor() {
+	function Scope(parent) {
+		var self = this;
+		var variables = [];
+
+		self.parent = parent;
+
+		self.isDeclared = function (identifier) {
+			return variables.indexOf(identifier) >= 0 || (self.parent != null && self.parent.isDeclared(identifier));
+		};
+
+		self.declare = function (identifier) {
+			variables.push(identifier);
+		};
+	}
+
+	function AnalyzeVisitor() {
 		var self = this;
 		var scope = new Scope();
-		var expectFormula = true;
 
-		self.infoMap = {};
+		// Functions and predicates can only be applied to terms (example: "p(x)"). This means that when the visitor
+		// enters a function or predicate, only terms are to be considered valid; if the visitor encounters any other
+		// type of formula, it raises an error (example: "p(¬x)").
+		//
+		// The purpose of this variable is to distinguish what the visitor is currently expecting.
+		// If "expectTerm" is false, the visitor accepts any formula; otherwise, the visitor expects to find terms
+		// only.
+		var expectTerm = false;
+
+		self.semantics = Object.create(null);
 
 		self.visitSymbol = function (symbol) {
 			var identifier = symbol.identifier;
-			setInfo(symbol, identifier, new Info(expectFormula ? "sentence" : scope.has(identifier) ? "variable" : "constant"));
+			var semantic;
+
+			if (expectTerm)
+				semantic = new Semantic(scope.isDeclared(identifier) ? "variable" : "constant");
+			else
+				semantic = new Semantic("sentence");
+
+			setSemantic(symbol, identifier, semantic);
 		};
 
 		self.visitUnaryFormula = function (formula) {
-			if (!expectFormula) {
-				throw new AnalysisError("¬-formula not permitted here", formula);
+			if (expectTerm) {
+				var message = formula.operator + "-formula not permitted here";
+				throw new AnalysisError(message, message, formula);
 			}
 
 			formula.operand.accept(self);
 		};
 
 		self.visitBinaryFormula = function (formula) {
-			if (!expectFormula) {
-				throw new AnalysisError(formula.operator + "-formula not permitted here", formula);
+			if (expectTerm) {
+				var message = formula.operator + "-formula not permitted here";
+				throw new AnalysisError(message, message, formula);
 			}
 
 			formula.left.accept(self);
@@ -79,41 +108,57 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		};
 
 		self.visitQuantifiedFormula = function (formula) {
-			if (!expectFormula) {
-				throw new AnalysisError(formula.quantifier + "-formula not permitted here", formula);
+			if (expectTerm) {
+				var message = formula.quantifier + "-formula not permitted here";
+				throw new AnalysisError(message, message, formula);
 			}
+
 			var variable = formula.variable;
-			if (scope.has(variable)) {
-				throw new AnalysisError("Variable “" + variable + "” already bound", formula);
+
+			if (scope.isDeclared(variable)) {
+				throw new AnalysisError(
+					"Variable \"" + variable + "\" already bound",
+					"Variable <i>" + variable + "</i> already bound",
+					formula
+				);
 			}
-			setInfo(formula, variable, new Info("variable"));
+
+			var semantic = new Semantic("variable");
+			setSemantic(formula, variable, semantic);
 
 			var oldScope = scope;
 			scope = new Scope(oldScope);
-			scope.set(variable);
-			formula.formula.accept(this);
+			scope.declare(variable);
+			formula.formula.accept(self);
 			scope = oldScope;
 		};
 
 		self.visitCall = function (call) {
 			var identifier = call.identifier;
-			setInfo(call, identifier, new Info(expectFormula ? "predicate" : "function", call.arity));
+			setSemantic(call, identifier, new Semantic(expectTerm ? "function" : "predicate", call.arity));
 
-			var oldExpectFormula = expectFormula;
-			expectFormula = false;
-			call.args.forEach(function (arg) {
-				arg.accept(self);
-			});
-			expectFormula = oldExpectFormula;
+			var oldExpectFormula = expectTerm;
+			expectTerm = true;
+			call.args.forEach(function (arg) { arg.accept(self); });
+			expectTerm = oldExpectFormula;
 		};
 
-		function setInfo(source, identifier, newInfo) {
-			var infoMap = self.infoMap;
-			var oldInfo;
-			if (identifier in infoMap && !newInfo.equals(oldInfo = infoMap[identifier])) {
-				throw new AnalysisError("“" + identifier + "” is used both as a " + oldInfo + " and a " + newInfo, source);
+		function setSemantic(source, identifier, semantic) {
+			var semantics = self.semantics;
+
+			if (identifier in semantics) {
+				var oldSemantic = semantics[identifier];
+
+				if (!semantic.equals(oldSemantic)) {
+					throw new AnalysisError(
+						"\"" + identifier + "\" is used both as a " + oldSemantic + " and a " + semantic,
+						"<i>" + identifier + "</i> is used both as a " + oldSemantic + " and a " + semantic,
+						source
+					);
+				}
 			}
-			infoMap[identifier] = newInfo;
+
+			semantics[identifier] = semantic;
 		}
 	}
 })();

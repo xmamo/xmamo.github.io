@@ -121,6 +121,7 @@ firstOrderLogicTool.BinaryFormula = function BinaryFormula(left, operator, right
 				case "∧":
 				case "∨":
 					return 2;
+
 				case "→":
 				case "←":
 				case "↔":
@@ -160,6 +161,7 @@ firstOrderLogicTool.BinaryFormula = function BinaryFormula(left, operator, right
 				case "∨":
 				case "↔":
 					return true;
+
 				case "→":
 				case "←":
 					return false;
@@ -172,7 +174,10 @@ firstOrderLogicTool.BinaryFormula = function BinaryFormula(left, operator, right
 	};
 
 	self.equals = function (other) {
-		return other instanceof BinaryFormula && other.left.equals(self.left) && other.operator === self.operator && other.right.equals(self.right);
+		return other instanceof BinaryFormula
+			&& other.left.equals(self.left)
+			&& other.operator === self.operator
+			&& other.right.equals(self.right);
 	};
 
 	self.toString = function () {
@@ -180,7 +185,9 @@ firstOrderLogicTool.BinaryFormula = function BinaryFormula(left, operator, right
 		var operator = self.operator;
 		var right = self.right;
 		var priority = self.priority;
-		return ((left.operator === operator && left.isAssociative ? left.priority < priority : left.priority <= priority) ? "(" + left + ")" : left) + " " + operator + " " + (right.priority <= priority ? "(" + right + ")" : right);
+		var x = (left.operator === operator && left.isAssociative) || left.priority > priority;
+		var y = right.priority > priority;
+		return (x ? left : "(" + left + ")") + " " + operator + " " + (y ? right : "(" + right + ")");
 	};
 };
 
@@ -229,12 +236,16 @@ firstOrderLogicTool.QuantifiedFormula = function QuantifiedFormula(quantifier, v
 	};
 
 	self.equals = function (other) {
-		return other instanceof QuantifiedFormula && other.quantifier === self.quantifier && other.variable === self.variable && other.formula.equals(self.formula);
+		return other instanceof QuantifiedFormula
+			&& other.quantifier === self.quantifier
+			&& other.variable === self.variable
+			&& other.formula.equals(self.formula);
 	};
 
 	self.toString = function () {
 		var formula = self.formula;
-		return self.quantifier + self.variable + (formula.priority < self.priority ? " (" + formula + ")" : " " + formula);
+		var x = formula.priority < self.priority;
+		return self.quantifier + self.variable + (x ? " (" + formula + ")" : " " + formula);
 	};
 };
 
@@ -297,9 +308,9 @@ firstOrderLogicTool.Call = function Call(identifier, args, source, start, end) {
 		var args = self.args;
 		var otherArgs = other.args;
 
-		return other.identifier === self.identifier && otherArgs.length === args.length && otherArgs.every(function (arg, i) {
-			return arg.equals(args[i]);
-		});
+		return other.identifier === self.identifier
+			&& otherArgs.length === args.length
+			&& otherArgs.every(function (arg, i) { return arg.equals(args[i]); });
 	};
 
 	self.toString = function () {
