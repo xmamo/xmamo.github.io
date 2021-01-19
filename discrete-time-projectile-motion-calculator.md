@@ -50,12 +50,10 @@ below and see how our theorem works in practice.
 		<label for="discrete-time-projectile-motion-calculator-damping">Damping factor</label>
 		<input id="discrete-time-projectile-motion-calculator-damping" name="damping" required="required" spellcheck="false" value="0.98" />
 	</p>
-
-	<p>
-		Required initial velocity: <output id="discrete-time-projectile-motion-calculator-result"></output><br />
-		Minecraft command: <output for="discrete-time-projectile-motion-calculator-source-pos discrete-time-projectile-motion-calculator-destination-pos discrete-time-projectile-motion-calculator-air-time discrete-time-projectile-motion-calculator-acceleration discrete-time-projectile-motion-calculator-damping"><code id="discrete-time-projectile-motion-calculator-command"></code></output>
-	</p>
 </form>
+
+Required initial velocity: <output id="discrete-time-projectile-motion-calculator-result"></output> \
+Minecraft command: <output for="discrete-time-projectile-motion-calculator-source-pos discrete-time-projectile-motion-calculator-destination-pos discrete-time-projectile-motion-calculator-air-time discrete-time-projectile-motion-calculator-acceleration discrete-time-projectile-motion-calculator-damping"><code id="discrete-time-projectile-motion-calculator-command"></code></output>
 
 
 ## BiLoMa's theorem ##
