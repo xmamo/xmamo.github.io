@@ -38,31 +38,33 @@
 		var acceleration = accelerationElement.value.match(singleDecimalPattern);
 		var damping = dampingElement.value.match(singleDecimalPattern);
 
-		if (sourcePos == null || destinationPos == null || airTime == null || acceleration == null || damping == null) {
+		if (sourcePos == null || destinationPos == null || airTime == null || acceleration == null || damping == null)
 			return;
-		}
 
 		sourcePos = {
 			x: parseFloat(sourcePos[1]),
 			y: parseFloat(sourcePos[2]),
 			z: parseFloat(sourcePos[3])
 		};
+
 		destinationPos = {
 			x: parseFloat(destinationPos[1]),
 			y: parseFloat(destinationPos[2]),
 			z: parseFloat(destinationPos[3])
 		};
 
-		var n = parseFloat(airTime[1]);
 		var pn = {
 			x: destinationPos.x - sourcePos.x,
 			y: destinationPos.y - sourcePos.y,
 			z: destinationPos.z - sourcePos.z
 		};
+
+		var n = parseFloat(airTime[1]);
 		var a = parseFloat(acceleration[1]);
 		var d = parseFloat(damping[1]);
 
 		var v0;
+
 		if (d === 1) {
 			v0 = {
 				x: pn.x / n,
@@ -77,11 +79,13 @@
 			};
 		}
 
-		if (!isFinite(v0.x) || !isFinite(v0.y) || !isFinite(v0.z)) {
+		if (!isFinite(v0.x) || !isFinite(v0.y) || !isFinite(v0.z))
 			return;
-		}
 
 		resultElement.innerText = v0.x + ", " + v0.y + ", " + v0.z;
-		commandElement.innerText = "/summon minecraft:falling_block " + sourcePos.x + " " + sourcePos.y + " " + sourcePos.z + " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
+
+		commandElement.innerText = "/summon minecraft:falling_block "
+			+ sourcePos.x + " " + sourcePos.y + " " + sourcePos.z
+			+ " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
 	}
 })();
