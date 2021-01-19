@@ -58,7 +58,7 @@ below and see how our theorem works in practice.
 </form>
 
 
-## BiLoMa's theorem ##+
+## BiLoMa's theorem ##
 
 Let <i>n</i> be the number of time units that have passed since the object was launched and <i>a</i> the
 (gravitational) acceleration. Assuming that the object was launched with an initial position of 0 and an initial
@@ -69,6 +69,8 @@ position <i>p</i><sub><i>n</i></sub>:
 
 The damping factor <i>d</i> is used in Minecraft to prevent objects from incrementing their velocity indefinitely.
 Using these formulas with <span class="nowrap"><i>d</i> → 1</span> means having no damping at all.
+
+![A block of sand landing exactly where predicted by the theorem](/img/discrete-time-projectile-motion-calculator/example.gif)
 
 
 ### Proof of the formula for <i>v<sub>n</sub></i> ###
