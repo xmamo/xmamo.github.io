@@ -61,7 +61,6 @@
         "no-implicit-coercion": "warn",
         "no-implied-eval": "warn",
         "no-iterator": "warn",
-        "no-labels": ["warn", {"allowLoop": true, "allowSwitch": true}],
         "no-lone-blocks": "warn",
         "no-multi-spaces": ["warn", {"ignoreEOLComments": true, "exceptions": {"Property": false}}],
         "no-multi-str": "warn",
