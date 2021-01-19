@@ -150,7 +150,7 @@ A <dfn>first order formula</dfn> can be defined recursively as follows:
 
  * <span class="nowrap">(<i>F</i> ∧ <i>G</i>)</span>, <span class="nowrap">(<i>F</i> ∨ <i>G</i>)</span>,
    <span class="nowrap">(<i>F</i> → <i>G</i>)</span>, <span class="nowrap">(<i>F</i> ← <i>G</i>)</span>,
-   <span class="nowrap">(<i>F</i> ↔ <i>G</i>)</span> are formulas if both <i>F<i> and <i>G<i> are formulas;
+   <span class="nowrap">(<i>F</i> ↔ <i>G</i>)</span> are formulas if both <i>F</i> and <i>G</i> are formulas;
 
  * <span class="nowrap">(∀<i>x</i> <i>F</i>)</span>, <span class="nowrap">(∃<i>x</i> <i>F</i>)</span> are formulas if
    <i>x</i> is a variable and <i>F</i> is a formula.
