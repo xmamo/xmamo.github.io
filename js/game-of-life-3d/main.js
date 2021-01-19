@@ -125,28 +125,33 @@
 				break;
 		}
 
-		switch (event.code) {
+		switch (event.code || event.keyCode) {
 			case "KeyA":
+			case 0x41:
 				left = true;
 				event.preventDefault();
 				break;
 
 			case "KeyD":
+			case 0x44:
 				right = true;
 				event.preventDefault();
 				break;
 
 			case "KeyW":
+			case 0x57:
 				up = true;
 				event.preventDefault();
 				break;
 
 			case "KeyS":
+			case 0x53:
 				down = true;
 				event.preventDefault();
 				break;
 
 			case "Space":
+			case 0x20:
 				paused = !paused;
 				event.preventDefault();
 				break;
@@ -154,20 +159,24 @@
 	});
 
 	document.addEventListener("keyup", function (event) {
-		switch (event.code) {
+		switch (event.code || event.keyCode) {
 			case "KeyA":
+			case 0x41:
 				left = false;
 				break;
 
 			case "KeyD":
+			case 0x44:
 				right = false;
 				break;
 
 			case "KeyW":
+			case 0x57:
 				up = false;
 				break;
 
 			case "KeyS":
+			case 0x53:
 				down = false;
 				break;
 		}
