@@ -27,6 +27,7 @@
 
 	var form = document.forms["game-of-life-3d"];
 	var rulesetElement = form.elements.ruleset;
+	var wrapElement = form.elements.wrap;
 
 	var camera = new Camera({ z: 64 });
 	var mouseX = NaN;
@@ -49,7 +50,7 @@
 	// completed.
 	var update = "cells";
 
-	var world = new World(64, 64, 64);
+	var world = new World(64, 64, 64, true, [4, 5], [5]);
 	world.forEach(function () { return Math.random() < 0.1; });
 	world.onUpdateComplete = function () { update = "buffers"; };
 
@@ -67,6 +68,10 @@
 
 		world.environment = (ruleset[1] || "").split(/\s*,\s*/).map(function (s) { return parseInt(s, 10); });
 		world.fertility = (ruleset[2] || "").split(/\s*,\s*/).map(function (s) { return parseInt(s, 10); });
+	});
+
+	wrapElement.addEventListener("change", function () {
+		world.wrap = wrapElement.checked;
 	});
 
 	canvas.addEventListener("contextmenu", function (event) {
