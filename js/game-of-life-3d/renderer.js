@@ -188,9 +188,9 @@ gameOfLife3d.Renderer = function (gl, world) {
 					i += 4;
 				}
 
-				// The maximum possible 16-bit index is 65535; we have to check that the next iteration of the loop can
+				// There are at most 65536 16-bit indices; we have to check that the next iteration of the loop can
 				// push up to 24 different indices without exceeding this limit.
-				if (i + 24 > 65535) uploadBuffers();
+				if (i + 24 > 65536) uploadBuffers();
 			}
 
 			if (++updated >= world.volume) {
@@ -229,17 +229,19 @@ gameOfLife3d.Renderer = function (gl, world) {
 		var otherBuffersArray = buffersArrays[1 - active].buffersArray;
 
 		while (otherBuffersArray.length <= j) {
+			var maxQuads = Math.floor(65536 / 4);
+
 			var positionsBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, Float32Array.BYTES_PER_ELEMENT * 65536 * 8, gl.DYNAMIC_DRAW);
+			gl.bufferData(gl.ARRAY_BUFFER, 12 * maxQuads * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_DRAW);
 
 			var normalsBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, Float32Array.BYTES_PER_ELEMENT * 65536 * 8, gl.DYNAMIC_DRAW);
+			gl.bufferData(gl.ARRAY_BUFFER, 12 * maxQuads * Float32Array.BYTES_PER_ELEMENT, gl.DYNAMIC_DRAW);
 
 			var indicesBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer);
-			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.BYTES_PER_ELEMENT * 65536 * 36, gl.DYNAMIC_DRAW);
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, 6 * maxQuads * Uint16Array.BYTES_PER_ELEMENT, gl.DYNAMIC_DRAW);
 
 			otherBuffersArray.push({
 				positions: positionsBuffer,
