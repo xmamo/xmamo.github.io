@@ -221,7 +221,6 @@ gameOfLife3d.Renderer = function (gl, world) {
 			gl.vertexAttribPointer(aNormalLocation, 3, gl.FLOAT, false, 0, 0);
 
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
-
 			gl.drawElements(gl.TRIANGLES, buffers.count, gl.UNSIGNED_SHORT, 0);
 		}
 	};
@@ -230,10 +229,22 @@ gameOfLife3d.Renderer = function (gl, world) {
 		var otherBuffersArray = buffersArrays[1 - active].buffersArray;
 
 		while (otherBuffersArray.length <= j) {
+			var positionsBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, Float32Array.BYTES_PER_ELEMENT * 65536 * 8, gl.DYNAMIC_DRAW);
+
+			var normalsBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, Float32Array.BYTES_PER_ELEMENT * 65536 * 8, gl.DYNAMIC_DRAW);
+
+			var indicesBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer);
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.BYTES_PER_ELEMENT * 65536 * 36, gl.DYNAMIC_DRAW);
+
 			otherBuffersArray.push({
-				positions: gl.createBuffer(),
-				normals: gl.createBuffer(),
-				indices: gl.createBuffer(),
+				positions: positionsBuffer,
+				normals: normalsBuffer,
+				indices: indicesBuffer,
 				count: 0
 			});
 		}
@@ -241,13 +252,13 @@ gameOfLife3d.Renderer = function (gl, world) {
 		var otherBuffers = otherBuffersArray[j];
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, otherBuffers.positions);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW);
+		gl.bufferSubData(gl.ARRAY_BUFFER, 0, Float32Array.from(positions));
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, otherBuffers.normals);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.DYNAMIC_DRAW);
+		gl.bufferSubData(gl.ARRAY_BUFFER, 0, Float32Array.from(normals));
 
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, otherBuffers.indices);
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.DYNAMIC_DRAW);
+		gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, 0, Uint16Array.from(indices));
 
 		otherBuffers.count = indices.length;
 
