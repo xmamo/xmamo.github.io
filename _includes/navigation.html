@@ -1,0 +1,29 @@
+<nav class="menu">
+    <span class="menu-hamburger">≡</span>
+
+    <ul class="menu-item-list">
+        {% for item in site.data.navigation %}
+            <li class="menu-item {% if item.subitems != nil %}has-submenu{% endif %}">
+                {% if item.url != nil %}
+                    <a class="menu-item-content" href="{{ item.url }}" {% unless item.external %}target="_self"{% endunless %}>{{ item.title | smartify }}</a>
+                {% else %}
+                    <span class="menu-item-content">{{ item.title | smartify }}</span>
+                {% endif %}
+
+                {% if item.subitems != nil %}
+                    <ul class="submenu-item-list">
+                        {% for subitem in item.subitems %}
+                            <li class="submenu-item">
+                                {% if subitem.url != nil %}
+                                    <a class="submenu-item-content" href="{{ subitem.url }}" {% unless subitem.external %}target="_self"{% endunless %}>{{ subitem.title | smartify }}</a>
+                                {% else %}
+                                    <span class="submenu-item-content">{{ subitem.title | smartify }}</span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
