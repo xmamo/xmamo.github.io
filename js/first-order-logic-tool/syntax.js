@@ -1,319 +1,254 @@
-"use strict";
+export class Formula {
+	constructor(source, start, end) {
+		this.source = source;
+		this.start = start;
+		this.end = end;
+	}
+}
 
-var firstOrderLogicTool = firstOrderLogicTool || {};
+export class Symbol extends Formula {
+	constructor(identifier, source, start, end) {
+		super(source, start, end);
+		this.identifier = identifier;
+	}
 
-firstOrderLogicTool.Symbol = function Symbol(identifier, source, start, end) {
-	var self = this;
+	get priority() {
+		return 4;
+	}
 
-	self.identifier = identifier;
-	self.source = source;
-	self.start = start;
-	self.end = end;
+	get height() {
+		return 1;
+	}
 
-	Object.defineProperty(self, "priority", {
-		get: function () {
-			return 4;
+	get degree() {
+		return 0;
+	}
+
+	get isPropositional() {
+		return true;
+	}
+
+	get hasQuantifiers() {
+		return false;
+	}
+
+	accept(visitor) {
+		return visitor.visitSymbol(this);
+	}
+
+	equals(other) {
+		return other instanceof Symbol
+			&& this.identifier === other.identifier;
+	}
+
+	toString() {
+		return this.identifier;
+	}
+}
+
+export class Unary extends Formula {
+	constructor(operator, operand, source, start, end) {
+		super(source, start, end);
+		this.operator = operator;
+		this.operand = operand;
+	}
+
+	get priority() {
+		return 3;
+	}
+
+	get height() {
+		return this.operand.height + 1;
+	}
+
+	get degree() {
+		return this.operand.degree + 1;
+	}
+
+	get isPropositional() {
+		return this.operand.isPropositional;
+	}
+
+	get hasQuantifiers() {
+		return this.operand.hasQuantifiers;
+	}
+
+	accept(visitor) {
+		return visitor.visitUnary(this);
+	}
+
+	equals(other) {
+		return other instanceof Unary
+			&& this.operator === other.operator
+			&& this.operand.equals(other.operand);
+	}
+
+	toString() {
+		let p = this.operand.priority < this.priority;
+		return `${this.operator} ${p ? `(${this.operand})` : this.operand}`;
+	}
+}
+
+export class Binary extends Formula {
+	constructor(left, operator, right, source, start, end) {
+		super(source, start, end);
+		this.left = left;
+		this.operator = operator;
+		this.right = right;
+	}
+
+	get priority() {
+		switch (this.operator) {
+			case "∧":
+			case "∨":
+				return 2;
+
+			case "→":
+			case "←":
+			case "↔":
+				return 1;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "height", {
-		get: function () {
-			return 1;
+	get height() {
+		return Math.max(this.left.height, this.right.height) + 1;
+	}
+
+	get degree() {
+		return this.left.degree + this.right.degree + 1;
+	}
+
+	get isPropositional() {
+		return this.left.isPropositional && this.right.isPropositional;
+	}
+
+	get hasQuantifiers() {
+		return this.left.hasQuantifiers || this.right.hasQuantifiers;
+	}
+
+	get isAssociative() {
+		switch (this.operator) {
+			case "∧":
+			case "∨":
+			case "↔":
+				return true;
+
+			case "→":
+			case "←":
+				return false;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "degree", {
-		get: function () {
-			return 0;
-		}
-	});
+	accept(visitor) {
+		return visitor.visitBinary(this);
+	}
 
-	Object.defineProperty(self, "isPropositional", {
-		get: function () {
-			return true;
-		}
-	});
+	equals(other) {
+		return other instanceof Binary
+			&& this.left.equals(other.left)
+			&& this.operator === other.operator
+			&& this.right.equals(other.right);
+	}
 
-	Object.defineProperty(self, "hasQuantifiers", {
-		get: function () {
-			return false;
-		}
-	});
+	toString() {
+		let p1 = this.left.priority <= this.priority
+			&& !(this.left instanceof Binary && this.left.operator == this.operator && this.left.isAssociative);
 
-	self.accept = function (visitor) {
-		return visitor.visitSymbol(self);
-	};
+		let p2 = this.right.priority <= this.priority
+			&& !(this.right instanceof Binary && this.right.operator == this.operator && this.right.isAssociative);
 
-	self.equals = function (other) {
-		return other instanceof Symbol && self.identifier === other.identifier;
-	};
+		return `${p1 ? `(${this.left})` : this.left} ${this.operator} ${p2 ? `(${this.right})` : this.right}`;
+	}
+}
 
-	self.toString = function () {
-		return self.identifier;
-	};
-};
+export class Quantified extends Formula {
+	constructor(quantifier, variable, formula, source, start, end) {
+		super(source, start, end);
+		this.quantifier = quantifier;
+		this.variable = variable;
+		this.formula = formula;
+	}
 
-firstOrderLogicTool.UnaryFormula = function UnaryFormula(operator, operand, source, start, end) {
-	var self = this;
+	get priority() {
+		return 3;
+	}
 
-	self.operator = operator;
-	self.operand = operand;
-	self.source = source;
-	self.start = start;
-	self.end = end;
+	get height() {
+		return this.formula.height + 1;
+	}
 
-	Object.defineProperty(self, "priority", {
-		get: function () {
-			return 3;
-		}
-	});
+	get degree() {
+		return this.formula.degree + 1;
+	}
 
-	Object.defineProperty(self, "height", {
-		get: function () {
-			return self.operand.height + 1;
-		}
-	});
+	get isPropositional() {
+		return false;
+	}
 
-	Object.defineProperty(self, "degree", {
-		get: function () {
-			return self.operand.degree + 1;
-		}
-	});
+	get hasQuantifiers() {
+		return true;
+	}
 
-	Object.defineProperty(self, "isPropositional", {
-		get: function () {
-			return self.operand.isPropositional;
-		}
-	});
+	accept(visitor) {
+		return visitor.visitQuantified(this);
+	}
 
-	Object.defineProperty(self, "hasQuantifiers", {
-		get: function () {
-			return self.operand.hasQuantifiers;
-		}
-	});
+	equals(other) {
+		return other instanceof Quantified
+			&& this.quantifier === other.quantifier
+			&& this.variable === other.variable
+			&& this.formula.equals(other.formula);
+	}
 
-	self.accept = function (visitor) {
-		return visitor.visitUnaryFormula(self);
-	};
+	toString() {
+		let p = this.formula.priority < this.priority;
+		return `${this.quantifier}${this.variable} ${p ? `(${this.formula})` : `${this.formula}`}`;
+	}
+}
 
-	self.equals = function (other) {
-		return other instanceof UnaryFormula && self.operator === other.operator && other.operand.equals(self.operand);
-	};
+export class Application extends Formula {
+	constructor(identifier, args, source, start, end) {
+		super(source, start, end);
+		this.identifier = identifier;
+		this.args = args;
+	}
 
-	self.toString = function () {
-		return self.operator + (self.operand.priority < self.priority ? "(" + self.operand + ")" : self.operand);
-	};
-};
+	get priority() {
+		return 4;
+	}
 
-firstOrderLogicTool.BinaryFormula = function BinaryFormula(left, operator, right, source, start, end) {
-	var self = this;
+	get height() {
+		return this.args.reduce((max, formula) => Math.max(max, formula.height), 0) + 1;
+	}
 
-	self.left = left;
-	self.operator = operator;
-	self.right = right;
-	self.source = source;
-	self.start = start;
-	self.end = end;
+	get degree() {
+		return 0;
+	}
 
-	Object.defineProperty(self, "priority", {
-		get: function () {
-			switch (self.operator) {
-				case "∧":
-				case "∨":
-					return 2;
+	get isPropositional() {
+		return false;
+	}
 
-				case "→":
-				case "←":
-				case "↔":
-					return 1;
-			}
-		}
-	});
+	get hasQuantifiers() {
+		return this.args.some(arg => arg.hasQuantifiers);
+	}
 
-	Object.defineProperty(self, "height", {
-		get: function () {
-			return Math.max(self.left.height, self.right.height) + 1;
-		}
-	});
+	get arity() {
+		return this.args.length;
+	}
 
-	Object.defineProperty(self, "degree", {
-		get: function () {
-			return self.left.degree + self.right.degree + 1;
-		}
-	});
+	accept(visitor) {
+		return visitor.visitApplication(this);
+	}
 
-	Object.defineProperty(self, "isPropositional", {
-		get: function () {
-			return self.left.isPropositional && self.right.isPropositional;
-		}
-	});
+	equals(other) {
+		return other instanceof Application
+			&& this.identifier === other.identifier
+			&& this.args.length === other.args.length
+			&& this.args.every((arg, i) => arg.equals(other.args[i]));
+	}
 
-	Object.defineProperty(self, "hasQuantifiers", {
-		get: function () {
-			return self.left.hasQuantifiers || self.right.hasQuantifiers;
-		}
-	});
-
-	Object.defineProperty(self, "isAssociative", {
-		get: function () {
-			switch (self.operator) {
-				case "∧":
-				case "∨":
-				case "↔":
-					return true;
-
-				case "→":
-				case "←":
-					return false;
-			}
-		}
-	});
-
-	self.accept = function (visitor) {
-		return visitor.visitBinaryFormula(self);
-	};
-
-	self.equals = function (other) {
-		return other instanceof BinaryFormula
-			&& other.left.equals(self.left)
-			&& other.operator === self.operator
-			&& other.right.equals(self.right);
-	};
-
-	self.toString = function () {
-		var left = self.left;
-		var operator = self.operator;
-		var right = self.right;
-		var priority = self.priority;
-		var x = (left.operator === operator && left.isAssociative) || left.priority > priority;
-		var y = right.priority > priority;
-		return (x ? left : "(" + left + ")") + " " + operator + " " + (y ? right : "(" + right + ")");
-	};
-};
-
-firstOrderLogicTool.QuantifiedFormula = function QuantifiedFormula(quantifier, variable, formula, source, start, end) {
-	var self = this;
-
-	self.quantifier = quantifier;
-	self.variable = variable;
-	self.formula = formula;
-	self.source = source;
-	self.start = start;
-	self.end = end;
-
-	Object.defineProperty(self, "priority", {
-		get: function () {
-			return 3;
-		}
-	});
-
-	Object.defineProperty(self, "height", {
-		get: function () {
-			return self.formula.height + 1;
-		}
-	});
-
-	Object.defineProperty(self, "degree", {
-		get: function () {
-			return self.formula.degree + 1;
-		}
-	});
-
-	Object.defineProperty(self, "isPropositional", {
-		get: function () {
-			return false;
-		}
-	});
-
-	Object.defineProperty(self, "hasQuantifiers", {
-		get: function () {
-			return true;
-		}
-	});
-
-	self.accept = function (visitor) {
-		return visitor.visitQuantifiedFormula(self);
-	};
-
-	self.equals = function (other) {
-		return other instanceof QuantifiedFormula
-			&& other.quantifier === self.quantifier
-			&& other.variable === self.variable
-			&& other.formula.equals(self.formula);
-	};
-
-	self.toString = function () {
-		var formula = self.formula;
-		var x = formula.priority < self.priority;
-		return self.quantifier + self.variable + (x ? " (" + formula + ")" : " " + formula);
-	};
-};
-
-firstOrderLogicTool.Call = function Call(identifier, args, source, start, end) {
-	var self = this;
-
-	self.identifier = identifier;
-	self.args = args;
-	self.source = source;
-	self.start = start;
-	self.end = end;
-
-	Object.defineProperty(self, "priority", {
-		get: function () {
-			return 4;
-		}
-	});
-
-	Object.defineProperty(self, "height", {
-		get: function () {
-			return Math.max(0, Math.max.apply(null, self.args.map(function (arg) { return arg.height; }))) + 1;
-		}
-	});
-
-	Object.defineProperty(self, "degree", {
-		get: function () {
-			return 0;
-		}
-	});
-
-	Object.defineProperty(self, "isPropositional", {
-		get: function () {
-			return false;
-		}
-	});
-
-	Object.defineProperty(self, "hasQuantifiers", {
-		get: function () {
-			return self.args.some(function (arg) {
-				return arg.hasQuantifiers;
-			});
-		}
-	});
-
-	Object.defineProperty(self, "arity", {
-		get: function () {
-			return self.args.length;
-		}
-	});
-
-	self.accept = function (visitor) {
-		return visitor.visitCall(self);
-	};
-
-	self.equals = function (other) {
-		if (!(other instanceof Call)) {
-			return false;
-		}
-
-		var args = self.args;
-		var otherArgs = other.args;
-
-		return other.identifier === self.identifier
-			&& otherArgs.length === args.length
-			&& otherArgs.every(function (arg, i) { return arg.equals(args[i]); });
-	};
-
-	self.toString = function () {
-		return self.identifier + "(" + self.args.join(", ") + ")";
-	};
-};
+	toString() {
+		return `${this.identifier}(${this.args.join(", ")})`;
+	}
+}

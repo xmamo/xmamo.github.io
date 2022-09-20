@@ -1,461 +1,432 @@
-"use strict";
+import * as syntax from "./syntax.js";
 
-var firstOrderLogicTool = firstOrderLogicTool || {};
+export function normalize(formula, semantics) {
+	let prenex = formula.accept(new ToPrenexFormulaVisitor(semantics));
+	let prefix = prenex.prefix;
+	let matrix = prenex.matrix;
 
-(function () {
-	var Symbol = firstOrderLogicTool.Symbol;
-	var UnaryFormula = firstOrderLogicTool.UnaryFormula;
-	var BinaryFormula = firstOrderLogicTool.BinaryFormula;
-	var QuantifiedFormula = firstOrderLogicTool.QuantifiedFormula;
-	var Call = firstOrderLogicTool.Call;
+	return {
+		prenex: prenex.formula,
 
-	firstOrderLogicTool.normalize = function (formula, semantics) {
-		var prenex = formula.accept(new ToPrenexFormulaVisitor(semantics));
-		var prefix = prenex.prefix;
-		var matrix = prenex.matrix;
+		prenexDNF: new PrenexFormula(
+			prefix,
 
-		return {
-			prenex: prenex.formula,
+			matrix.accept(new NormalizeVisitor("DNF")).reduce((formula, conjunct) => {
+				conjunct = conjunct.reduce((conjunct, literal) => {
+					return conjunct != null ? new syntax.Binary(conjunct, "∧", literal) : literal;
+				}, undefined);
 
-			prenexDNF: new PrenexFormula(
-				prefix,
+				return formula != null ? new syntax.Binary(formula, "∨", conjunct) : conjunct;
+			}, undefined)
+		).formula,
 
-				matrix.accept(new NormalizeVisitor("DNF")).reduce(function (formula, conjunct) {
-					conjunct = conjunct.reduce(function (conjunct, literal) {
-						return conjunct != null ? new BinaryFormula(conjunct, "∧", literal) : literal;
-					}, null);
+		prenexCNF: new PrenexFormula(
+			prefix,
 
-					return formula != null ? new BinaryFormula(formula, "∨", conjunct) : conjunct;
-				}, null)
-			).formula,
+			matrix.accept(new NormalizeVisitor("CNF")).reduce((formula, disjunct) => {
+				disjunct = disjunct.reduce((disjunct, literal) => {
+					return disjunct != null ? new syntax.Binary(disjunct, "∨", literal) : literal;
+				}, undefined);
 
-			prenexCNF: new PrenexFormula(
-				prefix,
-
-				matrix.accept(new NormalizeVisitor("CNF")).reduce(function (formula, disjunct) {
-					disjunct = disjunct.reduce(function (disjunct, literal) {
-						return disjunct != null ? new BinaryFormula(disjunct, "∨", literal) : literal;
-					}, null);
-
-					return formula != null ? new BinaryFormula(formula, "∧", disjunct) : disjunct;
-				}, null)
-			).formula
-		};
+				return formula != null ? new syntax.Binary(formula, "∧", disjunct) : disjunct;
+			}, undefined)
+		).formula
 	};
+}
 
-	// Represents a formula in prenex form. The prefix is an array of quantifiers and associated variables; the matrix
-	// is a formula.
-	function PrenexFormula(prefix, matrix) {
-		var self = this;
-		var negated = false;
-
-		Object.defineProperty(self, "prefix", {
-			get: function () {
-				return prefix.slice();
-			}
-		});
-
-		Object.defineProperty(self, "negatedPrefix", {
-			get: function () {
-				return prefix.map(function (p) {
-					var quantifier;
-
-					switch (p.quantifier) {
-						case "∀":
-							quantifier = "∃";
-							break;
-
-						case "∃":
-							quantifier = "∀";
-							break;
-					}
-
-					return { quantifier: quantifier, variable: p.variable };
-				});
-			}
-		});
-
-		Object.defineProperty(self, "variables", {
-			get: function () {
-				return prefix.map(function (p) { return p.variable; });
-			}
-		});
-
-		Object.defineProperty(self, "matrix", {
-			get: function () {
-				return negated ? new UnaryFormula("¬", matrix) : matrix;
-			}
-		});
-
-		Object.defineProperty(self, "formula", {
-			get: function () {
-				var formula = self.matrix;
-				var prefix = self.prefix;
-
-				for (var i = prefix.length - 1; i >= 0; --i) {
-					var p = prefix[i];
-					formula = new QuantifiedFormula(p.quantifier, p.variable, formula);
-				}
-
-				return formula;
-			}
-		});
-
-		self.addToPrefix = function (quantifier, variable) {
-			prefix.unshift({ quantifier: quantifier, variable: variable });
-		};
-
-		self.negate = function () {
-			prefix = self.negatedPrefix;
-			negated = !negated;
-		};
-
-		self.rename = function (symbol1, symbol2) {
-			prefix.forEach(function (p) { if (p.variable === symbol1) p.variable = symbol2; });
-			matrix = matrix.accept(new RenameSymbolVisitor(symbol1, symbol2));
-		};
+// Represents a formula in prenex form. The prefix is an array of quantifiers and associated variables; the matrix is a
+// formula.
+class PrenexFormula {
+	constructor(prefix, matrix) {
+		this._prefix = prefix;
+		this._matrix = matrix;
+		this._negated = false;
 	}
 
-	function ToPrenexFormulaVisitor(semantics) {
-		var self = this;
-
-		self.visitSymbol = function (symbol) {
-			return new PrenexFormula([], symbol);
-		};
-
-		self.visitUnaryFormula = function (formula) {
-			var prenexFormula = formula.operand.accept(self);
-			prenexFormula.negate();
-			return prenexFormula;
-		};
-
-		self.visitBinaryFormula = function (formula) {
-			var left = formula.left;
-			var operator = formula.operator;
-			var right = formula.right;
-
-			if (operator === "↔") {
-				var prenexFormula = new BinaryFormula(
-					new BinaryFormula(left, "→", right),
-					"∧",
-					new BinaryFormula(left, "←", right)
-				).accept(self);
-
-				(function () {
-					var matrix = prenexFormula.matrix;
-					if (!(matrix instanceof BinaryFormula) || matrix.operator !== "∧") return;
-
-					var left = matrix.left;
-					var right = matrix.right;
-					if (!(left instanceof BinaryFormula) || !(right instanceof BinaryFormula)) return;
-
-					var leftOp = left.operator;
-					var rightOp = right.operator;
-					if ((leftOp !== "→" || rightOp !== "←") && (leftOp !== "←" || rightOp !== "→")) return;
-					if (!right.left.equals(left.left) || !right.right.equals(left.right)) return;
-
-					prenexFormula = new PrenexFormula(
-						prenexFormula.prefix,
-						new BinaryFormula(left.left, "↔", left.right)
-					);
-				})();
-
-				return prenexFormula;
-			}
-
-			var leftFormula = left.accept(self);
-			var rightFormula = right.accept(self);
-			var leftVariables = leftFormula.variables;
-			var rightVariables = rightFormula.variables;
-
-			// Guard against variable name collisions, renaming variables of the right-hand side formula if needed
-			for (var i = 0, count = rightVariables.length; i < count; ++i) {
-				var variable = rightVariables[i];
-				if (leftVariables.indexOf(variable) < 0) continue;
-
-				var match = variable.match(/^([^0-9]+)([0-9]+)?$/) || [variable, variable];
-				var variablePrefix = match[1];
-				var variableSuffix = Number(match[2] || 0);
-
-				while (true) {
-					var newVariable = variablePrefix + ++variableSuffix;
-					if (newVariable in semantics && semantics[newVariable].type !== "variable") continue;
-					if (leftVariables.indexOf(newVariable) >= 0) continue;
-					if (rightVariables.indexOf(newVariable) >= 0) continue;
-
-					rightFormula.rename(variable, newVariable);
-					rightVariables[i] = newVariable;
-					break;
-				}
-			}
-
-			var prefix;
-
-			switch (operator) {
-				case "∧":
-				case "∨":
-					prefix = leftFormula.prefix.concat(rightFormula.prefix);
-					break;
-
-				case "→":
-					prefix = leftFormula.negatedPrefix.concat(rightFormula.prefix);
-					break;
-
-				case "←":
-					prefix = leftFormula.prefix.concat(rightFormula.negatedPrefix);
-					break;
-			}
-
-			return new PrenexFormula(prefix, new BinaryFormula(leftFormula.matrix, operator, rightFormula.matrix));
-		};
-
-		self.visitQuantifiedFormula = function (formula) {
-			var prenexFormula = formula.formula.accept(self);
-
-			// The formula's quantifier and variable are added only if the variable is bound
-			if (formula.formula.accept(new HasIdentifierVisitor(formula.variable)))
-				prenexFormula.addToPrefix(formula.quantifier, formula.variable);
-
-			return prenexFormula;
-		};
-
-		self.visitCall = function (call) {
-			return new PrenexFormula([], call);
-		};
+	get prefix() {
+		return this._prefix.slice();
 	}
 
-	function NormalizeVisitor(form) {
-		var self = this;
-
-		self.visitSymbol = function (symbol) {
-			return [[symbol]];
-		};
-
-		self.visitUnaryFormula = function (formula) {
-			return formula.operand.accept({
-				visitSymbol: function () {
-					return [[formula]];
-				},
-
-				visitUnaryFormula: function (formula) {
-					return formula.operand.accept(self);
-				},
-
-				visitBinaryFormula: function (formula) {
-					var left = formula.left;
-					var right = formula.right;
-
-					switch (formula.operator) {
-						case "∧":
-							return new BinaryFormula(
-								new UnaryFormula("¬", left),
-								"∨",
-								new UnaryFormula("¬", right)
-							).accept(self);
-
-						case "∨":
-							return new BinaryFormula(
-								new UnaryFormula("¬", left),
-								"∧",
-								new UnaryFormula("¬", right)
-							).accept(self);
-
-						case "→":
-							return new BinaryFormula(
-								left,
-								"∧",
-								new UnaryFormula("¬", right)
-							).accept(self);
-
-						case "←":
-							return new BinaryFormula(
-								new UnaryFormula("¬", left),
-								"∧",
-								right
-							).accept(self);
-
-						case "↔":
-							return new UnaryFormula(
-								"¬",
-								new BinaryFormula(
-									new BinaryFormula(left, "→", right),
-									"∧",
-									new BinaryFormula(left, "←", right)
-								)
-							).accept(self);
-					}
-				},
-
-				visitCall: function () {
-					return [[formula]];
-				}
-			});
-		};
-
-		self.visitBinaryFormula = function (formula) {
-			var left = formula.left;
-			var operator = formula.operator;
-			var right = formula.right;
-
-			switch (operator) {
-				case "∧":
-					switch (form) {
-						case "DNF":
-							return combine(left.accept(self), right.accept(self));
-						case "CNF":
-							return concat(left.accept(self), right.accept(self));
-					}
-					break;
-
-				case "∨":
-					switch (form) {
-						case "DNF":
-							return concat(left.accept(self), right.accept(self));
-						case "CNF":
-							return combine(left.accept(self), right.accept(self));
-					}
-					break;
-
-				case "→":
-					return new BinaryFormula(
-						new UnaryFormula("¬", left),
-						"∨", right
-					).accept(self);
-
-				case "←":
-					return new BinaryFormula(
-						left,
-						"∨",
-						new UnaryFormula("¬", right)
-					).accept(self);
-
-				case "↔":
-					return new BinaryFormula(
-						new BinaryFormula(left, "→", right),
-						"∧",
-						new BinaryFormula(left, "←", right)
-					).accept(self);
+	get negatedPrefix() {
+		return this._prefix.map(p => {
+			switch (p.quantifier) {
+				case "∀":
+					return { quantifier: "∃", variable: p.variable };
+				case "∃":
+					return { quantifier: "∀", variable: p.variable };
 			}
-		};
+		});
+	}
 
-		self.visitQuantifiedFormula = function (formula) {
-			return [[formula]];
-		};
+	get variables() {
+		return this._prefix.map(p => p.variable);
+	}
 
-		self.visitCall = function (call) {
-			return [[call]];
-		};
+	get matrix() {
+		return this._negated ? new syntax.Unary("¬", this._matrix) : this._matrix;
+	}
 
-		function concat(clauses1, clauses2) {
-			return fix(clauses1.concat(clauses2));
+	get formula() {
+		let formula = this._matrix;
+
+		for (let i = this._prefix.length - 1; i >= 0; --i) {
+			let p = this._prefix[i];
+			formula = new syntax.Quantified(p.quantifier, p.variable, formula);
 		}
 
-		function combine(clauses1, clauses2) {
-			var clauses = [];
-
-			clauses1.forEach(function (clause1) {
-				clauses2.forEach(function (clause2) {
-					clauses.push(clause1.concat(clause2));
-				});
-			});
-
-			return fix(clauses);
-		}
-
-		function fix(clauses) {
-			// Remove duplicate literals
-			clauses.forEach(function (clause) {
-				for (var i = clause.length - 1; i >= 0; --i) {
-					var literal = clause[i];
-
-					for (var j = i - 1; j >= 0; --j) {
-						if (clause[j].equals(literal)) {
-							// Remove ith element
-							clause.splice(i, 1);
-							break;
-						}
-					}
-				}
-			});
-
-			// Remove duplicate clauses
-			for (var i = clauses.length - 1; i >= 0; --i) {
-				var clause1 = clauses[i];
-
-				for (var j = clauses.length - 1; j >= 0; --j) {
-					if (i !== j) {
-						var clause2 = clauses[j];
-
-						var ok = clause2.every(function (literal1) {
-							return clause1.some(function (literal2) {
-								return literal2.equals(literal1);
-							});
-						});
-
-						if (ok) {
-							// Remove ith element
-							clauses.splice(i, 1);
-							break;
-						}
-					}
-				}
-			}
-
-			return clauses;
-		}
+		return formula;
 	}
 
-	function HasIdentifierVisitor(identifier) {
-		var self = this;
-
-		self.visitSymbol = function (symbol) {
-			return symbol.identifier === identifier;
-		};
-
-		self.visitUnaryFormula = function (formula) {
-			return formula.operand.accept(self);
-		};
-
-		self.visitBinaryFormula = function (formula) {
-			return formula.left.accept(self) || formula.right.accept(self);
-		};
-
-		self.visitQuantifiedFormula = function (formula) {
-			return formula.variable === identifier || formula.formula.accept(self);
-		};
-
-		self.visitCall = function (call) {
-			return call.identifier === identifier || call.args.some(function (arg) { return arg.accept(self); });
-		};
+	addToPrefix(quantifier, variable) {
+		this._prefix.unshift({ quantifier: quantifier, variable: variable });
 	}
 
-	function RenameSymbolVisitor(symbol1, symbol2) {
-		var self = this;
+	negate() {
+		this._prefix = this.negatedPrefix;
+		this._negated = !this._negated;
+	}
 
-		self.visitSymbol = function (symbol) {
-			return symbol.identifier === symbol1 ? new Symbol(symbol2) : symbol;
-		};
+	rename(symbol1, symbol2) {
+		this._prefix.forEach(p => { if (p.variable === symbol1) p.variable = symbol2; });
+		this._matrix = this._matrix.accept(new RenameSymbolVisitor(symbol1, symbol2));
+	}
+}
 
-		self.visitUnaryFormula = function (formula) {
-			return new UnaryFormula(formula.operator, formula.operand.accept(self));
-		};
+class ToPrenexFormulaVisitor {
+	constructor(semantics) {
+		this.semantics = semantics;
+	}
 
-		self.visitBinaryFormula = function (formula) {
-			return new BinaryFormula(formula.left.accept(self), formula.operator, formula.right.accept(self));
-		};
+	visitSymbol(symbol) {
+		return new PrenexFormula([], symbol);
+	}
 
-		self.visitQuantifiedFormula = function (formula) {
-			var variable = formula.variable;
+	visitUnary(formula) {
+		let prenexFormula = formula.operand.accept(this);
+		prenexFormula.negate();
+		return prenexFormula;
+	}
 
-			return new QuantifiedFormula(
-				formula.quantifier,
-				variable === symbol1 ? symbol2 : variable,
-				formula.formula.accept(self)
+	visitBinary(formula) {
+		let left = formula.left;
+		let operator = formula.operator;
+		let right = formula.right;
+
+		if (operator === "↔") {
+			let prenex = new syntax.Binary(
+				new syntax.Binary(left, "→", right),
+				"∧",
+				new syntax.Binary(left, "←", right)
+			).accept(this);
+
+			let matrix = prenex.matrix;
+			if (!(matrix instanceof syntax.Binary) || matrix.operator !== "∧") return prenex;
+
+			left = matrix.left;
+			right = matrix.right;
+			if (!(left instanceof syntax.Binary && right instanceof syntax.Binary)) return prenex;
+
+			let leftOp = left.operator;
+			let rightOp = right.operator;
+			if (!((leftOp === "→" && rightOp === "←") || (leftOp === "←" || rightOp === "→"))) return prenex;
+			if (!(right.left.equals(left.left) && right.right.equals(left.right))) return prenex;
+
+			return new PrenexFormula(
+				prenex.prefix,
+				new syntax.Binary(left.left, "↔", left.right)
 			);
-		};
+		}
 
-		self.visitCall = function (call) {
-			return new Call(call.identifier, call.args.map(function (arg) { return arg.accept(self); }));
-		};
+		let leftFormula = left.accept(this);
+		let rightFormula = right.accept(this);
+		let leftVariables = leftFormula.variables;
+		let rightVariables = rightFormula.variables;
+
+		// Guard against variable name collisions, renaming variables of the right-hand side formula if needed
+		for (let i = 0; i < rightVariables.length; ++i) {
+			let variable = rightVariables[i];
+			if (!leftVariables.includes(variable)) continue;
+
+			let match = variable.match(/^([^0-9]+)([0-9]+)?$/u);
+			let variablePrefix = match[1];
+			let variableSuffix = match[2] != null ? Number(match[2]) : 0;
+
+			while (true) {
+				let newVariable = `${variablePrefix}${++variableSuffix}`;
+				let semantics = this.semantics.get(newVariable);
+				if (semantics != null && semantics.type !== "variable") continue;
+				if (leftVariables.includes(newVariable)) continue;
+				if (rightVariables.includes(newVariable)) continue;
+
+				rightFormula.rename(variable, newVariable);
+				rightVariables[i] = newVariable;
+				break;
+			}
+		}
+
+		let prefix;
+
+		switch (operator) {
+			case "∧":
+			case "∨":
+				prefix = leftFormula.prefix.concat(rightFormula.prefix);
+				break;
+
+			case "→":
+				prefix = leftFormula.negatedPrefix.concat(rightFormula.prefix);
+				break;
+
+			case "←":
+				prefix = leftFormula.prefix.concat(rightFormula.negatedPrefix);
+				break;
+		}
+
+		return new PrenexFormula(prefix, new syntax.Binary(leftFormula.matrix, operator, rightFormula.matrix));
 	}
-})();
+
+	visitQuantified(formula) {
+		let prenex = formula.formula.accept(this);
+
+		// The formula's quantifier and variable are added only if the variable is bound
+		if (formula.formula.accept(new HasIdentifierVisitor(formula.variable)))
+			prenex.addToPrefix(formula.quantifier, formula.variable);
+
+		return prenex;
+	}
+
+	visitApplication(application) {
+		return new PrenexFormula([], application);
+	}
+}
+
+class NormalizeVisitor {
+	constructor(form) {
+		this.form = form;
+	}
+
+	visitSymbol(symbol) {
+		return [[symbol]];
+	}
+
+	visitUnary(formula) {
+		let self = this;
+
+		return formula.operand.accept({
+			visitSymbol() {
+				return [[formula]];
+			},
+
+			visitUnary(formula) {
+				return formula.operand.accept(self);
+			},
+
+			visitBinary(formula) {
+				switch (formula.operator) {
+					case "∧":
+						return new syntax.Binary(
+							new syntax.Unary("¬", formula.left),
+							"∨",
+							new syntax.Unary("¬", formula.right)
+						).accept(self);
+
+					case "∨":
+						return new syntax.Binary(
+							new syntax.Unary("¬", formula.left),
+							"∧",
+							new syntax.Unary("¬", formula.right)
+						).accept(self);
+
+					case "→":
+						return new syntax.Binary(
+							formula.left,
+							"∧",
+							new syntax.Unary("¬", formula.right)
+						).accept(self);
+
+					case "←":
+						return new syntax.Binary(
+							new syntax.Unary("¬", formula.left),
+							"∧",
+							formula.right
+						).accept(self);
+
+					case "↔":
+						return new syntax.Unary(
+							"¬",
+							new syntax.Binary(
+								new syntax.Binary(formula.left, "→", formula.right),
+								"∧",
+								new syntax.Binary(formula.left, "←", formula.right)
+							)
+						).accept(self);
+				}
+			},
+
+			visitApplication() {
+				return [[formula]];
+			}
+		});
+	}
+
+	visitBinary(formula) {
+		switch (formula.operator) {
+			case "∧":
+				switch (this.form) {
+					case "DNF":
+						return combine(formula.left.accept(this), formula.right.accept(this));
+					case "CNF":
+						return concat(formula.left.accept(this), formula.right.accept(this));
+				}
+				break;
+
+			case "∨":
+				switch (this.form) {
+					case "DNF":
+						return concat(formula.left.accept(this), formula.right.accept(this));
+					case "CNF":
+						return combine(formula.left.accept(this), formula.right.accept(this));
+				}
+				break;
+
+			case "→":
+				return new syntax.Binary(
+					new syntax.Unary("¬", formula.left),
+					"∨",
+					formula.right
+				).accept(this);
+
+			case "←":
+				return new syntax.Binary(
+					formula.left,
+					"∨",
+					new syntax.Unary("¬", formula.right)
+				).accept(this);
+
+			case "↔":
+				return new syntax.Binary(
+					new syntax.Binary(formula.left, "→", formula.right),
+					"∧",
+					new syntax.Binary(formula.left, "←", formula.right)
+				).accept(this);
+		}
+	}
+
+	visitQuantified(formula) {
+		return [[formula]];
+	}
+
+	visitApplication(application) {
+		return [[application]];
+	}
+}
+
+class HasIdentifierVisitor {
+	constructor(identifier) {
+		this.identifier = identifier;
+	}
+
+	visitSymbol(symbol) {
+		return symbol.identifier === this.identifier;
+	}
+
+	visitUnary(formula) {
+		return formula.operand.accept(this);
+	}
+
+	visitBinary(formula) {
+		return formula.left.accept(this) || formula.right.accept(this);
+	}
+
+	visitQuantified(formula) {
+		return formula.variable === this.identifier || formula.formula.accept(this);
+	}
+
+	visitApplication(application) {
+		return application.identifier === this.identifier || application.args.some(arg => arg.accept(this));
+	}
+}
+
+class RenameSymbolVisitor {
+	constructor(symbol1, symbol2) {
+		this.symbol = symbol1;
+		this.symbol2 = symbol2;
+	}
+
+	visitSymbol(symbol) {
+		return symbol.identifier === this.symbol1 ? new syntax.Symbol(this.symbol2) : symbol;
+	}
+
+	visitUnary(formula) {
+		return new syntax.Unary(formula.operator, formula.operand.accept(this));
+	}
+
+	visitBinary(formula) {
+		return new syntax.Binary(formula.left.accept(this), formula.operator, formula.right.accept(this));
+	}
+
+	visitQuantified(formula) {
+		return new syntax.Quantified(
+			formula.quantifier,
+			formula.variable === this.symbol1 ? this.symbol2 : formula.variable,
+			formula.formula.accept(this)
+		);
+	}
+
+	visitApplication(application) {
+		return new syntax.Application(application.identifier, application.args.map(arg => arg.accept(this)));
+	}
+}
+
+function concat(clauses1, clauses2) {
+	return fix(clauses1.concat(clauses2));
+}
+
+function combine(clauses1, clauses2) {
+	let clauses = [];
+
+	for (let clause1 of clauses1) {
+		for (let clause2 of clauses2) {
+			clauses.push(clause1.concat(clause2));
+		}
+	}
+
+	return fix(clauses);
+}
+
+function fix(clauses) {
+	// Remove duplicate literals:
+
+	for (let clause of clauses) {
+		for (let i = clause.length - 1; i >= 0; --i) {
+			let literal = clause[i];
+
+			for (let j = i - 1; j >= 0; --j) {
+				if (clause[j].equals(literal)) {
+					// Remove ith element
+					clause.splice(i, 1);
+					break;
+				}
+			}
+		}
+	}
+
+	// Remove duplicate clauses:
+
+	for (let i = clauses.length - 1; i >= 0; --i) {
+		let clause1 = clauses[i];
+
+		for (let j = clauses.length - 1; j >= 0; --j) {
+			if (i !== j) {
+				let clause2 = clauses[j];
+
+				if (clause2.every(literal1 => clause1.some(literal2 => literal2.equals(literal1)))) {
+					// Remove ith element
+					clauses.splice(i, 1);
+					break;
+				}
+			}
+		}
+	}
+
+	return clauses;
+}

@@ -1,69 +1,65 @@
-"use strict";
+import * as utils from "./utils.js";
 
-var firstOrderLogicTool = firstOrderLogicTool || {};
+export class Semantic {
+	constructor(type, arity) {
+		this.type = type;
+		this.arity = arity;
+	}
 
-(function () {
-	firstOrderLogicTool.Semantic = Semantic;
+	equals(other) {
+		return other instanceof Semantic
+			&& this.type === other.type
+			&& this.arity === other.arity;
+	}
 
-	firstOrderLogicTool.analyze = function (formula) {
-		var visitor = new AnalyzeVisitor();
-		formula.accept(visitor);
-		return visitor.semantics;
-	};
+	toString() {
+		switch (this.type) {
+			case "function":
+			case "predicate":
+				return `${this.type} of arity ${this.arity}`;
 
-	var AnalysisError = firstOrderLogicTool.AnalysisError = function (message, htmlMessage, source) {
-		Error.call(this, message);
-		this.messageHTML = htmlMessage;
+			case "constant":
+			case "variable":
+			case "sentence":
+				return this.type;
+		}
+	}
+}
+
+export class AnalysisError extends Error {
+	constructor(message, htmlMessage, source) {
+		super(message);
+		this.htmlMessage = htmlMessage;
 		this.source = source;
-	};
+	}
+}
 
-	AnalysisError.prototype = Object.create(Error.prototype);
-	AnalysisError.prototype.constructor = AnalysisError;
+export function analyze(formula) {
+	let visitor = new AnalyzeVisitor();
+	formula.accept(visitor);
+	return visitor.semantics;
+}
 
-	function Semantic(type, arity) {
-		var self = this;
-
-		self.type = type;
-		self.arity = arity;
-
-		self.equals = function (other) {
-			return other.type === self.type && other.arity === self.arity;
-		};
-
-		self.toString = function () {
-			var type = self.type;
-
-			switch (type) {
-				case "function":
-				case "predicate":
-					return type + " of arity " + self.arity;
-
-				case "constant":
-				case "variable":
-				case "sentence":
-					return type;
-			}
-		};
+class Scope {
+	constructor(parent) {
+		this.parent = parent;
+		this._variables = [];
 	}
 
-	function Scope(parent) {
-		var self = this;
-		var variables = [];
-
-		self.parent = parent;
-
-		self.isDeclared = function (identifier) {
-			return variables.indexOf(identifier) >= 0 || (self.parent != null && self.parent.isDeclared(identifier));
-		};
-
-		self.declare = function (identifier) {
-			variables.push(identifier);
-		};
+	isDeclared(identifier) {
+		return this._variables.includes(identifier) || (this.parent != null && this.parent.isDeclared(identifier));
 	}
 
-	function AnalyzeVisitor() {
-		var self = this;
-		var scope = new Scope();
+	declare(identifier) {
+		this._variables.push(identifier);
+	}
+}
+
+class AnalyzeVisitor {
+	constructor() {
+		this.semantics = new Map();
+
+		this._scope = new Scope();
 
 		// Functions and predicates can only be applied to terms (example: "p(x)"). This means that when the visitor
 		// enters a function or predicate, only terms are to be considered valid; if the visitor encounters any other
@@ -72,93 +68,104 @@ var firstOrderLogicTool = firstOrderLogicTool || {};
 		// The purpose of this variable is to distinguish what the visitor is currently expecting.
 		// If "expectTerm" is false, the visitor accepts any formula; otherwise, the visitor expects to find terms
 		// only.
-		var expectTerm = false;
+		this._expectTerm = false;
+	}
 
-		self.semantics = Object.create(null);
+	visitSymbol(symbol) {
+		let type = this._expectTerm ? (this._scope.isDeclared(symbol.identifier) ? "variable" : "constant") : "sentence";
+		this._setSemantic(symbol, symbol.identifier, new Semantic(type));
+	}
 
-		self.visitSymbol = function (symbol) {
-			var identifier = symbol.identifier;
-			var semantic;
+	visitUnary(unary) {
+		if (this._expectTerm) {
+			let message = `${unary.operator}-formula not permitted here`;
+			throw new AnalysisError(message, document.createTextNode(message), unary);
+		}
 
-			if (expectTerm)
-				semantic = new Semantic(scope.isDeclared(identifier) ? "variable" : "constant");
-			else
-				semantic = new Semantic("sentence");
+		unary.operand.accept(this);
+	}
 
-			setSemantic(symbol, identifier, semantic);
-		};
+	visitBinary(binary) {
+		if (this._expectTerm) {
+			let message = `${binary.operator}-formula not permitted here`;
+			throw new AnalysisError(message, document.createTextNode(message), binary);
+		}
 
-		self.visitUnaryFormula = function (formula) {
-			if (expectTerm) {
-				var message = formula.operator + "-formula not permitted here";
-				throw new AnalysisError(message, message, formula);
-			}
+		binary.left.accept(this);
+		binary.right.accept(this);
+	}
 
-			formula.operand.accept(self);
-		};
+	visitQuantified(quantified) {
+		if (this._expectTerm) {
+			let message = `${quantified.quantifier}-formula not permitted here`;
+			throw new AnalysisError(message, document.createTextNode(message), quantified);
+		}
 
-		self.visitBinaryFormula = function (formula) {
-			if (expectTerm) {
-				var message = formula.operator + "-formula not permitted here";
-				throw new AnalysisError(message, message, formula);
-			}
+		if (this._scope.isDeclared(quantified.variable)) {
+			throw new AnalysisError(
+				`Variable "${quantified.variable}" already bound`,
 
-			formula.left.accept(self);
-			formula.right.accept(self);
-		};
+				utils.createElement(
+					"span",
+					"Variable ",
+					utils.createElement("var", quantified.variable),
+					" already bound"
+				),
 
-		self.visitQuantifiedFormula = function (formula) {
-			if (expectTerm) {
-				var message = formula.quantifier + "-formula not permitted here";
-				throw new AnalysisError(message, message, formula);
-			}
+				quantified
+			);
+		}
 
-			var variable = formula.variable;
+		this._setSemantic(quantified, quantified.variable, new Semantic("variable"));
 
-			if (scope.isDeclared(variable)) {
-				throw new AnalysisError(
-					"Variable \"" + variable + "\" already bound",
-					"Variable <i>" + variable + "</i> already bound",
-					formula
-				);
-			}
+		let oldScope = this._scope;
+		this._scope = new Scope(oldScope);
 
-			var semantic = new Semantic("variable");
-			setSemantic(formula, variable, semantic);
-
-			var oldScope = scope;
-			scope = new Scope(oldScope);
-			scope.declare(variable);
-			formula.formula.accept(self);
-			scope = oldScope;
-		};
-
-		self.visitCall = function (call) {
-			var identifier = call.identifier;
-			setSemantic(call, identifier, new Semantic(expectTerm ? "function" : "predicate", call.arity));
-
-			var oldExpectFormula = expectTerm;
-			expectTerm = true;
-			call.args.forEach(function (arg) { arg.accept(self); });
-			expectTerm = oldExpectFormula;
-		};
-
-		function setSemantic(source, identifier, semantic) {
-			var semantics = self.semantics;
-
-			if (identifier in semantics) {
-				var oldSemantic = semantics[identifier];
-
-				if (!semantic.equals(oldSemantic)) {
-					throw new AnalysisError(
-						"\"" + identifier + "\" is used both as a " + oldSemantic + " and a " + semantic,
-						"<i>" + identifier + "</i> is used both as a " + oldSemantic + " and a " + semantic,
-						source
-					);
-				}
-			}
-
-			semantics[identifier] = semantic;
+		try {
+			this._scope.declare(quantified.variable);
+			quantified.formula.accept(this);
+		} finally {
+			this._scope = oldScope;
 		}
 	}
-})();
+
+	visitApplication(application) {
+		this._setSemantic(
+			application,
+			application.identifier,
+			new Semantic(this._expectTerm ? "function" : "predicate", application.arity)
+		);
+
+		let oldExpectTerm = this._expectTerm;
+		this._expectTerm = true;
+
+		try {
+			application.args.forEach(arg => arg.accept(this));
+		} finally {
+			this._expectTerm = oldExpectTerm;
+		}
+	}
+
+	_setSemantic(source, identifier, semantic) {
+		let oldSemantic = this.semantics.get(identifier);
+
+		if (oldSemantic != null && !semantic.equals(oldSemantic)) {
+			throw new AnalysisError(
+				`"${identifier}" is used both as a ${oldSemantic} and a ${semantic}`,
+
+				utils.createElement(
+					"span",
+					utils.createElement("var", identifier),
+					" is used both as a ",
+					oldSemantic,
+					" and a ",
+					semantic
+				),
+
+				source
+			);
+		}
+
+		this.semantics.set(identifier, semantic);
+	}
+}

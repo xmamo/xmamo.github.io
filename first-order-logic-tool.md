@@ -14,12 +14,7 @@ keywords: >-
 styles:
   - /css/first-order-logic-tool.css
 
-scripts:
-  - /js/utils.js
-  - /js/first-order-logic-tool/syntax.js
-  - /js/first-order-logic-tool/parser.js
-  - /js/first-order-logic-tool/analyzer.js
-  - /js/first-order-logic-tool/normalizer.js
+modules:
   - /js/first-order-logic-tool/main.js
 ---
 
@@ -77,8 +72,8 @@ Use the input field below to write a first order formula. Confirm your input by 
 ## Purpose and usage of the tool ##
 
 The purpose of this tool is to analyze propositional formulas like
-<span class="nowrap"><i>A</i> → <i>B</i> ∧ <i>C</i></span> and first order formulas like
-<span class="nowrap">∀<i>x</i> ¬∃<i>y</i> (<i>p</i>(<i>x</i>) → <i>q</i>(<i>y</i>))</span>.
+<span class="nowrap"><var>A</var> → <var>B</var> ∧ <var>C</var></span> and first order formulas like
+<span class="nowrap">∀<var>x</var> ¬∃<var>y</var> (<var>p</var>(<var>x</var>) → <var>q</var>(<var>y</var>))</span>.
 
 Given any formula of these types, the tool is able to calculate the degree and the height of the formula. It is also
 able to infer the meaning of each used symbol, which means it understands if the symbol stands for a variable,
@@ -119,56 +114,27 @@ follows:
 
  * Every constant is a term;
 
- * <span class="nowrap"><i>f</i>(<i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub>)</span> is a term if
-   <i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub> are terms and <i>f</i> is a function of arity <i>n</i>.
+ * <span class="nowrap"><var>f</var>(<var>t</var><sub>1</sub>, ..., <var>t</var><sub><var>n</var></sub>)</span> is a
+   term if <var>t</var><sub>1</sub>, ..., <var>t</var><sub><var>n</var></sub> are terms and <var>f</var> is a function
+   of arity <var>n</var>.
 
 
 ### Formulas ###
 
 A <dfn>first order formula</dfn> can be defined inductively as follows:
 
- * <span class="nowrap"><i>p</i>(<i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub>)</span> is a formula if
-   <i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub> are terms and <i>p</i> is a predicate of arity <i>n</i>. A
-   formula of this kind is called <dfn>atomic</dfn>;
+ * <span class="nowrap"><var>p</var>(<var>t</var><sub>1</sub>, ..., <var>t</var><sub><var>n</var></sub>)</span> is a
+   formula if <var>t</var><sub>1</sub>, ..., <var>t</var><sub><var>n</var></sub> are terms and <var>p</var> is a
+   predicate of arity <var>n</var>. A formula of this kind is called <dfn>atomic</dfn>;
 
- * (¬<i>F</i>) is a formula if <i>F</i> is a formula;
+ * (¬<var>F</var>) is a formula if <var>F</var> is a formula;
 
- * <span class="nowrap">(<i>F</i> ∧ <i>G</i>)</span>, <span class="nowrap">(<i>F</i> ∨ <i>G</i>)</span>,
-   <span class="nowrap">(<i>F</i> → <i>G</i>)</span>, <span class="nowrap">(<i>F</i> ← <i>G</i>)</span>,
-   <span class="nowrap">(<i>F</i> ↔ <i>G</i>)</span> are formulas if both <i>F</i> and <i>G</i> are formulas;
+ * <span class="nowrap">(<var>F</var> ∧ <var>G</var>)</span>,
+   <span class="nowrap">(<var>F</var> ∨ <var>G</var>)</span>,
+   <span class="nowrap">(<var>F</var> → <var>G</var>)</span>,
+   <span class="nowrap">(<var>F</var> ← <var>G</var>)</span>,
+   <span class="nowrap">(<var>F</var> ↔ <var>G</var>)</span> are formulas if both <var>F</var> and <var>G</var> are
+   formulas;
 
- * <span class="nowrap">(∀<i>x</i> <i>F</i>)</span>, <span class="nowrap">(∃<i>x</i> <i>F</i>)</span> are formulas if
-   <i>x</i> is a variable and <i>F</i> is a formula.
-
-
-## Semantics ##
-
-### Interpretation ###
-
-Let <i>D</i> be a set representing the domain of discourse. An <dfn>interpretation</dfn> <i>I</i> maps every symbol to
-its meaning:
-
- * For each function symbol of arity <i>n</i>, there's a function
-   <span class="nowrap"><i>f</i>: <i>D</i><sup><i>n</i></sup> → <i>D</i></span>;
-
- * For each predicate symbol of arity <i>n</i>, there's a set <span class="nowrap"><i>P</i> ⊆ <i>D</i></span>;
-
-
-### Evaluation ###
-
-Given an interpretation, a formula evaluates to a value which can be either true (𝕋) or false (𝔽).
-
- * <span class="nowrap"><i>p(<i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub>)</i></span> is true iff
-   <span class="nowrap">(<i>t</i><sub>1</sub>, ..., <i>t</i><sub><i>n</i></sub>) ∈ <i>I</i>(<i>p</i>)</span>;
-
- * <span class="nowrap">(¬<i>F</i>)</span> is true iff <i>F</i> is false;
-
- * <span class="nowrap">(<i>F</i> ∧ <i>G</i>)</span> is true iff <i>F</i> and <i>G</i> are both true;
-
- * <span class="nowrap">(<i>F</i> ∨ <i>G</i>)</span> is true iff <i>F</i> is true or <i>G</i> is true;
-
- * <span class="nowrap">(<i>F</i> → <i>G</i>)</span> is true iff <i>F</i> is false or <i>G</i> is true;
-
- * <span class="nowrap">(<i>F</i> ← <i>G</i>)</span> is true iff <i>F</i> is true or <i>G</i> is false;
-
- * <span class="nowrap">(<i>F</i> ↔ <i>G</i>)</span> is true iff <i>F</i> and <i>G</i> have the same truth value.
+ * <span class="nowrap">(∀<var>x</var> <var>F</var>)</span>, <span class="nowrap">(∃<var>x</var> <var>F</var>)</span>
+   are formulas if <var>x</var> is a variable and <var>F</var> is a formula.

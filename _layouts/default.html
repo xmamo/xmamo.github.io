@@ -37,5 +37,6 @@
 
 		<script src="/js/main.js" defer="defer"></script>
 		{% for script in page.scripts %}<script src="{{ script }}" defer="defer"></script>{% endfor %}
+		{% for script in page.modules %}<script type="module" src="{{ script }}" defer="defer"></script>{% endfor %}
 	</body>
 </html>
