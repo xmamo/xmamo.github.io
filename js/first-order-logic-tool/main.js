@@ -254,14 +254,9 @@ function update() {
 		if (context.errorPosition === FORMULA_ELEMENT.value.length)
 			FORMULA_ELEMENT.value += " ";
 
+		FORMULA_ELEMENT.setSelectionRange(context.errorPosition, FORMULA_ELEMENT.value.length);
 		ERROR_ELEMENT.replaceChildren(context.error);
 		ERROR_ELEMENT.style.removeProperty("display");
-
-		setTimeout(() => {
-			FORMULA_ELEMENT.focus();
-			FORMULA_ELEMENT.setSelectionRange(context.errorPosition, FORMULA_ELEMENT.value.length);
-		}, 0);
-
 		return;
 	}
 
@@ -271,14 +266,9 @@ function update() {
 		semantics = analyzer.analyze(formula);
 	} catch (e) {
 		RESULT_ELEMENT.style.display = "none";
+		FORMULA_ELEMENT.setSelectionRange(e.source.start, e.source.end);
 		ERROR_ELEMENT.replaceChildren(e.htmlMessage);
 		ERROR_ELEMENT.style.removeProperty("display");
-
-		setTimeout(() => {
-			FORMULA_ELEMENT.focus();
-			FORMULA_ELEMENT.setSelectionRange(e.source.start, e.source.end);
-		});
-
 		return;
 	}
 
@@ -342,7 +332,7 @@ function mathify(string) {
 		.replace(/[!~]/gu, "¬")
 		.replace(/<->/gu, "↔")
 		.replace(/->/gu, "→")
-		.replace(/<-(?!>|$)/gu, "←")
+		.replace(/<-(?=[^>])/gu, "←")
 		.replace(/\\A/gui, "∀")
 		.replace(/\\E/gui, "∃");
 }
