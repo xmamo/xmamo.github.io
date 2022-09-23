@@ -1,106 +1,113 @@
-"use strict";
+const WIDTH_SYMBOL = Symbol();
+const HEIGHT_SYMBOL = Symbol();
+const ARRAYS_SYMBOL = Symbol();
+const ACTIVE_SYMBOL = Symbol();
+const GET_SYMBOL = Symbol();
+const SET_SYMBOL = Symbol();
+const FOR_EACH_SYMBOL = Symbol();
 
-var gameOfLife = gameOfLife || {};
+export class World {
+	constructor(width, height, wrap) {
+		this.wrap = wrap;
 
-(function () {
-	var modulo = utils.modulo;
-
-	gameOfLife.World = function (width, height, wrap) {
-		var self = this;
+		this[WIDTH_SYMBOL] = width;
+		this[HEIGHT_SYMBOL] = height;
 
 		// The state of the game world is represented by a collection of two arrays. Only one of the two arrays is
 		// active at any given time. Updates are computed by querying the inactive array. 
-		var arrays = [[], []];
-		var active = 0;
+		this[ARRAYS_SYMBOL] = [[], []];
+		this[ACTIVE_SYMBOL] = 0;
 
-		for (var i = 0, area = width * height; i < area; ++i) {
-			arrays[0].push(false);
-			arrays[1].push(false);
+		for (let i = 0; i < width * height; ++i) {
+			this[ARRAYS_SYMBOL][0].push(false);
+			this[ARRAYS_SYMBOL][1].push(false);
 		}
+	}
 
-		self.wrap = wrap;
+	get width() {
+		return this[WIDTH_SYMBOL];
+	}
 
-		Object.defineProperty(self, "width", {
-			get: function () {
-				return width;
-			}
-		});
+	get height() {
+		return this[HEIGHT_SYMBOL];
+	}
 
-		Object.defineProperty(self, "height", {
-			get: function () {
-				return height;
-			}
-		});
+	get area() {
+		return this[ARRAYS_SYMBOL][this[ACTIVE_SYMBOL]].length;
+	}
 
-		Object.defineProperty(self, "area", {
-			get: function () {
-				return arrays[active].length;
-			}
-		});
+	get(x, y) {
+		return this[GET_SYMBOL](this[ACTIVE_SYMBOL], x, y);
+	}
 
-		self.get = function (x, y) {
-			return get(active, x, y);
-		};
+	set(x, y, value) {
+		this[SET_SYMBOL](this[ACTIVE_SYMBOL], x, y, value);
+	}
 
-		self.set = function (x, y, value) {
-			set(active, x, y, value);
-		};
+	forEach(callback) {
+		this[FOR_EACH_SYMBOL](this[ACTIVE_SYMBOL], callback);
+	}
 
-		self.forEach = function (callback) {
-			forEach(active, callback);
-		};
+	updateCells() {
+		for (let y0 = 0; y0 < this.height; ++y0) {
+			for (let x0 = 0; x0 < this.width; ++x0) {
+				let neighbors = 0;
 
-		self.updateCells = function () {
-			var inactive = 1 - active;
+				for (let dy = -1; dy <= 1; ++dy) {
+					for (let dx = -1; dx <= 1; ++dx) {
+						if (dx !== 0 || dy !== 0) {
+							let x;
+							let y;
 
-			for (var y = 0; y < height; ++y) {
-				for (var x = 0; x < width; ++x) {
-					var neighbors = 0;
-
-					for (var dy = -1; dy <= 1; ++dy) {
-						for (var dx = -1; dx <= 1; ++dx) {
-							if (dx !== 0 || dy !== 0) {
-								if (wrap) {
-									if (get(active, modulo(x + dx, width), modulo(y + dy, height))) ++neighbors;
-								} else {
-									if (get(active, x + dx, y + dy)) ++neighbors;
-								}
+							if (this.wrap) {
+								x = modulo(x0 + dx, this.width);
+								y = modulo(y0 + dy, this.height);
+							} else {
+								x = x0 + dx;
+								y = y0 + dx;
 							}
+
+							if (this[GET_SYMBOL](this[ACTIVE_SYMBOL], x, y))
+								++neighbors;
 						}
 					}
-
-					if (get(active, x, y))
-						set(inactive, x, y, neighbors >= 2 && neighbors <= 3);
-					else
-						set(inactive, x, y, neighbors === 3);
 				}
-			}
 
-			active = inactive;
-		};
-
-		function get(active, x, y) {
-			if (x >= 0 && x < width && y >= 0 && y < height)
-				return arrays[active][x + y * width];
-			else
-				return false;
-		}
-
-		function set(active, x, y, value) {
-			if (x >= 0 && x < width && y >= 0 && y < height)
-				arrays[active][x + y * width] = value;
-		}
-
-		function forEach(active, callback) {
-			var activeArray = arrays[active];
-
-			for (var y = 0; y < height; ++y) {
-				for (var x = 0; x < width; ++x) {
-					var index = x + y * width;
-					var value = callback(x, y, activeArray[index]);
-					if (value != null) activeArray[index] = value;
-				}
+				if (this[GET_SYMBOL](this[ACTIVE_SYMBOL], x0, y0))
+					this[SET_SYMBOL](1 - this[ACTIVE_SYMBOL], x0, y0, neighbors >= 2 && neighbors <= 3);
+				else
+					this[SET_SYMBOL](1 - this[ACTIVE_SYMBOL], x0, y0, neighbors === 3);
 			}
 		}
-	};
-})();
+
+		this[ACTIVE_SYMBOL] = 1 - this[ACTIVE_SYMBOL];
+	}
+
+	[GET_SYMBOL](active, x, y) {
+		if (x >= 0 && x < this.width && y >= 0 && y < this.height)
+			return this[ARRAYS_SYMBOL][active][x + y * this.width];
+		else
+			return false;
+	}
+
+	[SET_SYMBOL](active, x, y, value) {
+		if (x >= 0 && x < this.width && y >= 0 && y < this.height)
+			this[ARRAYS_SYMBOL][active][x + y * this.width] = value;
+	}
+
+	[FOR_EACH_SYMBOL](active, callback) {
+		for (let y = 0; y < this.height; ++y) {
+			for (let x = 0; x < this.width; ++x) {
+				let index = x + y * this.width;
+				let value = callback(x, y, this[ARRAYS_SYMBOL][active][index]);
+
+				if (value != null)
+					this[ARRAYS_SYMBOL][active][index] = value;
+			}
+		}
+	}
+}
+
+function modulo(x, y) {
+	return (x % y + y) % y;
+}
