@@ -82,7 +82,7 @@ equivalent to the initial formula. Given a propositional formula, it automatical
 table.
 
 To use the tool, simply write the formula to be analyzed in the input field above and press enter. The symbols ¬, ∧, ∨,
-→, ←, ↔, ∀, ∃ can be inserted by typing !, &, \|, ->, <-, <->, \A (or \a), \E (or \e) respectively.
+→, ←, ↔, ∀, ∃ can be inserted by typing !, &, \|, ->, <-, <->, \A, \E respectively.
 
 ## Syntax of first order formulas ##
 

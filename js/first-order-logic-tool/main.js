@@ -330,9 +330,9 @@ function mathify(string) {
 		.replace(/[&^]/gu, "∧")
 		.replace(/\|/gu, "∨")
 		.replace(/[!~]/gu, "¬")
-		.replace(/<->/gu, "↔")
-		.replace(/->/gu, "→")
-		.replace(/<-(?=[^>])/gu, "←")
+		.replace(/<[-=]>/gu, "↔")
+		.replace(/[-=]>/gu, "→")
+		.replace(/<[-=](?=[^>])/gu, "←")
 		.replace(/\\A/gui, "∀")
 		.replace(/\\E/gui, "∃");
 }
@@ -363,7 +363,7 @@ FORMULA_ELEMENT.addEventListener("input", () => {
 	FORMULA_ELEMENT.setSelectionRange(left.length, left.length + middle.length);
 });
 
-FORMULA_ELEMENT.addEventListener("change", update);
+FORMULA_ELEMENT.addEventListener("change", () => update());
 
 FORM_ELEMENT.addEventListener("submit", event => {
 	event.preventDefault();
