@@ -41,17 +41,17 @@ export function analyze(formula) {
 }
 
 class Scope {
-	constructor(parent) {
+	constructor(parent = undefined) {
 		this.parent = parent;
-		this._variables = [];
+		this.variables = [];
 	}
 
 	isDeclared(identifier) {
-		return this._variables.includes(identifier) || (this.parent != null && this.parent.isDeclared(identifier));
+		return this.variables.includes(identifier) || (this.parent != null && this.parent.isDeclared(identifier));
 	}
 
 	declare(identifier) {
-		this._variables.push(identifier);
+		this.variables.push(identifier);
 	}
 }
 
@@ -59,7 +59,7 @@ class AnalyzeVisitor {
 	constructor() {
 		this.semantics = new Map();
 
-		this._scope = new Scope();
+		this.scope = new Scope();
 
 		// Functions and predicates can only be applied to terms (example: "p(x)"). This means that when the visitor
 		// enters a function or predicate, only terms are to be considered valid; if the visitor encounters any other
@@ -68,16 +68,16 @@ class AnalyzeVisitor {
 		// The purpose of this variable is to distinguish what the visitor is currently expecting.
 		// If "expectTerm" is false, the visitor accepts any formula; otherwise, the visitor expects to find terms
 		// only.
-		this._expectTerm = false;
+		this.expectTerm = false;
 	}
 
 	visitSymbol(symbol) {
-		let type = this._expectTerm ? (this._scope.isDeclared(symbol.identifier) ? "variable" : "constant") : "sentence";
-		this._setSemantic(symbol, symbol.identifier, new Semantic(type));
+		let type = this.expectTerm ? (this.scope.isDeclared(symbol.identifier) ? "variable" : "constant") : "sentence";
+		this.setSemantic(symbol, symbol.identifier, new Semantic(type));
 	}
 
 	visitUnary(unary) {
-		if (this._expectTerm) {
+		if (this.expectTerm) {
 			let message = `${unary.operator}-formula not permitted here`;
 			throw new AnalysisError(message, document.createTextNode(message), unary);
 		}
@@ -86,7 +86,7 @@ class AnalyzeVisitor {
 	}
 
 	visitBinary(binary) {
-		if (this._expectTerm) {
+		if (this.expectTerm) {
 			let message = `${binary.operator}-formula not permitted here`;
 			throw new AnalysisError(message, document.createTextNode(message), binary);
 		}
@@ -96,12 +96,12 @@ class AnalyzeVisitor {
 	}
 
 	visitQuantified(quantified) {
-		if (this._expectTerm) {
+		if (this.expectTerm) {
 			let message = `${quantified.quantifier}-formula not permitted here`;
 			throw new AnalysisError(message, document.createTextNode(message), quantified);
 		}
 
-		if (this._scope.isDeclared(quantified.variable)) {
+		if (this.scope.isDeclared(quantified.variable)) {
 			throw new AnalysisError(
 				`Variable "${quantified.variable}" already bound`,
 
@@ -116,37 +116,37 @@ class AnalyzeVisitor {
 			);
 		}
 
-		this._setSemantic(quantified, quantified.variable, new Semantic("variable"));
+		this.setSemantic(quantified, quantified.variable, new Semantic("variable"));
 
-		let oldScope = this._scope;
-		this._scope = new Scope(oldScope);
+		let oldScope = this.scope;
+		this.scope = new Scope(oldScope);
 
 		try {
-			this._scope.declare(quantified.variable);
+			this.scope.declare(quantified.variable);
 			quantified.formula.accept(this);
 		} finally {
-			this._scope = oldScope;
+			this.scope = oldScope;
 		}
 	}
 
 	visitApplication(application) {
-		this._setSemantic(
+		this.setSemantic(
 			application,
 			application.identifier,
-			new Semantic(this._expectTerm ? "function" : "predicate", application.arity)
+			new Semantic(this.expectTerm ? "function" : "predicate", application.arity)
 		);
 
-		let oldExpectTerm = this._expectTerm;
-		this._expectTerm = true;
+		let oldExpectTerm = this.expectTerm;
+		this.expectTerm = true;
 
 		try {
 			application.args.forEach(arg => arg.accept(this));
 		} finally {
-			this._expectTerm = oldExpectTerm;
+			this.expectTerm = oldExpectTerm;
 		}
 	}
 
-	_setSemantic(source, identifier, semantic) {
+	setSemantic(source, identifier, semantic) {
 		let oldSemantic = this.semantics.get(identifier);
 
 		if (oldSemantic != null && !semantic.equals(oldSemantic)) {

@@ -8,10 +8,10 @@ const [IDENTIFIER_START, IDENTIFIER_PART] = (() => {
 	}
 })();
 
-const SOURCE_SYMBOL = Symbol();
-const POSITION_SYMBOL = Symbol();
-const ERROR_SYMBOL = Symbol();
-const ERROR_POSITION_SYMBOL = Symbol();
+const SOURCE_SYMBOL = Symbol("source");
+const POSITION_SYMBOL = Symbol("position");
+const ERROR_SYMBOL = Symbol("error");
+const ERROR_POSITION_SYMBOL = Symbol("errorPosition");
 
 export class Context {
 	constructor(source) {
@@ -51,10 +51,14 @@ export class Context {
 	}
 
 	peek(maxOffset) {
-		return this.source.substring(
-			this.position,
-			Math.min(this.position + Math.max(0, maxOffset), this.source.length)
-		);
+		let i = this.position;
+
+		while (i < this.source.length && maxOffset > 0) {
+			i += this.source.codePointAt(i) < 0x10000 ? 1 : 2;
+			--maxOffset;
+		}
+
+		return this.source.substring(this.position, i);
 	}
 
 	advance(maxOffset) {
@@ -107,60 +111,19 @@ function parseImpliesOrEquivalenceFormula(context) {
 
 	let position = context.position;
 	skipWhitespace(context);
-	let peek = context.peek(3);
-	peek = ["→", "←", "↔", "<-", "->", "<->"].find(s => peek.startsWith(s));
+	let operator = context.advance(1);
 	context.position = position;
 
-	if (peek == null)
+	if (!["→", "←", "↔"].includes(operator))
 		return formula;
 
-	// The operator which we just parsed determines how the remaining part of the parsing routine is performed
-	let operator;
-
-	switch (peek) {
-		case "→":
-		case "->":
-			operator = "→";
-			break;
-
-		case "←":
-		case "<-":
-			operator = "←";
-			break;
-
-		case "↔":
-		case "<->":
-			operator = "↔";
-			break;
-	}
-
 	do {
-		position = context.position;
 		skipWhitespace(context);
 
-		switch (operator) {
-			case "→":
-				peek = context.peek(2);
-				peek = ["→", "->"].find(s => peek.startsWith(s));
-				break;
-
-			case "←":
-				peek = context.peek(2);
-				peek = ["←", "<-"].find(s => peek.startsWith(s));
-				break;
-
-			case "↔":
-				peek = context.peek(3);
-				peek = ["↔", "<->"].find(s => peek.startsWith(s));
-				break;
-		}
-
-		if (peek == null) {
-			context.position = position;
+		if (context.peek(1) !== operator)
 			break;
-		}
 
-		context.advance(peek.length);
+		context.advance(1);
 		skipWhitespace(context);
 		let right = parseAndOrXorOrOrFormula(context);
 
@@ -186,50 +149,19 @@ function parseAndOrXorOrOrFormula(context) {
 
 	let position = context.position;
 	skipWhitespace(context);
-	let peek = context.peek(1);
+	let operator = context.advance(1);
 	context.position = position;
 
-	if (!["∧", "∨", "&", "^", "|"].includes(peek))
+	if (!["∧", "∨"].includes(operator))
 		return formula;
 
-	// The operator which we just parsed determines how the remaining part of the parsing routine is performed
-	let operator;
-
-	switch (peek) {
-		case "∧":
-		case "&":
-		case "^":
-			operator = "∧";
-			break;
-
-		case "∨":
-		case "|":
-			operator = "∨";
-			break;
-	}
-
-	while (true) {  // Both ∧ and ∨ are associative
-		position = context.position;
+	do {
 		skipWhitespace(context);
 
-		switch (operator) {
-			case "∧":
-				peek = context.peek(1);
-				peek = ["∧", "&", "^"].find(s => peek.startsWith(s));
-				break;
-
-			case "∨":
-				peek = context.peek(1);
-				peek = ["∨", "|"].find(s => peek.startsWith(s));
-				break;
-		}
-
-		if (peek == null) {
-			context.position = position;
+		if (context.peek(1) !== operator)
 			break;
-		}
 
-		context.advance(peek.length);
+		context.advance(1);
 		skipWhitespace(context);
 		let right = parseNotFormula(context);
 
@@ -240,17 +172,19 @@ function parseAndOrXorOrOrFormula(context) {
 		}
 
 		formula = new syntax.Binary(formula, operator, right, context.source, formula.start, context.position);
-	}
+	} while (true);  // Both ∧ and ∨ are associative
 
 	return formula;
 }
 
 function parseNotFormula(context) {
-	if (!["¬", "!", "~"].includes(context.peek(1)))
-		return parseQuantifiedFormula(context);
-
 	let position = context.position;
-	context.advance(1);
+
+	if (context.advance(1) !== "¬") {
+		context.position = position;
+		return parseQuantifiedFormula(context);
+	}
+
 	skipWhitespace(context);
 	let operand = parseNotFormula(context);
 
@@ -264,29 +198,12 @@ function parseNotFormula(context) {
 }
 
 function parseQuantifiedFormula(context) {
-	let peek = context.peek(2);
-	peek = ["∀", "∃", "\\A", "\\E", "\\a", "\\e"].find(s => peek.startsWith(s));
-
-	if (peek == null)
-		return parseParenthesizedFormula(context);
-
 	let position = context.position;
-	context.advance(peek.length);
+	let quantifier = context.advance(1);
 
-	let quantifier;
-
-	switch (peek) {
-		case "∀":
-		case "\\A":
-		case "\\a":
-			quantifier = "∀";
-			break;
-
-		case "∃":
-		case "\\E":
-		case "\\e":
-			quantifier = "∃";
-			break;
+	if (!["∀", "∃"].includes(quantifier)) {
+		context.position = position;
+		return parseParenthesizedFormula(context);
 	}
 
 	skipWhitespace(context);
@@ -311,11 +228,13 @@ function parseQuantifiedFormula(context) {
 }
 
 function parseParenthesizedFormula(context) {
-	if (context.peek(1) !== "(")
-		return parseCallOrIdentifier(context);
-
 	let position = context.position;
-	context.advance(1);
+
+	if (context.advance(1) !== "(") {
+		context.position = position;
+		return parseCallOrIdentifier(context);
+	}
+
 	skipWhitespace(context);
 	let formula = parseFormula(context);
 
@@ -327,13 +246,12 @@ function parseParenthesizedFormula(context) {
 
 	skipWhitespace(context);
 
-	if (context.peek(1) !== ")") {
+	if (context.advance(1) !== ")") {
 		context.error = "Expected closing parenthesis";
 		context.position = position;
 		return parseCallOrIdentifier(context);
 	}
 
-	context.advance(1);
 	return formula;
 }
 
@@ -349,12 +267,11 @@ function parseCallOrIdentifier(context) {
 	let position = context.position;
 	skipWhitespace(context);
 
-	if (context.peek(1) !== "(") {
+	if (context.advance(1) !== "(") {
 		context.position = position;
 		return new syntax.Symbol(identifier, context.source, initialPosition, position);
 	}
 
-	context.advance(1);
 	skipWhitespace(context);
 
 	let args = [];
@@ -380,13 +297,12 @@ function parseCallOrIdentifier(context) {
 		}
 	}
 
-	if (context.peek(1) !== ")") {
+	if (context.advance(1) !== ")") {
 		context.error = "Expected closing parenthesis";
 		context.position = position;
 		return new syntax.Symbol(identifier, context.source, initialPosition, position);
 	}
 
-	context.advance(1);
 	return new syntax.Application(identifier, args, context.source, initialPosition, context.position);
 }
 

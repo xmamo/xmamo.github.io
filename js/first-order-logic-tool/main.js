@@ -54,8 +54,7 @@ class HTMLTreeGeneratorVisitor {
 		let p1 = binary.left.priority <= binary.priority
 			&& !(binary.left instanceof syntax.Binary && binary.left.operator == binary.operator && binary.left.isAssociative);
 
-		let p2 = binary.right.priority <= binary.priority && !(binary.right instanceof syntax.Binary
-			&& binary.right.operator == binary.operator && binary.right.isAssociative);
+		let p2 = binary.right.priority <= binary.priority;
 
 		let box = this.createBox(height);
 
@@ -144,8 +143,7 @@ class HTMLTextGeneratorVisitor {
 		let p1 = binary.left.priority <= binary.priority
 			&& !(binary.left instanceof syntax.Binary && binary.left.operator == binary.operator && binary.left.isAssociative);
 
-		let p2 = binary.right.priority <= binary.priority
-			&& !(binary.right instanceof syntax.Binary && binary.right.operator == binary.operator && binary.right);
+		let p2 = binary.right.priority <= binary.priority;
 
 		let span = document.createElement("span");
 
@@ -244,7 +242,20 @@ class EvaluateVisitor {
 	}
 }
 
-function update() {
+function update(submit = false) {
+	let source = FORMULA_ELEMENT.value;
+	let selectionStart = Math.min(FORMULA_ELEMENT.selectionStart, FORMULA_ELEMENT.selectionEnd);
+	let selectionEnd = Math.max(FORMULA_ELEMENT.selectionStart, FORMULA_ELEMENT.selectionEnd);
+	let left = mathify(source.substring(0, selectionStart));
+	let middle = mathify(source.substring(selectionStart, selectionEnd));
+	let right = mathify(source.substring(selectionEnd, source.length));
+
+	FORMULA_ELEMENT.value = `${left}${middle}${right}`;
+	FORMULA_ELEMENT.setSelectionRange(left.length, left.length + middle.length);
+
+	if (!submit)
+		return;
+
 	let context = new parser.Context(FORMULA_ELEMENT.value);
 	let formula = parser.parse(context);
 
@@ -352,22 +363,13 @@ function nextBinary(booleanArray) {
 	return false;
 }
 
-FORMULA_ELEMENT.addEventListener("input", () => {
-	let formula = FORMULA_ELEMENT.value;
-	let selectionStart = Math.min(FORMULA_ELEMENT.selectionStart, FORMULA_ELEMENT.selectionEnd);
-	let selectionEnd = Math.max(FORMULA_ELEMENT.selectionStart, FORMULA_ELEMENT.selectionEnd);
-	let left = mathify(formula.substring(0, selectionStart));
-	let middle = mathify(formula.substring(selectionStart, selectionEnd));
-	let right = mathify(formula.substring(selectionEnd, formula.length));
-	FORMULA_ELEMENT.value = `${left}${middle}${right}`;
-	FORMULA_ELEMENT.setSelectionRange(left.length, left.length + middle.length);
-});
+FORMULA_ELEMENT.addEventListener("input", () => update());
 
 FORMULA_ELEMENT.addEventListener("change", () => update());
 
 FORM_ELEMENT.addEventListener("submit", event => {
 	event.preventDefault();
-	update();
+	update(true);
 });
 
-update();
+update(true);
