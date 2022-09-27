@@ -1,10 +1,10 @@
-const WIDTH_SYMBOL = Symbol();
-const HEIGHT_SYMBOL = Symbol();
-const ARRAYS_SYMBOL = Symbol();
-const ACTIVE_SYMBOL = Symbol();
-const GET_SYMBOL = Symbol();
-const SET_SYMBOL = Symbol();
-const FOR_EACH_SYMBOL = Symbol();
+const WIDTH_SYMBOL = Symbol("width");
+const HEIGHT_SYMBOL = Symbol("height");
+const ARRAYS_SYMBOL = Symbol("arrays");
+const ACTIVE_SYMBOL = Symbol("active");
+const GET_SYMBOL = Symbol("get");
+const SET_SYMBOL = Symbol("set");
+const FOR_EACH_SYMBOL = Symbol("forEach");
 
 export class World {
 	constructor(width, height, wrap) {
