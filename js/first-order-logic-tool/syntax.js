@@ -154,8 +154,7 @@ export class Binary extends Formula {
 		let p1 = this.left.priority <= this.priority
 			&& !(this.left instanceof Binary && this.left.operator == this.operator && this.left.isAssociative);
 
-		let p2 = this.right.priority <= this.priority
-			&& !(this.right instanceof Binary && this.right.operator == this.operator && this.right.isAssociative);
+		let p2 = this.right.priority <= this.priority;
 
 		return `${p1 ? `(${this.left})` : this.left} ${this.operator} ${p2 ? `(${this.right})` : this.right}`;
 	}
