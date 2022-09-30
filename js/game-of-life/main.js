@@ -14,15 +14,13 @@ let brushSize = 1;
 let paused = false;
 
 let world = new World(80, 45, true);
-let lastUpdate = 0;  // The timestamp at which the world has last been updated
+let lastUpdate = Number.NEGATIVE_INFINITY;  // The timestamp at which the world has last been updated
 
 FORM.addEventListener("submit", event => event.preventDefault());
 
 SIZE_ELEMENT.addEventListener("change", () => {
-	let size = SIZE_ELEMENT.value.match(/^\s*(\d+)(?:\s*[×x]\s*|\s+)(\d+)\s*$/u);
-	if (size == null) return;
-
-	let newWorld = new World(Number(size[1]), Number(size[2]), world.a, world.b, world.c, world.d);
+	let size = SIZE_ELEMENT.value.split(" × ");
+	let newWorld = new World(Number(size[0]), Number(size[1]), world.a, world.b, world.c, world.d);
 	newWorld.forEach((x, y) => world.get(x, y));
 	world = newWorld;
 });
@@ -32,6 +30,8 @@ WRAP_ELEMENT.addEventListener("change", () => world.wrap = WRAP_ELEMENT.checked)
 CANVAS.addEventListener("contextmenu", event => event.preventDefault());
 
 CANVAS.addEventListener("pointerdown", event => {
+	event.preventDefault();
+
 	let rect = CANVAS.getBoundingClientRect();
 	pointerX = event.clientX - rect.left;
 	pointerY = event.clientY - rect.top;
@@ -103,30 +103,36 @@ document.addEventListener("pointerup", event => {
 });
 
 CANVAS.addEventListener("wheel", event => {
+	event.preventDefault();
 	brushSize = brushSize + Math.sign(event.deltaY);
 	if (brushSize < 1) brushSize = 1;
 	if (brushSize > world.width) brushSize = world.width;
 	if (brushSize > world.height) brushSize = world.height;
-	event.preventDefault();
 });
 
 CANVAS.addEventListener("keydown", event => {
 	switch (event.code) {
 		case "Space":
-			paused = !paused;
 			event.preventDefault();
+			paused = !paused;
 			break;
 	}
 });
 
-requestAnimationFrame(function render(timeStamp) {
+requestAnimationFrame(function callback(timeStamp) {
+	render(timeStamp);
+	requestAnimationFrame(callback);
+});
+
+function render(timeStamp) {
 	if (!paused && timeStamp >= lastUpdate + 1000) {
 		world.updateCells();
 		lastUpdate = timeStamp;
 	}
 
 	CANVAS.width = CANVAS.clientWidth;
-	CANVAS.height = document.fullscreenElement ? CANVAS.clientHeight : CANVAS.width * (9 / 16);
+	CANVAS.height = CANVAS.clientWidth * (9 / 16);
+
 	CONTEXT.fillStyle = "#000";
 	CONTEXT.lineWidth = 2;
 	CONTEXT.strokeStyle = "#777";
@@ -134,7 +140,7 @@ requestAnimationFrame(function render(timeStamp) {
 	let cellWidth = CANVAS.width / world.width;
 	let cellHeight = CANVAS.height / world.height;
 
-	world.forEach(function (x, y, value) {
+	world.forEach((x, y, value) => {
 		if (value) {
 			CONTEXT.fillRect(
 				Math.floor(cellWidth * x),
@@ -151,9 +157,7 @@ requestAnimationFrame(function render(timeStamp) {
 		Math.ceil(cellWidth * brushSize) - 2,
 		Math.ceil(cellHeight * brushSize) - 2
 	);
-
-	requestAnimationFrame(render);
-});
+}
 
 function setCells(x0, y0) {
 	let y1 = y0 + brushSize;
