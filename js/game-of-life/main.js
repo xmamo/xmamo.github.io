@@ -1,7 +1,7 @@
 import { World } from "./world.js";
 
 const CANVAS = document.getElementById("game-of-life-canvas");
-const CONTEXT = CANVAS.getContext("2d");
+const CONTEXT = CANVAS.getContext("2d", { alpha: false });
 const FORM = document.forms["game-of-life"];
 const SIZE_ELEMENT = FORM.elements.size;
 const WRAP_ELEMENT = FORM.elements.wrap;
@@ -104,10 +104,7 @@ document.addEventListener("pointerup", event => {
 
 CANVAS.addEventListener("wheel", event => {
 	event.preventDefault();
-	brushSize = brushSize + Math.sign(event.deltaY);
-	if (brushSize < 1) brushSize = 1;
-	if (brushSize > world.width) brushSize = world.width;
-	if (brushSize > world.height) brushSize = world.height;
+	brushSize = Math.max(1, Math.min(brushSize + Math.sign(event.deltaY), world.width, world.height));
 });
 
 CANVAS.addEventListener("keydown", event => {
@@ -132,6 +129,9 @@ function render(timeStamp) {
 
 	CANVAS.width = CANVAS.clientWidth;
 	CANVAS.height = CANVAS.clientWidth * (9 / 16);
+
+	CONTEXT.fillStyle = "#FFF";
+	CONTEXT.fillRect(0, 0, CANVAS.width, CANVAS.height);
 
 	CONTEXT.fillStyle = "#000";
 	CONTEXT.lineWidth = 2;

@@ -8,7 +8,7 @@ modules:
 
 # {{ page.title }} #
 
-<canvas class="bordered" id="game-of-life-canvas" tabindex="0"></canvas>
+<canvas id="game-of-life-canvas" tabindex="0" style="touch-action: none;"></canvas>
 
 <div class="columns">
 	<div class="left-column">
