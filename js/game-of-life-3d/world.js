@@ -1,149 +1,139 @@
-"use strict";
+const X_MAX_SYMBOL = Symbol("xMax");
+const Y_MAX_SYMBOL = Symbol("yMax");
+const Z_MAX_SYMBOL = Symbol("zMax");
+const WRAP_SYMBOL = Symbol("wrap");
+const NEW_WRAP_SYMBOL = Symbol("newWrap");
+const ARRAYS_SYMBOL = Symbol("arrays");
+const ACTIVE_SYMBOL = Symbol("active");
+const UPDATED_SYMBOL = Symbol("updated");
+const GET_SYMBOL = Symbol("get");
+const SET_SYMBOL = Symbol("set");
+const FOR_EACH_SYMBOL = Symbol("forEach");
 
-var gameOfLife3d = gameOfLife3d || {};
+export class World {
+	constructor(xMax, yMax, zMax, wrap, environment, fertility) {
+		this[X_MAX_SYMBOL] = xMax;
+		this[Y_MAX_SYMBOL] = yMax;
+		this[Z_MAX_SYMBOL] = zMax;
+		this[WRAP_SYMBOL] = wrap;
 
-(function () {
-	var modulo = utils.modulo;
-
-	gameOfLife3d.World = function (xMax, yMax, zMax, wrap, environment, fertility) {
-		var self = this;
+		// Changes on "wrap" are delayed until incremental updates are completed
+		this[NEW_WRAP_SYMBOL] = this[WRAP_SYMBOL];
 
 		// The state of the game world is represented by a collection of two arrays. Only one of the two arrays is
 		// active at any given time. Updates are done incrementally on the inactive array, keeping track of where we
 		// left off using the "updated" variable.
-		var arrays = [[], []];
-		var active = 0;
-		var updated = 0;
+		this[ARRAYS_SYMBOL] = [[], []];
+		this[ACTIVE_SYMBOL] = 0;
+		this[UPDATED_SYMBOL] = 0;
 
-		// Changes on "wrap" are delayed until incremental updates are completed
-		var newWrap = wrap;
-
-		for (var i = 0, volume = xMax * yMax * zMax; i < volume; ++i) {
-			arrays[0].push(false);
-			arrays[1].push(false);
+		for (let i = 0; i < xMax * yMax * zMax; ++i) {
+			this[ARRAYS_SYMBOL][0].push(false);
+			this[ARRAYS_SYMBOL][1].push(false);
 		}
 
-		self.environment = environment;
-		self.fertility = fertility;
+		this.environment = environment;
+		this.fertility = fertility;
+		this.onUpdateComplete = () => {};
+	}
 
-		self.onUpdateComplete = function () { };
+	get xMax() {
+		return this[X_MAX_SYMBOL];
+	}
 
-		Object.defineProperty(self, "xMax", {
-			get: function () {
-				return xMax;
-			}
-		});
+	get yMax() {
+		return this[Y_MAX_SYMBOL];
+	}
 
-		Object.defineProperty(self, "yMax", {
-			get: function () {
-				return yMax;
-			}
-		});
+	get zMax() {
+		return this[Z_MAX_SYMBOL];
+	}
 
-		Object.defineProperty(self, "zMax", {
-			get: function () {
-				return zMax;
-			}
-		});
+	get volume() {
+		return this[ARRAYS_SYMBOL][this[ACTIVE_SYMBOL]].length;
+	}
 
-		Object.defineProperty(self, "volume", {
-			get: function () {
-				return arrays[active].length;
-			}
-		});
+	get(x, y, z) {
+		return this[GET_SYMBOL](this[ACTIVE_SYMBOL], x, y, z);
+	}
 
-		Object.defineProperty(self, "wrap", {
-			get: function () {
-				return wrap;
-			},
+	set(x, y, z, value) {
+		this[SET_SYMBOL](this[ACTIVE_SYMBOL], x, y, z, value);
+	}
 
-			set: function (wrap) {
-				newWrap = wrap;
-			}
-		});
+	forEach(callback) {
+		this[FOR_EACH_SYMBOL](this[ACTIVE_SYMBOL], callback);
+	}
 
-		self.get = function (x, y, z) {
-			return get(active, x, y, z);
-		};
+	updateCells(count) {
+		for (; count > 0; --count) {
+			let x0 = this[UPDATED_SYMBOL] % this.xMax;
+			let z0 = Math.floor(this[UPDATED_SYMBOL] / this.xMax) % this.zMax;
+			let y0 = Math.floor(this[UPDATED_SYMBOL] / (this.xMax * this.zMax)) % this.yMax;
 
-		self.set = function (x, y, z, value) {
-			return set(active, x, y, z, value);
-		};
+			let neighbors = 0;
 
-		self.forEach = function (callback) {
-			forEach(active, callback);
-		};
+			for (let dy = -1; dy <= 1; ++dy) {
+				for (let dz = -1; dz <= 1; ++dz) {
+					for (let dx = -1; dx <= 1; ++dx) {
+						if (dx !== 0 || dy !== 0 || dz !== 0) {
+							let x = x0 + dx;
+							let y = y0 + dy;
+							let z = z0 + dz;
 
-		self.updateCells = function (count) {
-			var inactive = 1 - active;
-
-			for (; count > 0; --count) {
-				var x0 = updated % xMax;
-				var z0 = Math.floor(updated / xMax) % zMax;
-				var y0 = Math.floor(updated / (xMax * zMax)) % yMax;
-
-				var neighbors = 0;
-
-				for (var dy = -1; dy <= 1; ++dy) {
-					for (var dz = -1; dz <= 1; ++dz) {
-						for (var dx = -1; dx <= 1; ++dx) {
-							if (dx !== 0 || dy !== 0 || dz !== 0) {
-								var x = x0 + dx;
-								var y = y0 + dy;
-								var z = z0 + dz;
-
-								if (wrap) {
-									x = modulo(x, xMax);
-									y = modulo(y, yMax);
-									z = modulo(z, zMax);
-								}
-
-								if (get(active, x, y, z))
-									++neighbors;
+							if (this.wrap) {
+								x = modulo(x, this.xMax);
+								y = modulo(y, this.yMax);
+								z = modulo(z, this.zMax);
 							}
+
+							if (this[GET_SYMBOL](this[ACTIVE_SYMBOL], x, y, z))
+								++neighbors;
 						}
 					}
 				}
-
-				if (get(active, x0, y0, z0))
-					set(inactive, x0, y0, z0, self.environment.indexOf(neighbors) >= 0);
-				else
-					set(inactive, x0, y0, z0, self.fertility.indexOf(neighbors) >= 0);
-
-				if (++updated >= arrays[active].length) {
-					active = inactive;
-					updated = 0;
-					wrap = newWrap;
-					self.onUpdateComplete();
-					break;
-				}
 			}
-		};
 
-		function get(active, x, y, z) {
-			if (x >= 0 && x < xMax && y >= 0 && y < yMax && z >= 0 && z < zMax)
-				return arrays[active][x + z * xMax + y * (xMax * zMax)];
+			if (this[GET_SYMBOL](this[ACTIVE_SYMBOL], x0, y0, z0))
+				this[SET_SYMBOL](1 - this[ACTIVE_SYMBOL], x0, y0, z0, this.environment.includes(neighbors));
 			else
-				return false;
+				this[SET_SYMBOL](1 - this[ACTIVE_SYMBOL], x0, y0, z0, this.fertility.includes(neighbors));
+
+			if (++this[UPDATED_SYMBOL] >= this[ARRAYS_SYMBOL][this[ACTIVE_SYMBOL]].length) {
+				this[ACTIVE_SYMBOL] = 1 - this[ACTIVE_SYMBOL];
+				this[UPDATED_SYMBOL] = 0;
+				this[WRAP_SYMBOL] = this[NEW_WRAP_SYMBOL];
+				this.onUpdateComplete();
+				break;
+			}
 		}
+	}
 
-		function set(active, x, y, z, value) {
-			if (x >= 0 && x < xMax && y >= 0 && y < yMax && z >= 0 && z < zMax)
-				arrays[active][x + z * xMax + y * (xMax * zMax)] = value;
-		}
+	[GET_SYMBOL](active, x, y, z) {
+		if (x >= 0 && x < this.xMax && y >= 0 && y < this.yMax && z >= 0 && z < this.zMax)
+			return this[ARRAYS_SYMBOL][active][x + z * this.xMax + y * (this.xMax * this.zMax)];
+		else
+			return false;
+	}
 
-		function forEach(active, callback) {
-			var activeArray = arrays[active];
+	[SET_SYMBOL](active, x, y, z, value) {
+		if (x >= 0 && x < this.xMax && y >= 0 && y < this.yMax && z >= 0 && z < this.zMax)
+			this[ARRAYS_SYMBOL][active][x + z * this.xMax + y * (this.xMax * this.zMax)] = value;
+	}
 
-			for (var y = 0; y < yMax; ++y) {
-				for (var z = 0; z < zMax; ++z) {
-					for (var x = 0; x < xMax; ++x) {
-						var index = x + z * xMax + y * (xMax * zMax);
-						var value = callback(x, y, z, activeArray[index]);
-						if (value != null) activeArray[index] = value;
-					}
+	[FOR_EACH_SYMBOL](active, callback) {
+		for (let y = 0; y < this.yMax; ++y) {
+			for (let z = 0; z < this.zMax; ++z) {
+				for (let x = 0; x < this.xMax; ++x) {
+					let index = x + z * this.xMax + y * (this.xMax * this.zMax);
+					let value = callback(x, y, z, this[ARRAYS_SYMBOL][active][index]);
+					if (value != null) this[ARRAYS_SYMBOL][active][index] = value;
 				}
 			}
 		}
-	};
-})();
+	}
+}
+
+function modulo(x, y) {
+	return (x % y + y) % y;
+}

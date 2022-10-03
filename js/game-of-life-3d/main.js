@@ -1,274 +1,243 @@
-"use strict";
+import { Camera } from "./camera.js";
+import { Renderer } from "./renderer.js";
+import { World } from "./world.js";
 
-(function () {
-	var clamp = utils.clamp;
-	var touchToMouse = utils.touchToMouse;
+let vertexShaderRequest = new XMLHttpRequest();
+vertexShaderRequest.addEventListener("readystatechange", () => onReadyStateChange());
+vertexShaderRequest.open("GET", "/js/game-of-life-3d/shader.vert");
+vertexShaderRequest.responseType = "text";
+vertexShaderRequest.send();
 
-	var Camera = gameOfLife3d.Camera;
-	var World = gameOfLife3d.World;
-	var Renderer = gameOfLife3d.Renderer;
+let fragmentShaderRequest = new XMLHttpRequest();
+fragmentShaderRequest.addEventListener("readystatechange", () => onReadyStateChange());
+fragmentShaderRequest.open("GET", "/js/game-of-life-3d/shader.frag");
+fragmentShaderRequest.responseType = "text";
+fragmentShaderRequest.send();
 
-	var vertexShaderRequest = new XMLHttpRequest();
-	var fragmentShaderRequest = new XMLHttpRequest();
+const CANVAS = document.getElementById("game-of-life-3d-canvas");
+const GL = CANVAS.getContext("webgl", { alpha: false });
+const FORM = document.forms["game-of-life-3d"];
+const RULESET_ELEMENT = FORM.elements.ruleset;
+const WRAP_ELEMENT = FORM.elements.wrap;
 
-	vertexShaderRequest.onreadystatechange = onReadyStateChange;
-	vertexShaderRequest.open("GET", "/js/game-of-life-3d/shader.vert");
-	vertexShaderRequest.responseType = "text";
-	vertexShaderRequest.send();
+let camera = new Camera({ z: 64 });
+let pointerX = NaN;
+let pointerY = NaN;
+let pointerDown = false;
+let left = false;
+let right = false;
+let up = false;
+let down = false;
+let paused = false;
 
-	fragmentShaderRequest.onreadystatechange = onReadyStateChange;
-	fragmentShaderRequest.open("GET", "/js/game-of-life-3d/shader.frag");
-	fragmentShaderRequest.responseType = "text";
-	fragmentShaderRequest.send();
+// Updates to the game are computationally expensive. Since older browsers do not support asynchronous functions,
+// the workload is split up in smaller chunks which are executed synchronously at each frame.
+//
+// There are two types of updates: cell updates and buffers updates. Cell updates incrementally update the state of
+// the world according to the rules of Game of Life; buffers updates incrementally update the buffers uploaded to
+// the graphics card. The update variable keeps track of which kind of update we are currently working on.
+//
+// Internally, double buffering is used for updates; the buffers are swapped only if the entire workload has been
+// completed.
+let update = "cells";
 
-	var canvas = document.getElementById("game-of-life-3d-canvas");
-	var gl = canvas.getContext("webgl");
-	canvas.focus();
+let world = new World(64, 64, 64, true, [4, 5], [5]);
+world.forEach(() => Math.random() < 0.1);
+world.onUpdateComplete = () => update = "buffers";
 
-	var form = document.forms["game-of-life-3d"];
-	var rulesetElement = form.elements.ruleset;
-	var wrapElement = form.elements.wrap;
+let renderer = new Renderer(GL, world);
+renderer.updateBuffers(world.volume);
+renderer.onUpdateComplete = () => update = "cells";
 
-	var camera = new Camera({ z: 64 });
-	var mouseX = NaN;
-	var mouseY = NaN;
-	var mouseDown = false;
-	var left = false;
-	var right = false;
-	var up = false;
-	var down = false;
-	var paused = false;
+FORM.addEventListener("submit", event => event.preventDefault());
 
-	// Updates to the game are computationally expensive. Since older browsers do not support asynchronous functions,
-	// the workload is split up in smaller chunks which are executed synchronously at each frame.
-	//
-	// There are two types of updates: cell updates and buffers updates. Cell updates incrementally update the state of
-	// the world according to the rules of Game of Life; buffers updates incrementally update the buffers uploaded to
-	// the graphics card. The "update" variable keeps track of which kind of update we are currently working on.
-	//
-	// Internally, double buffering is used for updates; the buffers are swapped only if the entire workload has been
-	// completed.
-	var update = "cells";
+RULESET_ELEMENT.addEventListener("change", () => {
+	let ruleset = RULESET_ELEMENT.value.match(RULESET_ELEMENT.pattern);
 
-	var world = new World(64, 64, 64, true, [4, 5], [5]);
-	world.forEach(function () { return Math.random() < 0.1; });
-	world.onUpdateComplete = function () { update = "buffers"; };
+	if (ruleset != null) {
+		world.environment = (ruleset[1] != null ? ruleset[1] : "").split(/\s*,\s*/u).map(s => parseInt(s, 10));
+		world.fertility = (ruleset[2] != null ? ruleset[2] : "").split(/\s*,\s*/u).map(s => parseInt(s, 10));
+	}
+});
 
-	var renderer = new Renderer(gl, world);
-	renderer.updateBuffers(world.volume);
-	renderer.onUpdateComplete = function () { update = "cells"; };
+WRAP_ELEMENT.addEventListener("change", () => world.wrap = WRAP_ELEMENT.checked);
 
-	form.addEventListener("submit", function (event) {
-		event.preventDefault();
-	});
+CANVAS.addEventListener("contextmenu", event => event.preventDefault());
 
-	rulesetElement.addEventListener("change", function () {
-		var ruleset = rulesetElement.value.match(rulesetElement.pattern);
-		if (ruleset == null) return;
+CANVAS.addEventListener("pointerdown", event => {
+	let boundingClientRect = CANVAS.getBoundingClientRect();
+	pointerX = event.clientX - boundingClientRect.x;
+	pointerY = event.clientY - boundingClientRect.y;
+	pointerDown = true;
+});
 
-		world.environment = (ruleset[1] || "").split(/\s*,\s*/).map(function (s) { return parseInt(s, 10); });
-		world.fertility = (ruleset[2] || "").split(/\s*,\s*/).map(function (s) { return parseInt(s, 10); });
-	});
+document.addEventListener("pointermove", event => {
+	let rect = CANVAS.getBoundingClientRect();
+	let newMouseX = event.clientX - rect.x;
+	let newMouseY = event.clientY - rect.y;
 
-	wrapElement.addEventListener("change", function () {
-		world.wrap = wrapElement.checked;
-	});
+	if (pointerDown) {
+		let rx = camera.rx + (newMouseY - pointerY) / CANVAS.clientHeight * Math.PI;
+		camera.rx = Math.max(-(Math.PI / 2), Math.min(rx, Math.PI / 2));
+		camera.ry += (newMouseX - pointerX) / CANVAS.clientWidth * Math.PI;
+	}
 
-	canvas.addEventListener("contextmenu", function (event) {
-		event.preventDefault();
-	});
+	pointerX = newMouseX;
+	pointerY = newMouseY;
+});
 
-	canvas.addEventListener("mousedown", function (event) {
-		var boundingClientRect = canvas.getBoundingClientRect();
-		mouseX = event.clientX - boundingClientRect.x;
-		mouseY = event.clientY - boundingClientRect.y;
-		mouseDown = true;
-	});
+document.addEventListener("pointerup", () => pointerDown = false);
 
-	document.addEventListener("mousemove", function (event) {
-		var boundingClientRect = canvas.getBoundingClientRect();
-		var newMouseX = event.clientX - boundingClientRect.x;
-		var newMouseY = event.clientY - boundingClientRect.y;
+CANVAS.addEventListener("keydown", event => {
+	switch (event.key) {
+		case "f":
+		case "F":
+			event.preventDefault();
+			if (!document.fullscreenElement)
+				CANVAS.requestFullscreen();
+			else
+				document.exitFullscreen();
+			break;
+	}
 
-		if (mouseDown) {
-			var rx = camera.rx + (newMouseY - mouseY) / canvas.clientHeight * Math.PI;
-			camera.rx = clamp(rx, -(Math.PI / 2), Math.PI / 2);
-			camera.ry += (newMouseX - mouseX) / canvas.clientWidth * Math.PI;
-		}
+	switch (event.code) {
+		case "KeyA":
+		case "ArrowLeft":
+			event.preventDefault();
+			left = true;
+			break;
 
-		mouseX = newMouseX;
-		mouseY = newMouseY;
-	});
+		case "KeyD":
+		case "ArrowRight":
+			event.preventDefault();
+			right = true;
+			break;
 
-	document.addEventListener("mouseup", function () {
-		mouseDown = false;
-	});
+		case "KeyW":
+		case "ArrowUp":
+			event.preventDefault();
+			up = true;
+			break;
 
-	canvas.addEventListener("touchstart", function (event) {
-		canvas.dispatchEvent(touchToMouse(event, "mousedown"));
-		event.preventDefault();
-	});
+		case "KeyS":
+		case "ArrowDown":
+			event.preventDefault();
+			down = true;
+			break;
 
-	document.addEventListener("touchmove", function (event) {
-		document.dispatchEvent(touchToMouse(event, "mousemove"));
-	});
+		case "Space":
+			event.preventDefault();
+			paused = !paused;
+			break;
+	}
+});
 
-	document.addEventListener("touchend", function (event) {
-		document.dispatchEvent(touchToMouse(event, "mouseup"));
-	});
+document.addEventListener("keyup", event => {
+	switch (event.code) {
+		case "KeyA":
+		case "ArrowLeft":
+			left = false;
+			break;
 
-	canvas.addEventListener("keydown", function (event) {
-		switch (event.key) {
-			case "f":
-			case "F":
-				if (!document.fullscreenElement)
-					canvas.requestFullscreen();
-				else
-					document.exitFullscreen();
-				break;
-		}
+		case "KeyD":
+		case "ArrowRight":
+			right = false;
+			break;
 
-		switch (event.code || event.keyCode) {
-			case "KeyA":
-			case 0x41:
-				left = true;
-				event.preventDefault();
-				break;
+		case "KeyW":
+		case "ArrowUp":
+			up = false;
+			break;
 
-			case "KeyD":
-			case 0x44:
-				right = true;
-				event.preventDefault();
-				break;
+		case "KeyS":
+		case "ArrowDown":
+			down = false;
+			break;
+	}
+});
 
-			case "KeyW":
-			case 0x57:
-				up = true;
-				event.preventDefault();
-				break;
+function onReadyStateChange() {
+	if (vertexShaderRequest.readyState !== XMLHttpRequest.DONE || vertexShaderRequest.status !== 200) return;
+	if (fragmentShaderRequest.readyState !== XMLHttpRequest.DONE || fragmentShaderRequest.status !== 200) return;
 
-			case "KeyS":
-			case 0x53:
-				down = true;
-				event.preventDefault();
-				break;
+	let vertexShader = GL.createShader(GL.VERTEX_SHADER);
+	GL.shaderSource(vertexShader, vertexShaderRequest.responseText);
+	GL.compileShader(vertexShader);
 
-			case "Space":
-			case 0x20:
-				paused = !paused;
-				event.preventDefault();
-				break;
-		}
-	});
+	if (!GL.getShaderParameter(vertexShader, GL.COMPILE_STATUS))
+		throw new Error(`Vertex shader: ${GL.getShaderInfoLog(vertexShader)}`);
 
-	document.addEventListener("keyup", function (event) {
-		switch (event.code || event.keyCode) {
-			case "KeyA":
-			case 0x41:
-				left = false;
-				break;
+	let fragmentShader = GL.createShader(GL.FRAGMENT_SHADER);
+	GL.shaderSource(fragmentShader, fragmentShaderRequest.responseText);
+	GL.compileShader(fragmentShader);
 
-			case "KeyD":
-			case 0x44:
-				right = false;
-				break;
+	if (!GL.getShaderParameter(fragmentShader, GL.COMPILE_STATUS))
+		throw new Error(`Fragment shader: ${GL.getShaderInfoLog(fragmentShader)}`);
 
-			case "KeyW":
-			case 0x57:
-				up = false;
-				break;
+	let program = GL.createProgram();
+	GL.attachShader(program, vertexShader);
+	GL.attachShader(program, fragmentShader);
+	GL.linkProgram(program);
 
-			case "KeyS":
-			case 0x53:
-				down = false;
-				break;
-		}
-	});
+	if (!GL.getProgramParameter(program, GL.LINK_STATUS))
+		throw new Error(`Program: ${GL.getProgramInfoLog(program)}`);
 
-	function onReadyStateChange() {
-		if (vertexShaderRequest.readyState !== XMLHttpRequest.DONE || vertexShaderRequest.status !== 200) return;
-		if (fragmentShaderRequest.readyState !== XMLHttpRequest.DONE || fragmentShaderRequest.status !== 200) return;
+	let aPositionLocation = GL.getAttribLocation(program, "aPosition");
+	let aNormalLocation = GL.getAttribLocation(program, "aNormal");
+	let uViewMatrixLocation = GL.getUniformLocation(program, "uViewMatrix");
+	let uProjectionMatrixLocation = GL.getUniformLocation(program, "uProjectionMatrix");
+	let uLightDirectionLocation = GL.getUniformLocation(program, "uLightDirection");
 
-		var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-		gl.shaderSource(vertexShader, vertexShaderRequest.responseText);
-		gl.compileShader(vertexShader);
+	requestAnimationFrame(timeStamp0 => {
+		requestAnimationFrame(timeStamp1 => {
+			let delta = (timeStamp1 - timeStamp0) / 1000;
+			render(delta);
 
-		if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS))
-			throw new Error("Vertex shader: " + gl.getShaderInfoLog(vertexShader));
-
-		var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-		gl.shaderSource(fragmentShader, fragmentShaderRequest.responseText);
-		gl.compileShader(fragmentShader);
-
-		if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS))
-			throw new Error("Fragment shader: " + gl.getShaderInfoLog(fragmentShader));
-
-		var program = gl.createProgram();
-		gl.attachShader(program, vertexShader);
-		gl.attachShader(program, fragmentShader);
-		gl.linkProgram(program);
-
-		if (!gl.getProgramParameter(program, gl.LINK_STATUS))
-			throw new Error("Program: " + gl.getProgramInfoLog(program));
-
-		var aPositionLocation = gl.getAttribLocation(program, "aPosition");
-		var aNormalLocation = gl.getAttribLocation(program, "aNormal");
-		var uViewMatrixLocation = gl.getUniformLocation(program, "uViewMatrix");
-		var uProjectionMatrixLocation = gl.getUniformLocation(program, "uProjectionMatrix");
-		var uLightDirectionLocation = gl.getUniformLocation(program, "uLightDirection");
-
-		requestAnimationFrame(function (timeStamp) {
-			var now = timeStamp;
-			var delta = 0;
-
-			requestAnimationFrame(function callback(timeStamp) {
-				delta = (delta + (timeStamp - now) / 1000) / 2;  // Exponential moving average
-				now = timeStamp;
+			requestAnimationFrame(function callback(timeStamp2) {
+				delta = (delta + (timeStamp2 - timeStamp1) / 1000) / 2;  // Exponential moving average
+				timeStamp1 = timeStamp2;
 				render(delta);
 				requestAnimationFrame(callback);
 			});
 		});
+	});
 
-		function render(delta) {
-			if (left) camera.ry += delta;
-			if (right) camera.ry -= delta;
-			if (up) camera.rx = Math.min(camera.rx + delta, Math.PI / 2);
-			if (down) camera.rx = Math.max(-(Math.PI / 2), camera.rx - delta);
+	function render(delta) {
+		if (left) camera.ry += delta;
+		if (right) camera.ry -= delta;
+		if (up) camera.rx = Math.min(camera.rx + delta, Math.PI / 2);
+		if (down) camera.rx = Math.max(-(Math.PI / 2), camera.rx - delta);
 
-			if (!paused) {
-				switch (update) {
-					case "cells":
-						world.updateCells(Math.ceil(2 * delta * world.volume));
-						break;
+		if (!paused) {
+			switch (update) {
+				case "cells":
+					world.updateCells(Math.ceil(2 * delta * world.volume));
+					break;
 
-					case "buffers":
-						renderer.updateBuffers(Math.ceil(2 * delta * world.volume));
-						break;
-				}
+				case "buffers":
+					renderer.updateBuffers(Math.ceil(2 * delta * world.volume));
+					break;
 			}
-
-			if (!document.fullscreenElement)
-				canvas.style.height = canvas.clientWidth * (9 / 16) + "px";
-
-			canvas.width = canvas.clientWidth;
-			canvas.height = canvas.clientHeight;
-			camera.aspect = canvas.clientWidth / canvas.clientHeight;
-
-			gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-
-			gl.enable(gl.CULL_FACE);
-			gl.enable(gl.DEPTH_TEST);
-
-			gl.clearColor(0, 0, 0, 0);
-			gl.clearDepth(1);
-			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-			gl.useProgram(program);
-			gl.uniformMatrix4fv(uViewMatrixLocation, false, camera.viewMatrix);
-			gl.uniformMatrix4fv(uProjectionMatrixLocation, false, camera.projectionMatrix);
-			gl.uniform3f(uLightDirectionLocation, -1, -2, -3);
-
-			renderer.render(aPositionLocation, aNormalLocation);
 		}
+
+		CANVAS.width = CANVAS.clientWidth;
+		CANVAS.height = document.fullscreenElement != null ? CANVAS.clientHeight : CANVAS.clientWidth * (9 / 16);
+		camera.aspect = CANVAS.width / CANVAS.height;
+
+		GL.viewport(0, 0, GL.drawingBufferWidth, GL.drawingBufferHeight);
+
+		GL.enable(GL.CULL_FACE);
+		GL.enable(GL.DEPTH_TEST);
+
+		GL.clearColor(1, 1, 1, 1);
+		GL.clearDepth(1);
+		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+
+		GL.useProgram(program);
+		GL.uniformMatrix4fv(uViewMatrixLocation, false, camera.viewMatrix);
+		GL.uniformMatrix4fv(uProjectionMatrixLocation, false, camera.projectionMatrix);
+		GL.uniform3f(uLightDirectionLocation, -1, -2, -3);
+
+		renderer.render(aPositionLocation, aNormalLocation);
 	}
-})();
+}
