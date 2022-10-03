@@ -2,19 +2,13 @@
 title: Game of Life 3D
 article: false
 
-scripts:
-  - /js/utils.js
-  - /js/game-of-life-3d/camera.js
-  - /js/game-of-life-3d/world.js
-  - /js/game-of-life-3d/renderer.js
+modules:
   - /js/game-of-life-3d/main.js
 ---
 
 # {{ page.title }} #
 
-<div class="bordered">
-	<canvas id="game-of-life-3d-canvas" tabindex="0"></canvas>
-</div>
+<canvas id="game-of-life-3d-canvas" tabindex="0" style="touch-action: none;"></canvas>
 
 <div class="columns">
 	<div class="left-column">
@@ -36,7 +30,7 @@ scripts:
 		<form id="game-of-life-3d">
 			<p>
 				<label for="game-of-life-3d-ruleset">Ruleset</label>
-				<input id="game-of-life-3d-ruleset" name="ruleset" required="required" spellcheck="false" pattern="^\s*(\d+(?:\s*,\s*\d+)*)?\s*\/\s*(\d+(?:\s*,\s*\d+)*)?\s*$" value="4,5/5" />
+				<input id="game-of-life-3d-ruleset" name="ruleset" required="required" spellcheck="false" pattern="/^\s*(\d+(?:\s*,\s*\d+)*)?\s*\/\s*(\d+(?:\s*,\s*\d+)*)?\s*$/u" value="4,5/5" />
 			</p>
 
 			<p>

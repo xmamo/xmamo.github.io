@@ -1,186 +1,182 @@
-"use strict";
-
-var gameOfLife3d = gameOfLife3d || {};
+const FOV_SYMBOL = Symbol("fov");
+const ASPECT_SYMBOL = Symbol("aspect");
+const NEAR_SYMBOL = Symbol("near");
+const FAR_SYMBOL = Symbol("far");
+const X_SYMBOL = Symbol("x");
+const Y_SYMBOL = Symbol("y");
+const Z_SYMBOL = Symbol("z");
+const RX_SYMBOL = Symbol("rx");
+const RY_SYMBOL = Symbol("ry");
+const PROJECTION_MATRIX_SYMBOL = Symbol("projectionMatrix");
+const VIEW_MATRIX_SYMBOL = Symbol("viewMatrix");
 
 // This particular camera always looks at (0, 0, 0). "options.x", "options.y" and "options.z" are the offsets with
 // respect of the sphere on which the camera is placed, relative to the direction it's looking at.
-gameOfLife3d.Camera = function (options) {
-	options = options || {};
+export class Camera {
+	constructor({
+		fov = 45 * (Math.PI / 2),
+		aspect = 1,
+		near = 0.1,
+		far = 1000,
+		x = 0,
+		y = 0,
+		z = 0,
+		rx = 0,
+		ry = 0
+	} = {}) {
+		this[FOV_SYMBOL] = fov;
+		this[ASPECT_SYMBOL] = aspect;
+		this[NEAR_SYMBOL] = near;
+		this[FAR_SYMBOL] = far;
+		this[X_SYMBOL] = x;
+		this[Y_SYMBOL] = y;
+		this[Z_SYMBOL] = z;
+		this[RX_SYMBOL] = rx;
+		this[RY_SYMBOL] = ry;
+		this[PROJECTION_MATRIX_SYMBOL] = undefined;
+		this[VIEW_MATRIX_SYMBOL] = undefined;
+	}
 
-	var self = this;
-	var fov = options.fov || 45 * (Math.PI / 2);
-	var aspect = options.aspect || 1;
-	var near = options.near || 0.1;
-	var far = options.far || 1000;
-	var x = options.x || 0;
-	var y = options.y || 0;
-	var z = options.z || 0;
-	var rx = options.rx || 0;
-	var ry = options.ry || 0;
+	get fov() {
+		return this[FOV_SYMBOL];
+	}
 
-	var projectionMatrix = null;
-	var viewMatrix = null;
-
-	Object.defineProperty(self, "fov", {
-		get: function () {
-			return fov;
-		},
-
-		set: function (value) {
-			if (value !== fov) {
-				fov = value;
-				projectionMatrix = null;
-			}
+	set fov(fov) {
+		if (fov !== this[FOV_SYMBOL]) {
+			this[FOV_SYMBOL] = fov;
+			this[PROJECTION_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "aspect", {
-		get: function () {
-			return aspect;
-		},
+	get aspect() {
+		return this[ASPECT_SYMBOL];
+	}
 
-		set: function (value) {
-			if (value !== aspect) {
-				aspect = value;
-				projectionMatrix = null;
-			}
+	set aspect(aspect) {
+		if (aspect !== this[ASPECT_SYMBOL]) {
+			this[ASPECT_SYMBOL] = aspect;
+			this[PROJECTION_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "near", {
-		get: function () {
-			return near;
-		},
+	get near() {
+		return this[NEAR_SYMBOL];
+	}
 
-		set: function (value) {
-			if (value !== near) {
-				near = value;
-				projectionMatrix = null;
-			}
+	set near(near) {
+		if (near !== this[NEAR_SYMBOL]) {
+			this[NEAR_SYMBOL] = near;
+			this[PROJECTION_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "far", {
-		get: function () {
-			return far;
-		},
+	get far() {
+		return this[FAR_SYMBOL];
+	}
 
-		set: function (value) {
-			if (value !== far) {
-				far = value;
-				projectionMatrix = null;
-			}
+	set far(far) {
+		if (far !== this[FAR_SYMBOL]) {
+			this[FAR_SYMBOL] = far;
+			this[PROJECTION_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "x", {
-		get: function () {
-			return x;
-		},
+	get x() {
+		return this[X_SYMBOL];
+	}
 
-		set: function (value) {
-			if (value !== x) {
-				x = value;
-				viewMatrix = null;
-			}
+	set x(x) {
+		if (x !== this[X_SYMBOL]) {
+			this[X_SYMBOL] = x;
+			this[VIEW_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "y", {
-		get: function () {
-			return y;
-		},
+	get y() {
+		return this[Y_SYMBOL];
+	}
 
-		set: function (value) {
-			if (value !== y) {
-				y = value;
-				viewMatrix = null;
-			}
+	set y(y) {
+		if (y !== this[Y_SYMBOL]) {
+			this[Y_SYMBOL] = y;
+			this[VIEW_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "z", {
-		get: function () {
-			return z;
-		},
+	get z() {
+		return this[Z_SYMBOL];
+	}
 
-		set: function (value) {
-			if (value !== z) {
-				z = value;
-				viewMatrix = null;
-			}
+	set z(z) {
+		if (z !== this[Z_SYMBOL]) {
+			this[Z_SYMBOL] = z;
+			this[VIEW_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "rx", {
-		get: function () {
-			return rx;
-		},
+	get rx() {
+		return this[RX_SYMBOL];
+	}
 
-		set: function (value) {
-			if (value !== rx) {
-				rx = value;
-				viewMatrix = null;
-			}
+	set rx(rx) {
+		if (rx !== this[RX_SYMBOL]) {
+			this[RX_SYMBOL] = rx;
+			this[VIEW_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "ry", {
-		get: function () {
-			return ry;
-		},
+	get ry() {
+		return this[RY_SYMBOL];
+	}
 
-		set: function (value) {
-			if (value !== ry) {
-				ry = value;
-				viewMatrix = null;
-			}
+	set ry(ry) {
+		if (ry !== this[RY_SYMBOL]) {
+			this[RY_SYMBOL] = ry;
+			this[VIEW_MATRIX_SYMBOL] = undefined;
 		}
-	});
+	}
 
-	Object.defineProperty(self, "projectionMatrix", {
-		get: function () {
-			if (projectionMatrix == null) {
-				// The column-major perspective projection matrix.
-				// See: https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js#L185.
-				projectionMatrix = [
-					1 / (Math.tan(self.fov / 2) * self.aspect), 0, 0, 0,
-					0, 1 / Math.tan(self.fov / 2), 0, 0,
-					0, 0, (self.near + self.far) / (self.near - self.far), -1,
-					0, 0, 2 * self.near * self.far / (self.near - self.far), 0
-				];
-			}
+	get projectionMatrix() {
+		if (this[PROJECTION_MATRIX_SYMBOL] == null) {
+			// The column-major perspective projection matrix.
+			// See: https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js#L185.
 
-			return projectionMatrix;
+			this[PROJECTION_MATRIX_SYMBOL] = [
+				1 / (Math.tan(this.fov / 2) * this.aspect), 0, 0, 0,
+				0, 1 / Math.tan(this.fov / 2), 0, 0,
+				0, 0, (this.near + this.far) / (this.near - this.far), -1,
+				0, 0, 2 * this.near * this.far / (this.near - this.far), 0
+			];
 		}
-	});
 
-	Object.defineProperty(self, "viewMatrix", {
-		get: function () {
-			if (viewMatrix == null) {
-				// The column-major camera matrix. It is calculated using the following transformations:
-				//
-				// * Rotate around the x axis (Rx):
-				//   https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js#L128;
-				//
-				// * Rotate around the y axis (Ry):
-				//   https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js#L141;
-				//
-				// * Translate by (x, y, z) (T):
-				//   https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js#L167.
-				//
-				// Using WolphramAlpha we can easily calculate the result of the following (row-major) matrix
-				// multiplication: (Ry * Rx * T)^-1 = T^-1 * Rx^-1 * Ry^-1. The result is available at
-				// https://bit.ly/3bFOHcT.
-				viewMatrix = [
-					Math.cos(self.ry), Math.sin(self.rx) * Math.sin(self.ry), -(Math.cos(self.rx) * Math.sin(self.ry)), 0,
-					0, Math.cos(self.rx), Math.sin(self.rx), 0,
-					Math.sin(self.ry), -(Math.sin(self.rx) * Math.cos(self.ry)), Math.cos(self.rx) * Math.cos(self.ry), 0,
-					-self.x, -self.y, -self.z, 1
-				];
-			}
+		return this[PROJECTION_MATRIX_SYMBOL];
+	}
 
-			return viewMatrix;
+	get viewMatrix() {
+		if (this[VIEW_MATRIX_SYMBOL] == null) {
+			// The column-major camera matrix. It is calculated using the following transformations:
+			//
+			// * Rotate around the x axis (Rx):
+			//   https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js#L128;
+			//
+			// * Rotate around the y axis (Ry):
+			//   https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js#L141;
+			//
+			// * Translate by (x, y, z) (T):
+			//   https://github.com/gregtatum/mdn-webgl/blob/master/library/matrices.js#L167.
+			//
+			// Using WolphramAlpha we can easily calculate the result of the following (row-major) matrix
+			// multiplication: (Ry * Rx * T)^-1 = T^-1 * Rx^-1 * Ry^-1. The result is available at
+			// https://bit.ly/3bFOHcT.
+
+			this[VIEW_MATRIX_SYMBOL] = [
+				Math.cos(this.ry), Math.sin(this.rx) * Math.sin(this.ry), -(Math.cos(this.rx) * Math.sin(this.ry)), 0,
+				0, Math.cos(this.rx), Math.sin(this.rx), 0,
+				Math.sin(this.ry), -(Math.sin(this.rx) * Math.cos(this.ry)), Math.cos(this.rx) * Math.cos(this.ry), 0,
+				-this.x, -this.y, -this.z, 1
+			];
 		}
-	});
-};
+
+		return this[VIEW_MATRIX_SYMBOL];
+	}
+}
