@@ -1,91 +1,85 @@
-"use strict";
+const FORM = document.forms["discrete-time-projectile-motion-calculator"];
+const SOURCE_POS_ELEMENT = FORM.elements["source-pos"];
+const DESTINATION_POS_ELEMENT = FORM.elements["destination-pos"];
+const AIR_TIME_ELEMENT = FORM.elements["air-time"];
+const ACCELERATION_ELEMENT = FORM.elements.acceleration;
+const DAMPING_ELEMENT = FORM.elements.damping;
+const RESULT_ELEMENT = document.getElementById("discrete-time-projectile-motion-calculator-result");
+const COMMAND_EVENT = document.getElementById("discrete-time-projectile-motion-calculator-command");
 
-(function () {
-	var randomInt = utils.randomInt;
+const DELIMITER_PATTERN = "(?:\\s*,\\s*|\\s+)";
+const DECIMAL_PATTERN = "([+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+))";
+const THREE_DECIMALS_PATTERN = `${DECIMAL_PATTERN}${`${DELIMITER_PATTERN}${DECIMAL_PATTERN}`.repeat(2)}`;
 
-	var decimal = "([+-]?(?:[0-9]+(?:.[0-9]*)?|.[0-9]+))";
-	var delimiter = "(?:\\s*,\\s*|\\s+)";
-	var singleDecimal = "\\s*" + decimal + "\\s*";
-	var threeDecimals = singleDecimal + delimiter + singleDecimal + delimiter + singleDecimal;
-	var singleDecimalPattern = "^" + singleDecimal + "$";
-	var threeDecimalsPattern = "^" + threeDecimals + "$";
+SOURCE_POS_ELEMENT.pattern = `^\\s*${THREE_DECIMALS_PATTERN}\\s*$`;
+SOURCE_POS_ELEMENT.value = `${randomInt(-32, 32)}, ${randomInt(64, 128)}, ${randomInt(-32, 32)}`;
+DESTINATION_POS_ELEMENT.pattern = `^\\s*${THREE_DECIMALS_PATTERN}\\s*$`;
+DESTINATION_POS_ELEMENT.value = `${randomInt(-32, 32)}, ${randomInt(64, 128)}, ${randomInt(-32, 32)}`;
+AIR_TIME_ELEMENT.pattern = `^\\s*${DECIMAL_PATTERN}\\s*$`;
+AIR_TIME_ELEMENT.value = randomInt(1, 6) * 20;
+ACCELERATION_ELEMENT.pattern = `^\\s*${DECIMAL_PATTERN}\\s*$`;
+DAMPING_ELEMENT.pattern = `^\\s*${DECIMAL_PATTERN}\\s*$`;
+FORM.addEventListener("submit", event => event.preventDefault());
+FORM.addEventListener("input", updateForm);
+updateForm();
 
-	var form = document.forms["discrete-time-projectile-motion-calculator"];
-	var sourcePosElement = form.elements["source-pos"];
-	var destinationPosElement = form.elements["destination-pos"];
-	var airTimeElement = form.elements["air-time"];
-	var accelerationElement = form.elements.acceleration;
-	var dampingElement = accelerationElement;
-	var resultElement = document.getElementById("discrete-time-projectile-motion-calculator-result");
-	var commandElement = document.getElementById("discrete-time-projectile-motion-calculator-command");
+function updateForm() {
+	let sourcePos = SOURCE_POS_ELEMENT.value.match(SOURCE_POS_ELEMENT.pattern);
+	let destinationPos = DESTINATION_POS_ELEMENT.value.match(DESTINATION_POS_ELEMENT.pattern);
+	let airTime = AIR_TIME_ELEMENT.value.match(AIR_TIME_ELEMENT.pattern);
+	let acceleration = ACCELERATION_ELEMENT.value.match(ACCELERATION_ELEMENT.pattern);
+	let damping = DAMPING_ELEMENT.value.match(DAMPING_ELEMENT.pattern);
 
-	sourcePosElement.value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
-	sourcePosElement.pattern = threeDecimalsPattern;
-	destinationPosElement.value = randomInt(-32, 32) + ", " + randomInt(64, 128) + ", " + randomInt(-32, 32);
-	destinationPosElement.pattern = threeDecimalsPattern;
-	airTimeElement.value = randomInt(1, 6) * 20;
-	airTimeElement.pattern = singleDecimalPattern;
-	accelerationElement.pattern = singleDecimalPattern;
-	dampingElement.pattern = singleDecimalPattern;
-	form.addEventListener("submit", function (event) { event.preventDefault(); });
-	form.addEventListener("input", updateForm);
-	updateForm();
+	if (sourcePos == null || destinationPos == null || airTime == null || acceleration == null || damping == null)
+		return;
 
-	function updateForm() {
-		var sourcePos = sourcePosElement.value.match(threeDecimalsPattern);
-		var destinationPos = destinationPosElement.value.match(threeDecimalsPattern);
-		var airTime = airTimeElement.value.match(singleDecimalPattern);
-		var acceleration = accelerationElement.value.match(singleDecimalPattern);
-		var damping = dampingElement.value.match(singleDecimalPattern);
+	sourcePos = {
+		x: Number(sourcePos[1]),
+		y: Number(sourcePos[2]),
+		z: Number(sourcePos[3])
+	};
 
-		if (sourcePos == null || destinationPos == null || airTime == null || acceleration == null || damping == null)
-			return;
+	destinationPos = {
+		x: Number(destinationPos[1]),
+		y: Number(destinationPos[2]),
+		z: Number(destinationPos[3])
+	};
 
-		sourcePos = {
-			x: parseFloat(sourcePos[1]),
-			y: parseFloat(sourcePos[2]),
-			z: parseFloat(sourcePos[3])
+	let pn = {
+		x: destinationPos.x - sourcePos.x,
+		y: destinationPos.y - sourcePos.y,
+		z: destinationPos.z - sourcePos.z
+	};
+
+	let n = Number(airTime[1]);
+	let a = Number(acceleration[1]);
+	let d = Number(damping[1]);
+
+	let v0;
+
+	if (d === 1) {
+		v0 = {
+			x: pn.x / n,
+			y: (pn.y - n * a) / n,
+			z: pn.z / n
 		};
-
-		destinationPos = {
-			x: parseFloat(destinationPos[1]),
-			y: parseFloat(destinationPos[2]),
-			z: parseFloat(destinationPos[3])
+	} else {
+		v0 = {
+			x: pn.x / ((1 - Math.pow(d, n)) / (1 - d)),
+			y: (pn.y - (n - (1 - Math.pow(d, n)) / (1 - d) * d) / (1 - d) * a) / ((1 - Math.pow(d, n)) / (1 - d)),
+			z: pn.z / ((1 - Math.pow(d, n)) / (1 - d))
 		};
-
-		var pn = {
-			x: destinationPos.x - sourcePos.x,
-			y: destinationPos.y - sourcePos.y,
-			z: destinationPos.z - sourcePos.z
-		};
-
-		var n = parseFloat(airTime[1]);
-		var a = parseFloat(acceleration[1]);
-		var d = parseFloat(damping[1]);
-
-		var v0;
-
-		if (d === 1) {
-			v0 = {
-				x: pn.x / n,
-				y: (pn.y - n * a) / n,
-				z: pn.z / n
-			};
-		} else {
-			v0 = {
-				x: pn.x / ((1 - Math.pow(d, n)) / (1 - d)),
-				y: (pn.y - (n - (1 - Math.pow(d, n)) / (1 - d) * d) / (1 - d) * a) / ((1 - Math.pow(d, n)) / (1 - d)),
-				z: pn.z / ((1 - Math.pow(d, n)) / (1 - d))
-			};
-		}
-
-		if (!isFinite(v0.x) || !isFinite(v0.y) || !isFinite(v0.z))
-			return;
-
-		resultElement.innerText = v0.x + ", " + v0.y + ", " + v0.z;
-
-		commandElement.innerText = "/summon minecraft:falling_block "
-			+ sourcePos.x + " " + sourcePos.y + " " + sourcePos.z
-			+ " {Motion: [" + v0.x + "D, " + v0.y + "D, " + v0.z + "D], Time: 1, DropItem: 0B}";
 	}
-})();
+
+	if (!isFinite(v0.x) || !isFinite(v0.y) || !isFinite(v0.z))
+		return;
+
+	RESULT_ELEMENT.replaceChildren(`${v0.x}, ${v0.y}, ${v0.z}`);
+
+	let nbt = `{Motion: [${v0.x}D, ${v0.y}D, ${v0.z}D], Time: 1, DropItem: 0B}`;
+	COMMAND_EVENT.replaceChildren(`/summon minecraft:falling_block ${sourcePos.x} ${sourcePos.y} ${sourcePos.z} ${nbt}`);
+}
+
+function randomInt(min, max) {
+	return Math.floor(Math.random() * (max - min) + min);
+}

@@ -9,8 +9,7 @@ keywords: >-
   BiLoMa, theorem, tool, calculator, formula, proof, projectile motion, projectile, motion, initial velocity, velocity,
   position, displacement, discrete time, discrete
 
-scripts:
-  - /js/utils.js
+modules:
   - /js/discrete-time-projectile-motion-calculator.js
 ---
 
@@ -38,16 +37,16 @@ below and see how our theorem works in practice.
 	</p>
 
 	<p>
-		<label for="discrete-time-projectile-motion-calculator-air-time">Air time</label>
+		<label for="discrete-time-projectile-motion-calculator-air-time">Air time (in-game tikcs)</label>
 		<input id="discrete-time-projectile-motion-calculator-air-time" name="air-time" required="required" spellcheck="false" />
 	</p>
 	<p>
-		<label for="discrete-time-projectile-motion-calculator-acceleration">Gravitational acceleration</label>
+		<label for="discrete-time-projectile-motion-calculator-acceleration">Gravitational acceleration (for vanilla Minecraft, use -0.04)</label>
 		<input id="discrete-time-projectile-motion-calculator-acceleration" name="acceleration" required="required" spellcheck="false" value="-0.04" />
 	</p>
 
 	<p>
-		<label for="discrete-time-projectile-motion-calculator-damping">Damping factor</label>
+		<label for="discrete-time-projectile-motion-calculator-damping">Damping factor (for vanilla Minecraft, use 0.98)</label>
 		<input id="discrete-time-projectile-motion-calculator-damping" name="damping" required="required" spellcheck="false" value="0.98" />
 	</p>
 </form>
