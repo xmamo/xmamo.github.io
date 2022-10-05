@@ -8,11 +8,17 @@
 		{% if page.keywords != nil %}<meta name="keywords" content="{{ page.keywords | smartify }}" />{% endif %}
 		<meta name="theme-color" content="#222" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
 		<title>{{ page.title | smartify }}—Mamo.dev</title>
+
 		<base target="_blank" />
+
 		{% comment %}<link rel="icon" href="favicon.ico" />{% endcomment %}
 		<link rel="stylesheet" href="/css/main.css" />
 		{% for style in page.styles %}<link rel="stylesheet" href="{{ style }}" />{% endfor %}
+
+		{% for script in page.scripts %}<script src="{{ script }}" defer="defer"></script>{% endfor %}
+		{% for script in page.modules %}<script type="module" src="{{ script }}"></script>{% endfor %}
 	</head>
 
 	<body>
@@ -34,9 +40,5 @@
 				{{ content }}
 			{% endif %}
 		</main>
-
-		<script src="/js/main.js" defer="defer"></script>
-		{% for script in page.scripts %}<script src="{{ script }}" defer="defer"></script>{% endfor %}
-		{% for script in page.modules %}<script type="module" src="{{ script }}" defer="defer"></script>{% endfor %}
 	</body>
 </html>
