@@ -14,7 +14,7 @@ styles:
   - /css/rouge.css
 ---
 
-# {{ page.title }} [](https://github.com/xMamo/VanillaVotifier/releases/latest){:.fas .fa-download .icon data-github-download="xMamo/VanillaVotifier"} [](https://github.com/xMamo/VanillaVotifier){:.fab .fa-github .icon} #
+# {{ page.title }} [](https://github.com/xMamo/VanillaVotifier/releases/latest){:.fas .fa-download .icon} [](https://github.com/xMamo/VanillaVotifier){:.fab .fa-github .icon} #
 
 VanillaVotifier is a Java application which listens for votes made on Minecraft server lists for your server. Inspired
 by [Bukkit](https://bukkit.org/)'s [Votifier](https://dev.bukkit.org/projects/votifier), VanillaVotifier aids to
