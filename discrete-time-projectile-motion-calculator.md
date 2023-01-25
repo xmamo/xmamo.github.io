@@ -37,7 +37,7 @@ below and see how our theorem works in practice.
 	</p>
 
 	<p>
-		<label for="discrete-time-projectile-motion-calculator-air-time">Air time (in-game tikcs)</label>
+		<label for="discrete-time-projectile-motion-calculator-air-time">Air time (in-game ticks)</label>
 		<input id="discrete-time-projectile-motion-calculator-air-time" name="air-time" required="required" spellcheck="false" />
 	</p>
 	<p>
